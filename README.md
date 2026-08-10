@@ -15,8 +15,8 @@ Aplikasi Website Sekolah SMAN 2 Situbondo dikembangkan menggunakan Laravel 12 de
 ## Setup Lokal
 1. Clone repository:
    ```bash
-   git clone <url-repository-github>
-   cd sman2situbondo-website
+   git clone https://github.com/lasticoo/SMAN-2-Situbondo.git
+   cd SMAN-2-Situbondo
    ```
 2. Install dependency PHP & Node:
    ```bash
