@@ -29,6 +29,10 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\AuthController;
 
+Route::get('/', function () {
+    return redirect()->route('admin.banners.index');
+});
+
 Route::withoutMiddleware(['auth:admin', 'role:admin'])->group(function () {
     Route::get('/login', [AuthController::class, 'create'])->name('admin.login');
     Route::post('/login', [AuthController::class, 'store']);

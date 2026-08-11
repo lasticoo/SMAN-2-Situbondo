@@ -18,7 +18,7 @@ class AuthController extends Controller
     {
         // Jika sudah login, langsung ke dashboard
         if (Auth::guard('admin')->check()) {
-            return redirect('/admin');
+            return redirect()->route('admin.banners.index');
         }
 
         return view('admin.auth.login');
@@ -65,7 +65,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended('/admin');
+        return redirect()->intended(route('admin.banners.index'));
     }
 
     /**
