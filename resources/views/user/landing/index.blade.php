@@ -1,39 +1,38 @@
 @extends('layouts.app')
 
 @section('content')
-<div x-data="{ activeTab: 'siswa', showPopup: {{ $activePopup ? 'true' : 'false' }}, activeSlide: 0, totalSlides: {{ count($banners) > 0 ? count($banners) : 1 }} }" class="min-h-screen font-sans bg-slate-100 text-slate-800 antialiased">
+<!-- Include Font Awesome 6 for icons matching exact HTML template -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div x-data="{ activeTab: 'siswa', showPopup: {{ $activePopup ? 'true' : 'false' }}, activeSlide: 0, totalSlides: {{ count($banners) > 0 ? count($banners) : 1 }} }" class="min-h-screen font-sans antialiased text-gray-800 bg-gray-50">
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 1. TOPBAR ATAS (Sesuai Figma) -->
+    <!-- 1. TOP BAR (EXACT HTML TEMPLATE MATCH) -->
     <!-- ------------------------------------------------------------- -->
-    <div class="bg-slate-900 text-slate-300 text-[11px] py-1.5 px-4 border-b border-slate-800">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
-            <div class="flex items-center gap-3">
-                <div class="flex items-center gap-1 cursor-pointer">
-                    <span class="inline-block w-3.5 h-2.5 bg-red-600 border border-slate-700"></span>
-                    <select class="bg-transparent border-none text-[11px] text-slate-300 focus:ring-0 cursor-pointer py-0">
-                        <option class="bg-slate-800">Indonesian</option>
-                    </select>
-                </div>
+    <div class="bg-gray-100 py-1 text-xs border-b border-gray-200">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="inline-block w-4 h-3 bg-red-600 border border-slate-300"></span>
+                <span class="font-medium">Indonesian <i class="fas fa-chevron-down ml-1 text-[10px]"></i></span>
             </div>
-            <div class="flex items-center gap-5 text-slate-300">
-                <span>smadasit@yahoo.com</span>
-                <span>(0338) 671618</span>
-                <a href="#alumni" class="hover:text-amber-400 transition">Alumni</a>
-                <a href="#siklus" class="hover:text-amber-400 transition">SIKLUS</a>
-                <a href="#mysmada" class="px-2.5 py-0.5 rounded text-[11px] font-bold text-white transition shadow-sm bg-amber-500 hover:bg-amber-600">MySmada</a>
+            <div class="flex space-x-4 items-center font-medium">
+                <a class="hover:text-blue-900 transition" href="mailto:smadasit@yahoo.com">smadasit@yahoo.com</a>
+                <a class="hover:text-blue-900 transition" href="tel:0338671618">(0338) 671618</a>
+                <a class="hover:text-blue-900 transition" href="#alumni">Alumni</a>
+                <a class="hover:text-blue-900 transition" href="#siklus">SIKLUS</a>
+                <a class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-3 py-1 font-bold rounded-lg shadow-sm transition" href="#mysmada">MySmada</a>
             </div>
         </div>
     </div>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 2. HEADER NAVBAR UTAMA -->
+    <!-- 2. MAIN HEADER (EXACT HTML TEMPLATE MATCH) -->
     <!-- ------------------------------------------------------------- -->
-    <header class="bg-white sticky top-0 z-40 shadow-sm border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <!-- Brand Logo -->
-            <a href="{{ route('home') }}" class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-white text-sm shadow" style="background-color: var(--primary-color, #0d2348)">
+    <header class="bg-white py-4 shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <!-- Logo -->
+            <a class="flex items-center gap-3" href="{{ route('home') }}">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-white text-sm shadow" style="background-color: var(--primary-color, #001c4d)">
                     S2
                 </div>
                 <div>
@@ -42,236 +41,197 @@
                 </div>
             </a>
 
-            <!-- Menu Navigasi Sesuai Figma -->
-            <nav class="hidden lg:flex items-center gap-5 font-bold text-xs tracking-wider text-slate-700">
-                <a href="{{ route('home') }}" class="text-blue-900 border-b-2 border-blue-900 pb-0.5">BERANDA</a>
-                <a href="#profil" class="hover:text-blue-900 transition">PROFIL ▾</a>
-                <a href="#tentang" class="hover:text-blue-900 transition">TENTANG KAMI</a>
-                <a href="#civitas" class="hover:text-blue-900 transition">CIVITAS AKADEMIK ▾</a>
-                <a href="#pengumuman" class="hover:text-blue-900 transition">PENGUMUMAN</a>
-                <a href="#media" class="hover:text-blue-900 transition">MEDIA ▾</a>
-                <a href="#berita" class="hover:text-blue-900 transition">BERITA</a>
-                <a href="#contact" class="hover:text-blue-900 transition">CONTACT</a>
-                <a href="#spmb" class="px-4 py-1.5 rounded text-white font-extrabold text-xs tracking-wider uppercase transition shadow hover:opacity-90" style="background-color: var(--primary-color, #0d2348)">SPMB</a>
+            <!-- Navigation Menu -->
+            <nav class="hidden md:flex space-x-6 text-sm font-semibold text-gray-700">
+                <a class="text-blue-900 border-b-2 border-blue-900 pb-0.5" href="{{ route('home') }}">BERANDA</a>
+                
+                <div class="relative group">
+                    <button class="hover:text-blue-900 flex items-center uppercase py-1">PROFIL <i class="fas fa-chevron-down ml-1 text-[10px]"></i></button>
+                    <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
+                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-900" href="#profil">Visi, Misi &amp; Tujuan</a>
+                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-900" href="#profil">Sejarah Singkat</a>
+                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-900" href="#profil">Struktur Organisasi</a>
+                    </div>
+                </div>
+
+                <a class="hover:text-blue-900 flex items-center" href="#tentang">TENTANG KAMI</a>
+
+                <div class="relative group">
+                    <button class="hover:text-blue-900 flex items-center uppercase py-1">CIVITAS AKADEMIK <i class="fas fa-chevron-down ml-1 text-[10px]"></i></button>
+                    <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
+                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-900" href="#civitas">Data Pegawai</a>
+                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-900" href="#siswa">Data Siswa</a>
+                    </div>
+                </div>
+
+                <a class="hover:text-blue-900 flex items-center" href="#pengumuman">PENGUMUMAN</a>
+
+                <div class="relative group">
+                    <button class="hover:text-blue-900 flex items-center uppercase py-1">MEDIA <i class="fas fa-chevron-down ml-1 text-[10px]"></i></button>
+                    <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
+                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-900" href="#media">Galeri</a>
+                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-900" href="#media">Video</a>
+                    </div>
+                </div>
+
+                <a class="hover:text-blue-900 flex items-center" href="#berita">BERITA</a>
+                <a class="hover:text-blue-900 flex items-center" href="#contact">CONTACT</a>
+                <a class="text-blue-900 font-extrabold flex items-center" href="#spmb">SPMB</a>
             </nav>
+
+            <button class="md:hidden text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
         </div>
     </header>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 3. HERO BANNER SECTION (FIGMA DESIGN MATCH) -->
+    <!-- 3. HERO SECTION (DYNAMIC CAROUSEL LOOP FROM BANNERS DB) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="relative text-white overflow-hidden min-h-[500px] flex items-center" style="background-color: var(--primary-color, #0d2348)" x-init="if (totalSlides > 1) { setInterval(() => { activeSlide = (activeSlide + 1) % totalSlides }, 6000) }">
-        
+    <section class="relative h-[550px] md:h-[600px] flex items-center overflow-hidden" style="background-color: var(--primary-color, #001c4d)" x-init="if (totalSlides > 1) { setInterval(() => { activeSlide = (activeSlide + 1) % totalSlides }, 6000) }">
         @if(count($banners) > 0)
             @foreach($banners as $index => $banner)
-                <div x-show="activeSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 scale-105" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0 w-full h-full">
-                    <!-- Background Image Overlay -->
-                    <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" class="w-full h-full object-cover opacity-35">
-                    <div class="absolute inset-0 bg-gradient-to-r from-[#0d2348]/95 via-[#0d2348]/80 to-transparent"></div>
-                    
-                    <div class="relative max-w-7xl mx-auto px-6 h-full flex items-center pt-10 pb-28">
-                        <div class="max-w-xl space-y-3">
-                            <span class="text-xs font-semibold text-slate-300 block tracking-wide">
-                                Selamat Hari Jadi SMA Negeri 2 Situbondo
-                            </span>
-                            <h2 class="text-4xl md:text-5xl font-black tracking-tight leading-tight text-white">
+                <div x-show="activeSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 scale-105" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0 w-full h-full flex items-center">
+                    <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" class="absolute inset-0 w-full h-full object-cover opacity-40">
+                    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+                    <div class="container mx-auto px-4 relative z-10 text-white">
+                        <div class="max-w-2xl space-y-4">
+                            <h1 class="text-4xl md:text-5xl font-bold leading-tight font-display-lg drop-shadow-md">
                                 {{ $banner->title }}
-                            </h2>
-                            <p class="text-slate-300 text-xs md:text-sm leading-relaxed">
-                                {{ $banner->description ?? 'Smada Prima — Assalamu\'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa...' }}
+                            </h1>
+                            <p class="text-shadow text-sm md:text-base leading-relaxed text-slate-200">
+                                <strong>Smada Prima</strong><br>
+                                {{ $banner->description ?? 'Assalamu\'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini, kami telah dapat mengembangkan website sekolah yang mengacu pada ICT-based learning.' }}
                             </p>
-                            <div class="flex items-center gap-3 pt-3">
-                                <a href="#spmb" class="px-6 py-2.5 rounded font-extrabold text-xs text-white uppercase tracking-wider shadow transition hover:opacity-90" style="background-color: var(--primary-color, #0d2348)">
-                                    SPMB
-                                </a>
-                                <a href="#elearning" class="px-6 py-2.5 rounded font-extrabold text-xs text-white border border-white/60 bg-white/10 hover:bg-white/20 transition uppercase tracking-wider">
-                                    E-LEARNING
-                                </a>
+                            <div class="flex space-x-4 pt-2">
+                                <a class="px-6 py-2.5 rounded-full font-bold text-sm text-white transition duration-300 shadow-lg" style="background-color: var(--primary-color, #163269)" href="#spmb">SPMB</a>
+                                <a class="border-2 border-white hover:bg-white hover:text-black text-white font-bold py-2 px-6 rounded-full transition duration-300 text-sm" href="#elearning">E-LEARNING</a>
                             </div>
                         </div>
                     </div>
                 </div>
             @endforeach
         @else
-            <!-- Fallback Banner Frame jika DB belum berisi banner -->
-            <div class="relative w-full h-full py-16 px-6">
-                <div class="absolute inset-0 bg-gradient-to-r from-[#0d2348] via-[#112952] to-[#0d2348] opacity-90"></div>
-                <div class="relative max-w-7xl mx-auto px-4 pt-6 pb-24 text-left">
-                    <span class="text-xs font-semibold text-slate-300 block mb-2">
-                        Selamat Hari Jadi SMA Negeri 2 Situbondo
-                    </span>
-                    <h2 class="text-4xl md:text-5xl font-black tracking-tight text-white mb-3">
-                        SMA Negeri 2 Situbondo
-                    </h2>
-                    <p class="text-slate-300 text-xs md:text-sm max-w-lg mb-6 leading-relaxed">
-                        Smada Prima — Assalamu'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini...
-                    </p>
-                    <div class="flex items-center gap-3">
-                        <a href="#spmb" class="px-6 py-2.5 rounded font-extrabold text-xs text-white uppercase tracking-wider shadow" style="background-color: var(--primary-color, #0d2348)">SPMB</a>
-                        <a href="#elearning" class="px-6 py-2.5 rounded font-extrabold text-xs text-white border border-white/60 bg-white/10">E-LEARNING</a>
+            <!-- Fallback Hero Frame -->
+            <div class="absolute inset-0 w-full h-full flex items-center bg-gradient-to-r from-[#001c4d] via-[#163269] to-[#001c4d]">
+                <div class="container mx-auto px-4 relative z-10 text-white">
+                    <div class="max-w-2xl space-y-4">
+                        <h1 class="text-4xl md:text-5xl font-bold leading-tight font-display-lg">SMA Negeri 2<br>Situbondo</h1>
+                        <p class="text-shadow text-sm md:text-base leading-relaxed text-slate-200">
+                            <strong>Smada Prima</strong><br>
+                            Assalamu'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini, kami telah dapat mengembangkan website sekolah yang mengacu pada ICT-based learning. Berbagai informasi tentang pendidikan dapat diakses dalam website sekolah ini, Khususnya Informasi tentang SMAN 2 SITUBONDO.
+                        </p>
+                        <div class="flex space-x-4 pt-2">
+                            <a class="px-6 py-2.5 rounded-full font-bold text-sm text-white transition duration-300 shadow-lg" style="background-color: var(--primary-color, #163269)" href="#spmb">SPMB</a>
+                            <a class="border-2 border-white hover:bg-white hover:text-black text-white font-bold py-2 px-6 rounded-full transition duration-300 text-sm" href="#elearning">E-LEARNING</a>
+                        </div>
                     </div>
                 </div>
             </div>
         @endif
 
-        <!-- Banner Indicators -->
         @if(count($banners) > 1)
-            <div class="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+            <div class="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
                 @foreach($banners as $index => $b)
-                    <button @click="activeSlide = {{ $index }}" class="w-2.5 h-2.5 rounded-full transition" :class="activeSlide === {{ $index }} ? 'bg-amber-400 w-6' : 'bg-white/40'"></button>
+                    <button @click="activeSlide = {{ $index }}" class="w-3 h-3 rounded-full transition" :class="activeSlide === {{ $index }} ? 'bg-amber-400 w-8' : 'bg-white/50'"></button>
                 @endforeach
             </div>
         @endif
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 4. FLOATING CARD - PROFIL SEKOLAH (5 BUTTONS PERSIS FIGMA) -->
+    <!-- 4. QUICK LINKS GRID (PROFIL SEKOLAH 5 BUTTONS) -->
     <!-- ------------------------------------------------------------- -->
-    <div class="relative max-w-4xl mx-auto px-4 -mt-20 z-30">
-        <div class="bg-white rounded-xl p-6 md:p-8 shadow-xl border border-slate-200">
-            <div class="text-center mb-6">
-                <h3 class="text-sm font-black uppercase tracking-widest text-slate-900 inline-block relative pb-1">
-                    PROFIL <span style="color: var(--primary-color, #0d2348)">SEKOLAH</span>
-                    <span class="absolute bottom-0 left-1/2 -translate-x-1/2 w-10 h-0.5" style="background-color: var(--primary-color, #0d2348)"></span>
-                </h3>
-            </div>
-
-            <!-- Grid 5 Button Figma (Row 1: 3 Buttons, Row 2: 2 Buttons Centered) -->
-            <div class="space-y-4 max-w-3xl mx-auto">
-                <!-- Row 1 (3 Buttons) -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <!-- 1. Visi Misi -->
-                    <a href="#profil" class="flex items-center justify-center gap-2 p-3.5 rounded text-white font-bold text-xs shadow transition transform hover:-translate-y-0.5" style="background-color: var(--primary-color, #0d2348)">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        Visi Misi
-                    </a>
-
-                    <!-- 2. Struktur Organisasi -->
-                    <a href="#profil" class="flex items-center justify-center gap-2 p-3.5 rounded text-white font-bold text-xs shadow transition transform hover:-translate-y-0.5" style="background-color: var(--primary-color, #0d2348)">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                        Struktur Organisasi
-                    </a>
-
-                    <!-- 3. Data Siswa -->
-                    <a href="#siswa" class="flex items-center justify-center gap-2 p-3.5 rounded text-white font-bold text-xs shadow transition transform hover:-translate-y-0.5" style="background-color: var(--primary-color, #0d2348)">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                        Data Siswa
-                    </a>
-                </div>
-
-                <!-- Row 2 (2 Buttons Centered) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
-                    <!-- 4. E-Learning -->
-                    <a href="#elearning" class="flex items-center justify-center gap-2 p-3.5 rounded text-white font-bold text-xs shadow transition transform hover:-translate-y-0.5" style="background-color: var(--primary-color, #0d2348)">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                        E-Learning
-                    </a>
-
-                    <!-- 5. Buku Digital -->
-                    <a href="#bukudigital" class="flex items-center justify-center gap-2 p-3.5 rounded text-white font-bold text-xs shadow transition transform hover:-translate-y-0.5" style="background-color: var(--primary-color, #0d2348)">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                        Buku Digital
-                    </a>
-                </div>
-            </div>
+    <section class="py-10 bg-white relative -mt-16 z-20 mx-4 md:mx-auto md:max-w-4xl rounded-xl shadow-lg border-t-4" style="border-top-color: var(--primary-color, #163269)">
+        <div class="text-center mb-8">
+            <h2 class="text-xl font-bold text-gray-800 font-headline-md uppercase tracking-wider">PROFIL <span style="color: var(--primary-color, #163269)">SEKOLAH</span></h2>
+            <div class="w-16 h-1 mx-auto mt-2 rounded-full" style="background-color: var(--primary-color, #163269)"></div>
         </div>
-    </div>
 
-    <!-- ------------------------------------------------------------- -->
-    <!-- 5. SAPA KEPALA SEKOLAH (SESUAI FIGMA) -->
-    <!-- ------------------------------------------------------------- -->
-    <section class="py-14 mt-10 text-white" style="background-color: var(--primary-color, #0d2348)">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between items-center mb-6 border-b border-blue-900 pb-3">
-                <h3 class="text-lg md:text-xl font-bold">
-                    Sapa <span class="text-amber-400">Kepala Sekolah</span>
-                </h3>
-                <a href="#profile" class="px-4 py-1 rounded-full text-xs font-bold text-white bg-amber-500 hover:bg-amber-600 transition flex items-center gap-1 shadow">
-                    Lainnya &rarr;
-                </a>
-            </div>
+        <!-- Row 1: 3 Buttons -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 px-8 pb-4">
+            <a class="text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-xl transition transform hover:-translate-y-1 shadow-md" style="background: linear-gradient(135deg, var(--primary-color, #001c4d), #163269)" href="#profil">
+                <i class="fas fa-eye text-3xl mb-3 text-amber-400"></i>
+                <span class="font-semibold text-sm">Visi Misi</span>
+            </a>
+            <a class="text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-xl transition transform hover:-translate-y-1 shadow-md" style="background: linear-gradient(135deg, var(--primary-color, #001c4d), #163269)" href="#profil">
+                <i class="fas fa-sitemap text-3xl mb-3 text-amber-400"></i>
+                <span class="font-semibold text-sm">Struktur Organisasi</span>
+            </a>
+            <a class="text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-xl transition transform hover:-translate-y-1 shadow-md" style="background: linear-gradient(135deg, var(--primary-color, #001c4d), #163269)" href="#siswa">
+                <i class="fas fa-users text-3xl mb-3 text-amber-400"></i>
+                <span class="font-semibold text-sm">Data Siswa</span>
+            </a>
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-                <!-- Foto Kepala Sekolah (Nikmatil Hasanah) -->
-                <div class="md:col-span-4 flex justify-center">
-                    <div class="w-56 h-72 rounded-xl overflow-hidden shadow-2xl border-2 border-white/20">
-                        <img src="/build/assets/kepala sekolah smada.png" alt="Kepala Sekolah SMAN 2 Situbondo" class="w-full h-full object-cover object-top">
-                    </div>
-                </div>
-
-                <!-- Text Sambutan -->
-                <div class="md:col-span-8 space-y-3">
-                    <div>
-                        <h4 class="text-xl md:text-2xl font-black text-white">NIKMATIL HASANAH, S.Pd, M.Pd</h4>
-                        <p class="text-amber-300 text-xs font-semibold">19640516 200604 2 012</p>
-                    </div>
-                    <p class="text-slate-200 text-xs md:text-sm leading-relaxed text-justify">
-                        Assalamu'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini, kami telah dapat mengembangkan website sekolah yang mengacu pada ICT-based learning. Berbagai informasi tentang pendidikan dapat diakses dalam website sekolah ini, khususnya Informasi tentang SMAN 2 SITUBONDO. Kami terus mengembangkan web ini mengikuti perkembangan teknologi yang sangat cepat. Dengan penuh harapan, kiranya website sekolah ini dapat memberikan manfaat yang maksimal dalam pengembangan dan pemanfaatannya untuk kebutuhan informasi dalam lingkungan sekolah SMAN 2 SITUBONDO and turut memajukan pendidikan di Indonesia. Wassalamu'alaikum Wr. Wb.
-                    </p>
-                </div>
-            </div>
+        <!-- Row 2: 2 Buttons Centered -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-8 pb-4 max-w-xl mx-auto">
+            <a class="text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-xl transition transform hover:-translate-y-1 shadow-md" style="background: linear-gradient(135deg, var(--primary-color, #001c4d), #163269)" href="#elearning">
+                <i class="fas fa-laptop text-3xl mb-3 text-amber-400"></i>
+                <span class="font-semibold text-sm">E-Learning</span>
+            </a>
+            <a class="text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-xl transition transform hover:-translate-y-1 shadow-md" style="background: linear-gradient(135deg, var(--primary-color, #001c4d), #163269)" href="#bukudigital">
+                <i class="fas fa-book text-3xl mb-3 text-amber-400"></i>
+                <span class="font-semibold text-sm">Buku Digital</span>
+            </a>
         </div>
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 6. BERITA SMADA (GRID LAYOUT FIGMA: LEFT MAIN 1 CARD + RIGHT 2X2 4 CARDS) -->
+    <!-- 5. NEWS SECTION (BERITA SMADA TOP 5 DINAMIS DATABASE) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-14 bg-white" id="berita">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between items-center mb-6 border-b border-slate-200 pb-3">
-                <h3 class="text-lg md:text-xl font-black text-slate-900">
-                    Berita <span style="color: var(--primary-color, #0d2348)">Smada</span>
-                </h3>
-                <a href="#berita" class="text-xs font-bold text-slate-500 hover:text-blue-900 transition">
-                    Selengkapnya &rarr;
+    <section class="py-12 bg-slate-100" id="berita">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-end mb-8 border-b-2 pb-2" style="border-bottom-color: var(--primary-color, #163269)">
+                <h2 class="text-2xl font-bold text-gray-800 font-headline-md">Berita Smada</h2>
+                <a class="text-sm text-gray-500 hover:text-blue-900 transition flex items-center gap-1 font-semibold" href="#berita">
+                    Selengkapnya <i class="fas fa-arrow-right text-xs"></i>
                 </a>
             </div>
 
             @if(count($newsList) > 0)
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <!-- Left Featured Card (Berita Utama Terbaru) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Main News (Left 1 Featured Card) -->
                     @php $firstNews = $newsList->first(); @endphp
-                    <div class="lg:col-span-5 bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between">
+                    <div class="md:col-span-1 bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between">
                         <div>
-                            <img src="{{ $firstNews->thumbnail_url ?? '/build/assets/banner smada.png' }}" alt="{{ $firstNews->title }}" class="w-full h-48 object-cover">
+                            <img alt="{{ $firstNews->title }}" class="w-full h-48 object-cover" src="{{ $firstNews->thumbnail_url ?? '/build/assets/banner smada.png' }}">
                             <div class="p-5 space-y-2">
-                                <h4 class="font-extrabold text-slate-900 text-sm leading-snug uppercase">
-                                    {{ $firstNews->title }}
-                                </h4>
-                                <span class="text-[11px] text-slate-400 block font-semibold">
-                                    📅 {{ $firstNews->published_at ? $firstNews->published_at->format('F d, Y') : 'September 13, 2025' }}
-                                </span>
-                                <p class="text-slate-600 text-xs line-clamp-3 leading-relaxed">
+                                <h3 class="font-bold text-lg leading-snug hover:text-blue-900 font-headline-md text-slate-900 uppercase">
+                                    <a href="#berita">{{ $firstNews->title }}</a>
+                                </h3>
+                                <p class="text-xs text-gray-500 flex items-center gap-1 font-medium">
+                                    <i class="far fa-calendar-alt text-amber-500"></i> {{ $firstNews->published_at ? $firstNews->published_at->format('F d, Y') : 'September 10, 2025' }}
+                                </p>
+                                <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
                                     {{ $firstNews->summary }}
                                 </p>
                             </div>
                         </div>
                         <div class="p-5 pt-0">
-                            <a href="#berita" class="inline-block px-4 py-1.5 rounded-full text-xs font-bold border border-slate-300 text-slate-700 hover:bg-slate-50 transition">
-                                Selengkapnya
-                            </a>
+                            <a class="inline-block border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white px-4 py-1.5 rounded-full text-xs font-bold transition shadow-sm" href="#berita">Selengkapnya</a>
                         </div>
                     </div>
 
-                    <!-- Right Side (Grid 2x2: 4 News Cards) -->
-                    <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- News List Grid (Right 4 Side Cards in 2x2) -->
+                    <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                         @foreach($newsList->slice(1, 4) as $item)
-                            <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm flex items-center gap-3 hover:shadow-md transition">
-                                <img src="{{ $item->thumbnail_url ?? '/build/assets/banner smada.png' }}" alt="{{ $item->title }}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
+                            <div class="flex space-x-3 bg-white p-3.5 rounded-lg shadow-sm border border-gray-100 items-start hover:shadow-md transition">
+                                <img alt="{{ $item->title }}" class="w-24 h-20 object-cover rounded flex-shrink-0" src="{{ $item->thumbnail_url ?? '/build/assets/banner smada.png' }}">
                                 <div class="space-y-1">
-                                    <h5 class="font-bold text-slate-900 text-xs uppercase leading-snug line-clamp-2">
-                                        {{ $item->title }}
-                                    </h5>
-                                    <span class="text-[10px] text-slate-400 block font-medium">
-                                        📅 {{ $item->published_at ? $item->published_at->format('F d, Y') : 'September 13, 2025' }}
-                                    </span>
+                                    <h4 class="font-semibold text-xs leading-tight hover:text-blue-900 line-clamp-2 text-slate-900 uppercase">
+                                        <a href="#berita">{{ $item->title }}</a>
+                                    </h4>
+                                    <p class="text-[11px] text-gray-400 flex items-center gap-1 font-medium">
+                                        <i class="far fa-calendar-alt text-amber-500 text-[10px]"></i> {{ $item->published_at ? $item->published_at->format('F d, Y') : 'August 28, 2025' }}
+                                    </p>
                                 </div>
                             </div>
                         @endforeach
                     </div>
                 </div>
             @else
-                <div class="text-center py-10 text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                <div class="text-center py-10 text-gray-400 bg-white rounded-lg border border-dashed border-gray-200">
                     Belum ada berita yang dipublikasikan.
                 </div>
             @endif
@@ -279,290 +239,289 @@
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 7. SMADA FACT (3 STAT BOXES SESUAI FIGMA) -->
+    <!-- 6. SAPA KEPALA SEKOLAH (EXACT HTML TEMPLATE MATCH) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-14 text-white" style="background-color: var(--primary-color, #0d2348)">
-        <div class="max-w-7xl mx-auto px-6 text-center">
+    <section class="py-12 text-white" style="background-color: var(--primary-color, #163269)">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-8 border-b border-blue-500 pb-2">
+                <h2 class="text-2xl font-bold font-headline-md">Sapa <span class="text-amber-400">Kepala Sekolah</span></h2>
+                <a class="bg-amber-500 text-slate-950 font-bold py-1 px-4 rounded-full text-sm hover:bg-amber-600 transition shadow" href="#profil">
+                    Lainnya <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div class="md:col-span-1 flex justify-center">
+                    <img alt="NIKMATIL HASANAH, S.Pd, M.Pd" class="w-64 h-auto object-cover rounded-lg shadow-2xl border-2 border-white/20" src="/build/assets/kepala sekolah smada.png">
+                </div>
+                <div class="md:col-span-2 space-y-3">
+                    <h3 class="font-bold text-2xl leading-tight font-headline-md text-white">NIKMATIL HASANAH, S.Pd, M.Pd</h3>
+                    <p class="text-sm text-blue-200 font-bold">19640516 200604 2 012</p>
+                    <p class="text-base text-blue-100 leading-relaxed text-justify">
+                        Assalamu'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini, kami telah dapat mengembangkan website sekolah yang mengacu pada ICT-based learning. Berbagai informasi tentang pendidikan dapat diakses dalam website sekolah ini, Khususnya Informasi tentang SMAN 2 SITUBONDO. Kami terus mengembangkan web ini mengikuti perkembangan teknologi yang sangat cepat. Dengan penuh harapan, kiranya website sekolah ini dapat memberikan manfaat yang maksimal dalam pengembangan dan pemanfaatannya untuk kebutuhan informasi dalam lingkungan sekolah SMAN 2 SITUBONDO and turut memajukan pendidikan di Indonesia. Wassalamu'alaikum Wr. Wb.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            <!-- Pill Badge SMADA FACT -->
-            <div class="inline-block bg-white text-slate-900 px-6 py-1.5 rounded-full font-black text-xs uppercase tracking-widest shadow mb-5">
+    <!-- ------------------------------------------------------------- -->
+    <!-- 7. SMADA FACT SECTION (EXACT HTML MATCH + INTERACTIVE TABS) -->
+    <!-- ------------------------------------------------------------- -->
+    <section class="py-12 text-white relative bg-cover bg-center" style="background-color: var(--primary-color, #001c4d)">
+        <div class="absolute inset-0 bg-opacity-70" style="background-color: var(--primary-color, #163269)"></div>
+        <div class="container mx-auto px-4 relative z-10 text-center">
+            
+            <div class="inline-block bg-white text-slate-900 font-bold py-2 px-12 rounded-full mb-8 text-xl shadow">
                 SMADA <span class="text-amber-500">FACT</span>
             </div>
 
-            <!-- Filter Buttons: PESERTA DIDIK (Active), GURU, STAFF -->
-            <div class="flex justify-center gap-3 mb-8">
-                <button @click="activeTab = 'siswa'" :class="activeTab === 'siswa' ? 'bg-amber-500 text-white' : 'bg-transparent text-slate-200 border border-blue-800'" class="px-5 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition">
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button @click="activeTab = 'siswa'" :class="activeTab === 'siswa' ? 'bg-amber-500 text-slate-950' : 'bg-transparent text-white border-white'" class="px-6 py-2 rounded-full text-sm font-semibold border transition">
                     PESERTA DIDIK
                 </button>
-                <button @click="activeTab = 'guru'" :class="activeTab === 'guru' ? 'bg-amber-500 text-white' : 'bg-transparent text-slate-200 border border-blue-800'" class="px-5 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition">
+                <button @click="activeTab = 'guru'" :class="activeTab === 'guru' ? 'bg-amber-500 text-slate-950' : 'bg-transparent text-white border-white'" class="px-6 py-2 rounded-full text-sm font-semibold border transition">
                     GURU
                 </button>
-                <button @click="activeTab = 'staf'" :class="activeTab === 'staf' ? 'bg-amber-500 text-white' : 'bg-transparent text-slate-200 border border-blue-800'" class="px-5 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition">
+                <button @click="activeTab = 'staf'" :class="activeTab === 'staf' ? 'bg-amber-500 text-slate-950' : 'bg-transparent text-white border-white'" class="px-6 py-2 rounded-full text-sm font-semibold border transition">
                     STAFF
                 </button>
             </div>
 
-            <!-- 3 Stat Cards in Row Sesuai Figma -->
-            <div x-show="activeTab === 'siswa'" class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <div class="bg-[#081833] rounded-xl p-6 border border-amber-500/40 shadow-lg">
-                    <div class="text-3xl md:text-4xl font-black text-amber-400 mb-1">{{ $studentStats['total'] }}</div>
-                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-300">Total Peserta Didik</div>
+            <!-- Tab Content: PESERTA DIDIK -->
+            <div x-show="activeTab === 'siswa'" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div class="bg-black bg-opacity-50 border border-amber-500 rounded-lg p-6 shadow-xl">
+                    <div class="text-4xl font-bold text-amber-400 mb-2 font-display-lg">{{ $studentStats['total'] }}</div>
+                    <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Total Peserta Didik</div>
                 </div>
-                <div class="bg-[#081833] rounded-xl p-6 border border-blue-900 shadow-lg">
-                    <div class="text-3xl md:text-4xl font-black text-amber-400 mb-1">{{ $studentStats['kelas_10'] }}</div>
-                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-300">Siswa Kelas X</div>
+                <div class="bg-black bg-opacity-50 border border-amber-500 rounded-lg p-6 shadow-xl">
+                    <div class="text-4xl font-bold text-amber-400 mb-2 font-display-lg">{{ $studentStats['kelas_10'] }}</div>
+                    <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas X</div>
                 </div>
-                <div class="bg-[#081833] rounded-xl p-6 border border-blue-900 shadow-lg">
-                    <div class="text-3xl md:text-4xl font-black text-amber-400 mb-1">{{ $studentStats['kelas_11'] + $studentStats['kelas_12'] }}</div>
-                    <div class="text-[11px] font-bold uppercase tracking-wider text-slate-300">Siswa Kelas XI & XII</div>
+                <div class="bg-black bg-opacity-50 border border-amber-500 rounded-lg p-6 shadow-xl">
+                    <div class="text-4xl font-bold text-amber-400 mb-2 font-display-lg">{{ $studentStats['kelas_11'] + $studentStats['kelas_12'] }}</div>
+                    <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas XI &amp; XII</div>
                 </div>
             </div>
 
-            <div x-show="activeTab === 'guru'" class="max-w-md mx-auto bg-[#081833] rounded-xl p-8 border border-amber-500/40 shadow-lg">
-                <div class="text-4xl font-black text-amber-400 mb-2">{{ $employeeStats['guru'] }}</div>
-                <div class="text-xs font-bold uppercase tracking-wider text-slate-300">Guru</div>
+            <!-- Tab Content: GURU -->
+            <div x-show="activeTab === 'guru'" class="max-w-md mx-auto bg-black bg-opacity-50 border border-amber-500 rounded-lg p-8 shadow-xl">
+                <div class="text-5xl font-bold text-amber-400 mb-2 font-display-lg">{{ $employeeStats['guru'] }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Guru</div>
             </div>
 
-            <div x-show="activeTab === 'staf'" class="max-w-md mx-auto bg-[#081833] rounded-xl p-8 border border-amber-500/40 shadow-lg">
-                <div class="text-4xl font-black text-amber-400 mb-2">{{ $employeeStats['staf'] }}</div>
-                <div class="text-xs font-bold uppercase tracking-wider text-slate-300">Staff</div>
+            <!-- Tab Content: STAFF -->
+            <div x-show="activeTab === 'staf'" class="max-w-md mx-auto bg-black bg-opacity-50 border border-amber-500 rounded-lg p-8 shadow-xl">
+                <div class="text-5xl font-bold text-amber-400 mb-2 font-display-lg">{{ $employeeStats['staf'] }}</div>
+                <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Staff</div>
             </div>
 
         </div>
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 8. AGENDA & PENGUMUMAN + EKSTRAKURIKULER (SESUAI FIGMA) -->
+    <!-- 8. AGENDA & PENGUMUMAN + EKSTRAKURIKULER (EXACT HTML MATCH) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-14 bg-white" id="pengumuman">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <section class="py-12 bg-white" id="pengumuman">
+        <div class="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Agenda & Pengumuman Left -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="flex justify-between items-end border-b-2 pb-2" style="border-bottom-color: var(--primary-color, #163269)">
+                    <h2 class="text-2xl font-bold text-gray-800 font-headline-md">Agenda &amp; Pengumuman</h2>
+                    <a class="text-sm text-gray-500 hover:text-blue-900 transition flex items-center gap-1 font-semibold" href="#pengumuman">
+                        Selengkapnya <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
+                </div>
 
-                <!-- Left: Agenda & Pengumuman -->
-                <div class="lg:col-span-8 space-y-5">
-                    <div class="flex justify-between items-center border-b border-slate-200 pb-3">
-                        <h3 class="text-lg font-black text-slate-900">
-                            Agenda & <span style="color: var(--primary-color, #0d2348)">Pengumuman</span>
-                        </h3>
-                        <a href="#pengumuman" class="text-xs font-bold text-slate-500 hover:text-blue-900 transition">
-                            Selengkapnya &rarr;
-                        </a>
-                    </div>
+                @if(count($announcementsList) > 0)
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Main Announcement Card -->
+                        @php $firstAnn = $announcementsList->first(); @endphp
+                        <div class="bg-gray-50 rounded-lg p-4 shadow flex flex-col justify-between border border-gray-100">
+                            <div>
+                                <img alt="{{ $firstAnn->title }}" class="w-full h-40 object-cover mb-4 rounded" src="{{ $firstAnn->thumbnail_url ?? '/build/assets/banner smada.png' }}">
+                                <h3 class="font-bold mb-1 text-slate-900 text-sm uppercase leading-snug">{{ $firstAnn->title }}</h3>
+                                <p class="text-xs text-gray-500 mb-3 flex items-center gap-1">
+                                    <i class="far fa-calendar-alt text-amber-500"></i> {{ $firstAnn->published_at ? $firstAnn->published_at->format('F d, Y') : 'July 16, 2022' }}
+                                </p>
+                                <p class="text-xs text-gray-600 line-clamp-3 leading-relaxed mb-4">
+                                    {{ $firstAnn->summary }}
+                                </p>
+                            </div>
+                            <div>
+                                <a class="inline-block border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white px-4 py-1 rounded-full text-xs transition" href="#pengumuman">Selengkapnya</a>
+                            </div>
+                        </div>
 
-                    @if(count($announcementsList) > 0)
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Main Featured Announcement Card -->
-                            @php $firstAnn = $announcementsList->first(); @endphp
-                            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 shadow-sm space-y-3 flex flex-col justify-between">
-                                <div class="space-y-2">
-                                    <h4 class="font-extrabold text-slate-900 text-sm uppercase leading-snug">
-                                        {{ $firstAnn->title }}
-                                    </h4>
-                                    <span class="text-[10px] text-slate-400 block font-semibold">
-                                        📅 {{ $firstAnn->published_at ? $firstAnn->published_at->format('F d, Y') : 'July 16, 2022' }}
-                                    </span>
-                                    <p class="text-xs text-slate-600 line-clamp-3">
-                                        {{ $firstAnn->summary }}
+                        <!-- Side Announcement Cards -->
+                        <div class="space-y-4">
+                            @foreach($announcementsList->slice(1, 2) as $annItem)
+                                <div class="bg-gray-50 p-4 rounded-lg shadow border border-gray-100 space-y-1">
+                                    <h3 class="font-bold mb-1 text-xs text-slate-900 uppercase leading-snug">{{ $annItem->title }}</h3>
+                                    <p class="text-[11px] text-gray-400 mb-2 flex items-center gap-1">
+                                        <i class="far fa-calendar-alt text-amber-500"></i> {{ $annItem->published_at ? $annItem->published_at->format('F d, Y') : 'May 05, 2022' }}
                                     </p>
+                                    <p class="text-xs text-gray-600 line-clamp-2 mb-2 leading-relaxed">
+                                        {{ $annItem->summary }}
+                                    </p>
+                                    <a class="inline-block border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white px-3 py-1 rounded-full text-[11px] transition" href="#pengumuman">Selengkapnya</a>
                                 </div>
-                                <a href="#pengumuman" class="inline-block px-4 py-1.5 rounded-full text-xs font-bold border border-slate-300 text-slate-700 hover:bg-white transition w-fit">
-                                    Selengkapnya
-                                </a>
-                            </div>
-
-                            <!-- Side Announcement Cards -->
-                            <div class="space-y-4">
-                                @foreach($announcementsList->slice(1, 2) as $annItem)
-                                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm space-y-2">
-                                        <h5 class="font-bold text-slate-900 text-xs uppercase leading-snug">
-                                            {{ $annItem->title }}
-                                        </h5>
-                                        <span class="text-[10px] text-slate-400 block font-semibold">
-                                            📅 {{ $annItem->published_at ? $annItem->published_at->format('F d, Y') : 'May 05, 2022' }}
-                                        </span>
-                                        <p class="text-[11px] text-slate-600 line-clamp-2">
-                                            {{ $annItem->summary }}
-                                        </p>
-                                    </div>
-                                @endforeach
-                            </div>
+                            @endforeach
                         </div>
-                    @else
-                        <div class="text-center py-8 text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                            Belum ada pengumuman yang dipublikasikan.
-                        </div>
-                    @endif
-                </div>
-
-                <!-- Right: Ekstrakurikuler -->
-                <div class="lg:col-span-4 space-y-5">
-                    <div class="border-b border-slate-200 pb-3">
-                        <h3 class="text-lg font-black text-slate-900">Ekstrakurikuler</h3>
                     </div>
-
-                    <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-                        <ul class="divide-y divide-slate-100 text-xs font-bold text-slate-800">
-                            <li class="py-2.5">Musik</li>
-                            <li class="py-2.5">Kharismada</li>
-                            <li class="py-2.5">Jurnalistik</li>
-                            <li class="py-2.5">Pecinta Alam</li>
-                        </ul>
-                        <button class="w-full py-2 rounded text-xs font-bold border border-slate-300 text-slate-700 hover:bg-slate-50 transition">
-                            Ekstrakurikuler Lainnya
-                        </button>
+                @else
+                    <div class="text-center py-8 text-gray-400 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                        Belum ada pengumuman yang dipublikasikan.
                     </div>
-                </div>
+                @endif
+            </div>
 
+            <!-- Ekstrakurikuler Right -->
+            <div>
+                <div class="mb-6 border-b-2 pb-2" style="border-bottom-color: var(--primary-color, #163269)">
+                    <h2 class="text-2xl font-bold text-gray-800 font-headline-md">Ekstrakurikuler</h2>
+                </div>
+                <ul class="space-y-4 font-semibold text-sm text-gray-700">
+                    <li class="border-b border-gray-200 pb-3 hover:text-blue-900 transition"><a href="#ekstra">Musik</a></li>
+                    <li class="border-b border-gray-200 pb-3 hover:text-blue-900 transition"><a href="#ekstra">Kharismada</a></li>
+                    <li class="border-b border-gray-200 pb-3 hover:text-blue-900 transition"><a href="#ekstra">Jurnalistik</a></li>
+                    <li class="border-b border-gray-200 pb-3 hover:text-blue-900 transition"><a href="#ekstra">Pecinta Alam</a></li>
+                </ul>
+                <a class="inline-block border border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white px-4 py-2 rounded-full text-sm font-bold transition mt-4 w-full text-center shadow-sm" href="#ekstra">Ekstrakurikuler Lainnya</a>
             </div>
         </div>
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 9. ATMOSFER SEKOLAH (3 FRAMED PHOTOS SESUAI FIGMA) -->
+    <!-- 9. ATMOSFER SEKOLAH (EXACT HTML MATCH) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-14 bg-slate-950 text-white" id="media">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-8">
-                <h3 class="text-xl font-black uppercase tracking-widest text-white">
-                    ATMOSFER <span class="text-amber-400">SEKOLAH</span>
-                </h3>
+    <section class="py-16 bg-gray-900 text-white relative overflow-hidden" id="media">
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold tracking-widest font-headline-lg uppercase">ATMOSFER <span class="text-amber-400">SEKOLAH</span></h2>
             </div>
-
-            <!-- 3 Framed Photos Display (Center Highlighted with Border) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center max-w-5xl mx-auto">
-                <div class="h-64 rounded-xl overflow-hidden border border-slate-800 shadow-lg">
-                    <img src="/build/assets/banner smada.png" alt="Atmosfer Kegiatan Sekolah 1" class="w-full h-full object-cover">
+            <div class="flex justify-center items-center space-x-4 overflow-x-auto pb-8">
+                <div class="w-64 h-80 flex-shrink-0 bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700">
+                    <img alt="Atmosfer 1" class="w-full h-full object-cover hover:scale-105 transition duration-500" src="/build/assets/banner smada.png">
                 </div>
-                <div class="h-72 rounded-xl overflow-hidden border-2 border-amber-500 shadow-2xl transform scale-105">
-                    <img src="/build/assets/banner smada.png" alt="Atmosfer Poster Prestasi 2" class="w-full h-full object-cover">
+                <div class="w-80 h-96 flex-shrink-0 bg-gray-800 rounded-xl overflow-hidden shadow-2xl relative z-10 border-4 border-white">
+                    <img alt="Atmosfer 2 Poster" class="w-full h-full object-cover hover:scale-105 transition duration-500" src="/build/assets/banner smada.png">
                 </div>
-                <div class="h-64 rounded-xl overflow-hidden border border-slate-800 shadow-lg">
-                    <img src="/build/assets/kepala sekolah smada.png" alt="Atmosfer Rapat Guru 3" class="w-full h-full object-cover">
+                <div class="w-64 h-80 flex-shrink-0 bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-700">
+                    <img alt="Atmosfer 3" class="w-full h-full object-cover hover:scale-105 transition duration-500" src="/build/assets/kepala sekolah smada.png">
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 10. QUOTE BANNER SECTION -->
+    <!-- 10. MOTTO BANNER SECTION (EXACT HTML MATCH) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-14 bg-white text-center border-t border-b border-slate-100">
-        <div class="max-w-3xl mx-auto px-4">
-            <span class="text-sm italic font-serif text-slate-500 block mb-1">Dari</span>
-            <h2 class="text-3xl md:text-4xl font-black text-amber-500 tracking-wide uppercase mb-1">
-                SMADA PRIMA
+    <section class="py-8 bg-white border-b-4" style="border-bottom-color: var(--primary-color, #163269)">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-serif italic font-headline-lg" style="color: var(--primary-color, #163269)">
+                Dari<br>
+                <span class="font-bold uppercase tracking-widest text-4xl md:text-5xl text-amber-500">SMADA PRIMA</span><br>
+                Untuk Bangsa
             </h2>
-            <span class="text-sm italic font-serif text-slate-500 block">Untuk Bangsa</span>
         </div>
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 11. FOOTER UTAMA (SESUAI FIGMA WITH WHATSAPP & ACCESSIBILITY BUTTONS) -->
+    <!-- 11. FOOTER (EXACT HTML MATCH WITH TWITTER REMOVED) -->
     <!-- ------------------------------------------------------------- -->
-    <footer class="relative text-slate-300 pt-12 pb-6" style="background-color: var(--primary-color, #0d2348)">
-        
-        <!-- Floating Right Action Icons (Accessibility & WhatsApp Sesuai Figma) -->
-        <div class="fixed bottom-6 right-6 z-40 flex flex-col gap-2">
-            <a href="#" class="w-10 h-10 rounded-full bg-amber-500 text-slate-900 flex items-center justify-center font-bold shadow-lg hover:scale-110 transition">
-                ♿
-            </a>
-            <a href="https://wa.me/628123456789" target="_blank" rel="noopener" class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold shadow-lg hover:scale-110 transition">
-                💬
-            </a>
-        </div>
-
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-8 mb-10">
-            
-            <!-- Left Box Card & Back To Top -->
-            <div class="md:col-span-4 space-y-4">
-                <div class="bg-white rounded-lg p-6 shadow-md text-slate-900 border border-slate-200 min-h-[140px]">
-                    <div class="flex items-center gap-2 mb-2">
-                        <div class="w-6 h-6 rounded bg-blue-900 text-white flex items-center justify-center font-bold text-xs">S2</div>
-                        <span class="font-extrabold text-xs text-blue-950">SMAN 2 SITUBONDO</span>
-                    </div>
-                    <p class="text-[11px] text-slate-600 leading-relaxed">
-                        Jl. Anggrek No. 1 Patokan, Kab. Situbondo, Jawa Timur, Indonesia.
-                    </p>
+    <footer class="text-white pt-12 pb-6" style="background-color: var(--primary-color, #001c4d)">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <!-- Brand & Accreditation -->
+            <div class="text-center md:text-left flex flex-col items-center md:items-start">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded bg-white text-slate-900 flex items-center justify-center font-extrabold text-sm shadow">S2</div>
+                    <span class="font-extrabold text-white text-base tracking-wider">SMAN 2 SITUBONDO</span>
                 </div>
-                <a href="#" class="inline-flex items-center justify-center w-8 h-8 rounded bg-slate-900 text-white text-xs font-bold hover:bg-amber-500 transition shadow">
-                    ▲
-                </a>
+                <p class="text-xs text-blue-100 leading-relaxed max-w-xs">
+                    SMA Negeri 2 Situbondo berkomitmen mencetak generasi bangsa unggul, berakhlak mulia, dan berwawasan lingkungan.
+                </p>
             </div>
 
             <!-- Informasi Tentang -->
-            <div class="md:col-span-3 space-y-2">
-                <h5 class="font-extrabold text-white text-xs tracking-wider uppercase border-b border-blue-900 pb-2">Informasi Tentang</h5>
-                <ul class="space-y-1.5 text-xs text-slate-300">
-                    <li><a href="#profil" class="hover:text-amber-400 transition">&bull; Visi Misi & Tujuan</a></li>
-                    <li><a href="#profil" class="hover:text-amber-400 transition">&bull; Sejarah Singkat</a></li>
-                    <li><a href="#profil" class="hover:text-amber-400 transition">&bull; Struktur Organisasi</a></li>
-                    <li><a href="#civitas" class="hover:text-amber-400 transition">&bull; Data Pegawai</a></li>
-                    <li><a href="#siswa" class="hover:text-amber-400 transition">&bull; Data Siswa</a></li>
-                    <li><a href="#profil" class="hover:text-amber-400 transition">&bull; Sarana & Prasarana</a></li>
+            <div>
+                <h4 class="font-bold mb-4 text-lg border-b border-blue-500 pb-2 inline-block font-headline-md">Informasi Tentang</h4>
+                <ul class="space-y-2 text-sm text-blue-100">
+                    <li><a class="hover:text-white hover:underline" href="#profil">&bull; Visi Misi &amp; Tujuan</a></li>
+                    <li><a class="hover:text-white hover:underline" href="#profil">&bull; Sejarah Singkat</a></li>
+                    <li><a class="hover:text-white hover:underline" href="#profil">&bull; Struktur Organisasi</a></li>
+                    <li><a class="hover:text-white hover:underline" href="#civitas">&bull; Data Pegawai</a></li>
+                    <li><a class="hover:text-white hover:underline" href="#siswa">&bull; Data Siswa</a></li>
+                    <li><a class="hover:text-white hover:underline" href="#profil">&bull; Sarana &amp; Prasarana</a></li>
                 </ul>
             </div>
 
             <!-- Link Lainnya -->
-            <div class="md:col-span-2 space-y-2">
-                <h5 class="font-extrabold text-white text-xs tracking-wider uppercase border-b border-blue-900 pb-2">Link Lainnya</h5>
-                <ul class="space-y-1.5 text-xs text-slate-300">
-                    <li><a href="#elearning" class="hover:text-amber-400 transition">&bull; Elearning</a></li>
-                    <li><a href="#media" class="hover:text-amber-400 transition">&bull; Video Pembelajaran</a></li>
-                    <li><a href="#bukudigital" class="hover:text-amber-400 transition">&bull; Buku Digital</a></li>
-                    <li><a href="#literasi" class="hover:text-amber-400 transition">&bull; Literasi</a></li>
-                    <li><a href="#spmb" class="hover:text-amber-400 transition">&bull; SPMB</a></li>
+            <div>
+                <h4 class="font-bold mb-4 text-lg border-b border-blue-500 pb-2 inline-block font-headline-md">Link Lainnya</h4>
+                <ul class="space-y-2 text-sm text-blue-100">
+                    <li><a class="hover:text-white hover:underline" href="#elearning">&bull; Elearning</a></li>
+                    <li><a class="hover:text-white hover:underline" href="#media">&bull; Video Pembelajaran</a></li>
+                    <li><a class="hover:text-white hover:underline" href="#bukudigital">&bull; Buku Digital</a></li>
+                    <li><a class="hover:text-white hover:underline" href="#literasi">&bull; Literasi</a></li>
+                    <li><a class="hover:text-white hover:underline" href="#spmb">&bull; SPMB</a></li>
                 </ul>
             </div>
 
             <!-- Kontak Kami -->
-            <div class="md:col-span-3 space-y-2" id="contact">
-                <h5 class="font-extrabold text-white text-xs tracking-wider uppercase border-b border-blue-900 pb-2">Kontak Kami</h5>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                    Jl. Anggrek No. 1 Patokan, Kab. Situbondo, Indonesia.
-                </p>
-                <p class="text-xs text-slate-300">
-                    Telp. : (0338) 671618<br>
-                    Email : smadasit@yahoo.com
-                </p>
+            <div id="contact">
+                <h4 class="font-bold mb-4 text-lg border-b border-blue-500 pb-2 inline-block font-headline-md">Kontak Kami</h4>
+                <p class="text-sm text-blue-100 mb-2">Jl. Anggrek No. 1 Patokan, Kab. Situbondo - Indonesia</p>
+                <p class="text-sm text-blue-100 mb-2">Telp. : (0338) 671618</p>
+                <p class="text-sm text-blue-100">Email : smadasit@yahoo.com</p>
             </div>
         </div>
 
-        <!-- Footer Bottom Bar (Social Media Icons - X Button Removed) -->
-        <div class="max-w-7xl mx-auto px-6 border-t border-blue-900/60 pt-4 flex flex-col md:flex-row justify-between items-center gap-3 text-[11px] text-slate-400">
+        <!-- Copyright & Socials (Twitter/X Removed) -->
+        <div class="container mx-auto px-4 mt-4 flex flex-col md:flex-row justify-between items-center text-xs text-blue-300 border-t border-blue-800 pt-4">
             <p>Copyright &copy; 2026 SMA NEGERI 2 SITUBONDO</p>
-            <div class="flex items-center gap-3">
+            <div class="flex space-x-4 mt-4 md:mt-0 text-white text-lg">
                 <!-- Facebook -->
-                <a href="https://www.facebook.com/Sma.Negeri.2.Situbondo/" target="_blank" rel="noopener" class="w-7 h-7 rounded-full bg-blue-900 flex items-center justify-center text-white hover:bg-amber-500 transition text-xs">
-                    fb
-                </a>
-                <!-- Instagram -->
-                <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener" class="w-7 h-7 rounded-full bg-blue-900 flex items-center justify-center text-white hover:bg-amber-500 transition text-xs">
-                    ig
-                </a>
+                <a class="hover:text-amber-400 transition" href="https://www.facebook.com/Sma.Negeri.2.Situbondo/" target="_blank" rel="noopener" title="facebook"><i class="fab fa-facebook"></i></a>
                 <!-- YouTube -->
-                <a href="https://www.youtube.com/c/SMADAPRIMA/videos" target="_blank" rel="noopener" class="w-7 h-7 rounded-full bg-blue-900 flex items-center justify-center text-white hover:bg-amber-500 transition text-xs">
-                    yt
-                </a>
+                <a class="hover:text-amber-400 transition" href="https://www.youtube.com/c/SMADAPRIMA/videos" target="_blank" rel="noopener" title="youtube"><i class="fab fa-youtube"></i></a>
+                <!-- Instagram -->
+                <a class="hover:text-amber-400 transition" href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener" title="instagram"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
     </footer>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 12. POP-UP EVENT MODAL -->
+    <!-- FLOATING ACTION BUTTONS (ACCESSIBILITY, WHATSAPP, TOP) -->
+    <!-- ------------------------------------------------------------- -->
+    <div class="fixed bottom-4 right-4 flex flex-col space-y-2 z-50">
+        <a class="bg-amber-500 text-black p-3 rounded-full shadow-lg hover:bg-amber-600 flex items-center justify-center h-12 w-12 transition" href="#" title="Aksesibilitas">
+            <i class="fas fa-universal-access text-xl"></i>
+        </a>
+        <a class="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 flex items-center justify-center h-12 w-12 transition" href="https://wa.me/628123456789" target="_blank" rel="noopener" title="WhatsApp">
+            <i class="fab fa-whatsapp text-2xl"></i>
+        </a>
+    </div>
+    
+    <a class="fixed bottom-4 left-4 bg-black text-white p-3 rounded-lg shadow-lg hover:bg-gray-800 flex items-center justify-center h-10 w-10 z-50 transition" href="#" title="Ke Atas">
+        <i class="fas fa-chevron-up"></i>
+    </a>
+
+    <!-- ------------------------------------------------------------- -->
+    <!-- POP-UP EVENT MODAL -->
     <!-- ------------------------------------------------------------- -->
     @if($activePopup)
-        <div x-show="showPopup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm" x-transition>
-            <div class="bg-white rounded-xl overflow-hidden max-w-md w-full shadow-2xl relative border border-slate-200">
-                <button @click="showPopup = false" class="absolute top-3 right-3 w-7 h-7 rounded-full bg-slate-900/80 text-white flex items-center justify-center text-xs font-bold z-10 hover:bg-red-600 transition">
-                    &times;
+        <div x-show="showPopup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm" x-transition>
+            <div class="bg-white rounded-xl overflow-hidden max-w-md w-full shadow-2xl relative border border-gray-200">
+                <button @click="showPopup = false" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-xs font-bold z-10 hover:bg-red-600 transition">
+                    <i class="fas fa-times"></i>
                 </button>
                 @if($activePopup->image_url)
                     <img src="{{ $activePopup->image_url }}" alt="{{ $activePopup->title }}" class="w-full h-44 object-cover">
                 @endif
                 <div class="p-5 space-y-2">
-                    <h4 class="font-extrabold text-slate-900 text-sm leading-tight uppercase">{{ $activePopup->title }}</h4>
-                    <p class="text-xs text-slate-600 leading-relaxed">{{ $activePopup->description }}</p>
-                    <button @click="showPopup = false" class="w-full py-2 rounded font-extrabold text-xs text-white uppercase tracking-wider shadow transition" style="background-color: var(--primary-color, #0d2348)">
+                    <h4 class="font-bold text-gray-900 text-base leading-tight uppercase font-headline-md">{{ $activePopup->title }}</h4>
+                    <p class="text-xs text-gray-600 leading-relaxed">{{ $activePopup->description }}</p>
+                    <button @click="showPopup = false" class="w-full py-2 rounded-lg font-bold text-xs text-white uppercase tracking-wider transition shadow" style="background-color: var(--primary-color, #163269)">
                         Tutup
                     </button>
                 </div>
