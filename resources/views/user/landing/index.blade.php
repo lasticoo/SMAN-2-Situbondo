@@ -29,6 +29,7 @@
 
 <div x-data="{ 
     activeTab: 'siswa', 
+    siswaSubTab: 'total',
     showPopup: {{ $activePopup ? 'true' : 'false' }}, 
     activeSlide: 0, 
     totalSlides: {{ count($banners) > 0 ? count($banners) : 1 }} 
@@ -54,60 +55,52 @@
     </div>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 2. MAIN HEADER NAVBAR (EXACT FIGMA MATCH) -->
+    <!-- 2. MAIN HEADER NAVBAR (PERINTAH 1: LOGO ATAS DIHAPUS) -->
     <!-- ------------------------------------------------------------- -->
     <header class="bg-white py-4 shadow-sm sticky top-0 z-50 border-b border-gray-100">
         <div class="container mx-auto px-4 flex justify-between items-center">
-            <!-- Logo -->
-            <a class="flex items-center gap-3" href="{{ route('home') }}">
-                <div class="w-11 h-11 rounded-full flex items-center justify-center font-black text-white text-base shadow-md bg-navy-main">
-                    S2
-                </div>
-                <div>
-                    <h1 class="font-extrabold text-base tracking-tight leading-none text-gray-900 font-headline uppercase">SMA NEGERI 2</h1>
-                    <span class="text-[10px] font-bold tracking-widest uppercase text-gray-500">SITUBONDO</span>
-                </div>
-            </a>
+            <!-- Navigation Menu (Logo Dihapus Sesuai Instruksi Perintah 1) -->
+            <nav class="w-full flex items-center justify-between text-sm font-semibold text-gray-700">
+                <div class="hidden md:flex space-x-6">
+                    <a class="text-blue-900 font-bold border-b-2 border-blue-900 pb-0.5" href="{{ route('home') }}">BERANDA</a>
+                    
+                    <div class="relative group">
+                        <button class="hover:text-blue-900 flex items-center uppercase py-1">PROFIL <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i></button>
+                        <div class="absolute left-0 mt-2 w-52 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
+                            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#profil">Visi, Misi &amp; Tujuan</a>
+                            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#profil">Sejarah Singkat</a>
+                            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#profil">Struktur Organisasi</a>
+                        </div>
+                    </div>
 
-            <!-- Navigation -->
-            <nav class="hidden md:flex space-x-6 text-sm font-semibold text-gray-700">
-                <a class="text-blue-900 font-bold border-b-2 border-blue-900 pb-0.5" href="{{ route('home') }}">BERANDA</a>
+                    <a class="hover:text-blue-900 flex items-center" href="#tentang">TENTANG KAMI</a>
+
+                    <div class="relative group">
+                        <button class="hover:text-blue-900 flex items-center uppercase py-1">CIVITAS AKADEMIK <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i></button>
+                        <div class="absolute left-0 mt-2 w-52 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
+                            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#civitas">Data Pegawai</a>
+                            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#siswa">Data Siswa</a>
+                        </div>
+                    </div>
+
+                    <a class="hover:text-blue-900 flex items-center" href="#pengumuman">PENGUMUMAN</a>
+
+                    <div class="relative group">
+                        <button class="hover:text-blue-900 flex items-center uppercase py-1">MEDIA <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i></button>
+                        <div class="absolute left-0 mt-2 w-52 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
+                            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#media">Galeri</a>
+                            <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#media">Video</a>
+                        </div>
+                    </div>
+
+                    <a class="hover:text-blue-900 flex items-center" href="#berita">BERITA</a>
+                    <a class="hover:text-blue-900 flex items-center" href="#contact">CONTACT</a>
+                </div>
                 
-                <div class="relative group">
-                    <button class="hover:text-blue-900 flex items-center uppercase py-1">PROFIL <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i></button>
-                    <div class="absolute left-0 mt-2 w-52 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#profil">Visi, Misi &amp; Tujuan</a>
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#profil">Sejarah Singkat</a>
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#profil">Struktur Organisasi</a>
-                    </div>
-                </div>
-
-                <a class="hover:text-blue-900 flex items-center" href="#tentang">TENTANG KAMI</a>
-
-                <div class="relative group">
-                    <button class="hover:text-blue-900 flex items-center uppercase py-1">CIVITAS AKADEMIK <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i></button>
-                    <div class="absolute left-0 mt-2 w-52 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#civitas">Data Pegawai</a>
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#siswa">Data Siswa</a>
-                    </div>
-                </div>
-
-                <a class="hover:text-blue-900 flex items-center" href="#pengumuman">PENGUMUMAN</a>
-
-                <div class="relative group">
-                    <button class="hover:text-blue-900 flex items-center uppercase py-1">MEDIA <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i></button>
-                    <div class="absolute left-0 mt-2 w-52 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#media">Galeri</a>
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-900" href="#media">Video</a>
-                    </div>
-                </div>
-
-                <a class="hover:text-blue-900 flex items-center" href="#berita">BERITA</a>
-                <a class="hover:text-blue-900 flex items-center" href="#contact">CONTACT</a>
-                <a class="text-blue-900 font-extrabold flex items-center" href="#spmb">SPMB</a>
+                <a class="text-blue-900 font-extrabold flex items-center uppercase ml-auto" href="#spmb">SPMB</a>
             </nav>
 
-            <button class="md:hidden text-gray-700">
+            <button class="md:hidden text-gray-700 ml-4">
                 <i class="fas fa-bars text-xl"></i>
             </button>
         </div>
@@ -174,7 +167,7 @@
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 4. QUICK LINKS GRID (PROFIL SEKOLAH 5 BUTTONS FIGMA) -->
+    <!-- 4. QUICK LINKS GRID (PERINTAH 2: WARNA IKON STATIS PUTIH) -->
     <!-- ------------------------------------------------------------- -->
     <section class="py-10 bg-white relative -mt-16 z-20 mx-4 md:mx-auto md:max-w-4xl rounded-xl shadow-xl border-t-4 border-blue-900" id="profil">
         <div class="text-center mb-8">
@@ -182,30 +175,30 @@
             <div class="w-16 h-1 bg-blue-900 mx-auto mt-2 rounded-full"></div>
         </div>
 
-        <!-- Row 1: 3 Buttons -->
+        <!-- Row 1: 3 Buttons (Ikon Statis Putih text-white Sesuai Perintah 2) -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 px-8 pb-4">
             <a class="bg-navy-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md" href="#profil">
-                <i class="fas fa-eye text-3xl mb-3 text-gold-main"></i>
+                <i class="fas fa-eye text-3xl mb-3 text-white"></i>
                 <span class="font-semibold text-sm">Visi Misi</span>
             </a>
             <a class="bg-navy-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md" href="#profil">
-                <i class="fas fa-sitemap text-3xl mb-3 text-gold-main"></i>
+                <i class="fas fa-sitemap text-3xl mb-3 text-white"></i>
                 <span class="font-semibold text-sm">Struktur Organisasi</span>
             </a>
             <a class="bg-navy-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md" href="#siswa">
-                <i class="fas fa-users text-3xl mb-3 text-gold-main"></i>
+                <i class="fas fa-users text-3xl mb-3 text-white"></i>
                 <span class="font-semibold text-sm">Data Siswa</span>
             </a>
         </div>
 
-        <!-- Row 2: 2 Buttons Centered -->
+        <!-- Row 2: 2 Buttons Centered (Ikon Statis Putih text-white Sesuai Perintah 2) -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-8 pb-4 max-w-xl mx-auto">
             <a class="bg-navy-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md" href="#elearning">
-                <i class="fas fa-laptop text-3xl mb-3 text-gold-main"></i>
+                <i class="fas fa-laptop text-3xl mb-3 text-white"></i>
                 <span class="font-semibold text-sm">E-Learning</span>
             </a>
             <a class="bg-navy-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md" href="#bukudigital">
-                <i class="fas fa-book text-3xl mb-3 text-gold-main"></i>
+                <i class="fas fa-book text-3xl mb-3 text-white"></i>
                 <span class="font-semibold text-sm">Buku Digital</span>
             </a>
         </div>
@@ -299,17 +292,18 @@
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 7. SMADA FACT SECTION (EXACT FIGMA MATCH + INTERACTIVE TABS) -->
+    <!-- 7. SMADA FACT SECTION (PERINTAH 5: 4 FILTER SISWA + DINAMIS COLOR) -->
     <!-- ------------------------------------------------------------- -->
     <section class="py-12 text-white relative bg-navy-main">
         <div class="absolute inset-0 bg-navy-deep bg-opacity-70"></div>
         <div class="container mx-auto px-4 relative z-10 text-center">
             
-            <div class="inline-block bg-white text-blue-900 font-bold py-2 px-12 rounded-full mb-8 text-xl shadow">
+            <div class="inline-block bg-white text-blue-900 font-bold py-2 px-12 rounded-full mb-6 text-xl shadow">
                 SMADA <span class="text-gold-main">FACT</span>
             </div>
 
-            <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <!-- Primary Tabs -->
+            <div class="flex flex-wrap justify-center gap-3 mb-4">
                 <button @click="activeTab = 'siswa'" :class="activeTab === 'siswa' ? 'bg-gold-main text-slate-950 border-gold-main' : 'bg-transparent text-white border-white'" class="px-6 py-2 rounded-full text-sm font-semibold border transition">
                     PESERTA DIDIK
                 </button>
@@ -321,32 +315,52 @@
                 </button>
             </div>
 
-            <!-- Tab Content: PESERTA DIDIK -->
-            <div x-show="activeTab === 'siswa'" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <div class="bg-black bg-opacity-50 border border-gold-main rounded-lg p-6 shadow-xl">
-                    <div class="text-4xl font-bold text-gold-main mb-2 font-headline">{{ $studentStats['total'] }}</div>
-                    <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Total Peserta Didik</div>
+            <!-- Sub-Filter Siswa (Perintah 5: 4 Filter Siswa) -->
+            <div x-show="activeTab === 'siswa'" class="flex flex-wrap justify-center gap-2 mb-8">
+                <button @click="siswaSubTab = 'total'" :class="siswaSubTab === 'total' ? 'bg-white text-slate-900 font-bold' : 'bg-white/20 text-white'" class="px-4 py-1 rounded-full text-xs transition">
+                    Total Seluruh Siswa
+                </button>
+                <button @click="siswaSubTab = 'x'" :class="siswaSubTab === 'x' ? 'bg-white text-slate-900 font-bold' : 'bg-white/20 text-white'" class="px-4 py-1 rounded-full text-xs transition">
+                    Siswa Kelas X
+                </button>
+                <button @click="siswaSubTab = 'xi'" :class="siswaSubTab === 'xi' ? 'bg-white text-slate-900 font-bold' : 'bg-white/20 text-white'" class="px-4 py-1 rounded-full text-xs transition">
+                    Siswa Kelas XI
+                </button>
+                <button @click="siswaSubTab = 'xii'" :class="siswaSubTab === 'xii' ? 'bg-white text-slate-900 font-bold' : 'bg-white/20 text-white'" class="px-4 py-1 rounded-full text-xs transition">
+                    Siswa Kelas XII
+                </button>
+            </div>
+
+            <!-- Tab Content: PESERTA DIDIK (Interactive Breakdown 4 Cards) -->
+            <div x-show="activeTab === 'siswa'" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+                <div :class="siswaSubTab === 'total' ? 'border-2 border-gold-main bg-black/70 scale-105' : 'border border-gold-main/50 bg-black/40'" class="rounded-lg p-5 transition duration-300 shadow-xl">
+                    <div class="text-3xl font-bold text-gold-main mb-1 font-headline">{{ $studentStats['total'] }}</div>
+                    <div class="text-xs font-medium uppercase tracking-wider text-slate-200">Total Seluruh Siswa</div>
                 </div>
-                <div class="bg-black bg-opacity-50 border border-gold-main rounded-lg p-6 shadow-xl">
-                    <div class="text-4xl font-bold text-gold-main mb-2 font-headline">{{ $studentStats['kelas_10'] }}</div>
-                    <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas X</div>
+                <div :class="siswaSubTab === 'x' ? 'border-2 border-gold-main bg-black/70 scale-105' : 'border border-gold-main/50 bg-black/40'" class="rounded-lg p-5 transition duration-300 shadow-xl">
+                    <div class="text-3xl font-bold text-gold-main mb-1 font-headline">{{ $studentStats['kelas_10'] }}</div>
+                    <div class="text-xs font-medium uppercase tracking-wider text-slate-200">Siswa Kelas X</div>
                 </div>
-                <div class="bg-black bg-opacity-50 border border-gold-main rounded-lg p-6 shadow-xl">
-                    <div class="text-4xl font-bold text-gold-main mb-2 font-headline">{{ $studentStats['kelas_11'] + $studentStats['kelas_12'] }}</div>
-                    <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas XI &amp; XII</div>
+                <div :class="siswaSubTab === 'xi' ? 'border-2 border-gold-main bg-black/70 scale-105' : 'border border-gold-main/50 bg-black/40'" class="rounded-lg p-5 transition duration-300 shadow-xl">
+                    <div class="text-3xl font-bold text-gold-main mb-1 font-headline">{{ $studentStats['kelas_11'] }}</div>
+                    <div class="text-xs font-medium uppercase tracking-wider text-slate-200">Siswa Kelas XI</div>
+                </div>
+                <div :class="siswaSubTab === 'xii' ? 'border-2 border-gold-main bg-black/70 scale-105' : 'border border-gold-main/50 bg-black/40'" class="rounded-lg p-5 transition duration-300 shadow-xl">
+                    <div class="text-3xl font-bold text-gold-main mb-1 font-headline">{{ $studentStats['kelas_12'] }}</div>
+                    <div class="text-xs font-medium uppercase tracking-wider text-slate-200">Siswa Kelas XII</div>
                 </div>
             </div>
 
             <!-- Tab Content: GURU -->
-            <div x-show="activeTab === 'guru'" class="max-w-md mx-auto bg-black bg-opacity-50 border border-gold-main rounded-lg p-8 shadow-xl">
+            <div x-show="activeTab === 'guru'" class="max-w-md mx-auto bg-black/50 border border-gold-main rounded-lg p-8 shadow-xl">
                 <div class="text-5xl font-bold text-gold-main mb-2 font-headline">{{ $employeeStats['guru'] }}</div>
-                <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Guru</div>
+                <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Guru (Tenaga Pendidik)</div>
             </div>
 
             <!-- Tab Content: STAFF -->
-            <div x-show="activeTab === 'staf'" class="max-w-md mx-auto bg-black bg-opacity-50 border border-gold-main rounded-lg p-8 shadow-xl">
+            <div x-show="activeTab === 'staf'" class="max-w-md mx-auto bg-black/50 border border-gold-main rounded-lg p-8 shadow-xl">
                 <div class="text-5xl font-bold text-gold-main mb-2 font-headline">{{ $employeeStats['staf'] }}</div>
-                <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Staff</div>
+                <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Staff (Tenaga Kependidikan)</div>
             </div>
 
         </div>
@@ -426,7 +440,7 @@
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 9. ATMOSFER SEKOLAH (INSTAGRAM FEED REAL TOP 10 CACHED POSTS) -->
+    <!-- 9. ATMOSFER SEKOLAH (PERINTAH 3: INSTAGRAM REAL FEED 10 POSTS) -->
     <!-- ------------------------------------------------------------- -->
     <section class="py-16 bg-gray-900 text-white relative overflow-hidden" id="media">
         <div class="container mx-auto px-4 relative z-10">
@@ -435,10 +449,11 @@
                 <p class="text-xs text-gray-400 mt-1 font-mono">@sman2situbondoofficial</p>
             </div>
 
-            <div class="flex justify-center items-center space-x-4 overflow-x-auto pb-8 scrollbar-thin scrollbar-thumb-amber-500">
+            <!-- Horizontal Carousel Frame - 10 Posts -->
+            <div class="flex items-center space-x-4 overflow-x-auto pb-8 scrollbar-thin scrollbar-thumb-amber-500 max-w-6xl mx-auto">
                 @if(!empty($instagramPosts) && count($instagramPosts) > 0)
                     @foreach($instagramPosts as $idx => $photoUrl)
-                        <div class="flex-shrink-0 bg-gray-800 rounded-xl overflow-hidden shadow-xl transition transform hover:scale-105 border {{ $idx === 1 ? 'w-80 h-96 border-4 border-white z-10 shadow-2xl' : 'w-64 h-80 border-gray-700' }}">
+                        <div class="flex-shrink-0 rounded-xl overflow-hidden shadow-xl transition transform hover:scale-105 border {{ $idx === 1 ? 'w-80 h-96 border-4 border-white z-10 shadow-2xl' : 'w-64 h-80 border-gray-700 bg-gray-800' }}">
                             <img alt="Atmosfer Sekolah {{ $idx + 1 }}" class="w-full h-full object-cover" src="{{ $photoUrl }}">
                         </div>
                     @endforeach
