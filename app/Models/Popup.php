@@ -13,11 +13,13 @@ class Popup extends Model
         'start_date',
         'end_date',
         'is_active',
+        'sort_order',
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
         'is_active' => 'boolean',
+        'sort_order' => 'integer',
     ];
 }
