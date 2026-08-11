@@ -95,8 +95,8 @@ class LandingPageController extends Controller
             'staf' => $stafCount,
         ];
 
-        // 8. Fetch Instagram Feed (Atmosfer Sekolah - Top 10 Posts Real Cache)
-        $instagramPosts = Cache::remember('instagram_feed_sman2situbondo', 3600, function () {
+        // 8. Real Live Fetch & Cache for Instagram Posts (@sman2situbondoofficial / 10 Posts)
+        $instagramPosts = Cache::remember('instagram_feed_sman2situbondo_live_v5', 300, function () {
             return $this->fetchInstagramFeedPosts();
         });
 
@@ -117,48 +117,68 @@ class LandingPageController extends Controller
     }
 
     /**
-     * Helper method to fetch top 10 Instagram posts from official account
+     * Real Instagram scraping engine for @sman2situbondoofficial (10 Photos, FIFO Slide logic)
      */
     private function fetchInstagramFeedPosts(): array
     {
         $posts = [];
         try {
-            $response = Http::timeout(5)
+            $response = Http::timeout(8)
                 ->withHeaders([
-                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                    'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                    'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+                    'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+                    'Accept-Language' => 'en-US,en;q=0.9',
+                    'Cache-Control' => 'no-cache',
+                    'Sec-Ch-Ua' => '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+                    'Sec-Fetch-Dest' => 'document',
+                    'Sec-Fetch-Mode' => 'navigate',
+                    'Sec-Fetch-Site' => 'none',
+                    'Sec-Fetch-User' => '?1',
+                    'Upgrade-Insecure-Requests' => '1',
                 ])
                 ->get('https://www.instagram.com/sman2situbondoofficial/');
 
             if ($response->successful()) {
                 $html = $response->body();
-                preg_match_all('/"(https:\/\/scontent[^"]+)"/', $html, $matches);
-                if (!empty($matches[1])) {
-                    $uniqueUrls = array_unique($matches[1]);
-                    foreach ($uniqueUrls as $url) {
-                        $cleanUrl = str_replace('\\u0026', '&', $url);
-                        $posts[] = $cleanUrl;
-                        if (count($posts) >= 10) break;
+
+                // 1. Extract all img src tags containing post media
+                preg_match_all('/<img[^>]+src="([^"]+)"/i', $html, $imgMatches);
+                if (!empty($imgMatches[1])) {
+                    foreach ($imgMatches[1] as $src) {
+                        $clean = str_replace(['\\u0026', '&amp;', '\\/'], ['&', '&', '/'], $src);
+                        if (str_contains($clean, 'scontent') && !str_contains($clean, 's150x150')) {
+                            if (!in_array($clean, $posts)) {
+                                $posts[] = $clean;
+                            }
+                            if (count($posts) >= 10) break;
+                        }
+                    }
+                }
+
+                // 2. Fallback regex to capture scontent media links in script payload
+                if (count($posts) < 10) {
+                    preg_match_all('#https?:\\\\?/\\\\?/scontent[^\s"\'<>]+#i', $html, $rawMatches);
+                    if (!empty($rawMatches[0])) {
+                        foreach ($rawMatches[0] as $raw) {
+                            $clean = str_replace(['\\u0026', '&amp;', '\\/', '\\"'], ['&', '&', '/', ''], $raw);
+                            if (str_contains($clean, 'scontent') && !str_contains($clean, 's150x150')) {
+                                if (!in_array($clean, $posts)) {
+                                    $posts[] = $clean;
+                                }
+                                if (count($posts) >= 10) break;
+                            }
+                        }
                     }
                 }
             }
         } catch (\Exception $e) {
-            // Handled gracefully
+            // Silently handle
         }
 
-        // Guarantee 10 photo assets returned if Instagram blocks direct cURL
+        // Fallback images if network/IG blocks direct request
         if (count($posts) < 10) {
             $fallbackAssets = [
-                '/build/assets/banner smada.png',
-                '/build/assets/kepala sekolah smada.png',
-                '/build/assets/banner smada.png',
-                '/build/assets/kepala sekolah smada.png',
-                '/build/assets/banner smada.png',
-                '/build/assets/kepala sekolah smada.png',
-                '/build/assets/banner smada.png',
-                '/build/assets/kepala sekolah smada.png',
-                '/build/assets/banner smada.png',
-                '/build/assets/kepala sekolah smada.png',
+              
             ];
             $posts = array_merge($posts, array_slice($fallbackAssets, 0, 10 - count($posts)));
         }
