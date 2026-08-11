@@ -26,4 +26,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Developer Admin dapat langsung mendaftarkan route untuk masing-masing fitur di bawah ini:
+
+use App\Http\Controllers\Admin\AuthController;
+
+Route::withoutMiddleware(['auth:admin', 'role:admin'])->group(function () {
+    Route::get('/login', [AuthController::class, 'create'])->name('admin.login');
+    Route::post('/login', [AuthController::class, 'store']);
+});
+
+Route::post('/logout', [AuthController::class, 'destroy'])->name('admin.logout');
 // Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
