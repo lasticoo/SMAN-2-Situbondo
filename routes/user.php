@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\LandingPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +21,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Developer User dapat langsung mendaftarkan route untuk masing-masing fitur di bawah ini:
-// Route::get('/', [App\Http\Controllers\User\LandingPageController::class, 'index'])->name('home');
+// US-01 Landing Page Utama
+Route::get('/', [LandingPageController::class, 'index'])->name('home');
