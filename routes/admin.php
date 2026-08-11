@@ -27,3 +27,35 @@ use Illuminate\Support\Facades\Route;
 
 // Developer Admin dapat langsung mendaftarkan route untuk masing-masing fitur di bawah ini:
 // Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+
+// =============================================================================
+// AD-01 — Manajemen Banner Web User
+// =============================================================================
+Route::resource('banners', App\Http\Controllers\Admin\BannerController::class)
+    ->except(['show'])
+    ->names([
+        'index'   => 'admin.banners.index',
+        'create'  => 'admin.banners.create',
+        'store'   => 'admin.banners.store',
+        'edit'    => 'admin.banners.edit',
+        'update'  => 'admin.banners.update',
+        'destroy' => 'admin.banners.destroy',
+    ]);
+Route::patch('banners/{banner}/toggle-active', [App\Http\Controllers\Admin\BannerController::class, 'toggleActive'])
+    ->name('admin.banners.toggleActive');
+
+// =============================================================================
+// AD-02 — Manajemen Pop-up Event
+// =============================================================================
+Route::resource('popups', App\Http\Controllers\Admin\PopupController::class)
+    ->except(['show'])
+    ->names([
+        'index'   => 'admin.popups.index',
+        'create'  => 'admin.popups.create',
+        'store'   => 'admin.popups.store',
+        'edit'    => 'admin.popups.edit',
+        'update'  => 'admin.popups.update',
+        'destroy' => 'admin.popups.destroy',
+    ]);
+Route::patch('popups/{popup}/toggle-active', [App\Http\Controllers\Admin\PopupController::class, 'toggleActive'])
+    ->name('admin.popups.toggleActive');
