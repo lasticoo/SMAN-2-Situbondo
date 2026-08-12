@@ -23,3 +23,4 @@ use App\Http\Controllers\User\LandingPageController;
 
 // US-01 Landing Page Utama
 Route::get('/', [LandingPageController::class, 'index'])->name('home');
+Route::get('/instagram-proxy', [LandingPageController::class, 'proxyInstagramImage'])->name('instagram.proxy');

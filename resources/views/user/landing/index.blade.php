@@ -4,7 +4,13 @@
 @php
     $getImageUrl = function (?string $path, string $default = '/build/assets/banner smada.png'): string {
         if (empty($path)) return $default;
-        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://', '/'])) {
+        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+            if (\Illuminate\Support\Str::contains($path, ['fbcdn.net', 'cdninstagram.com', 'instagram.com'])) {
+                return route('instagram.proxy', ['url' => base64_encode($path)]);
+            }
+            return $path;
+        }
+        if (\Illuminate\Support\Str::startsWith($path, '/')) {
             return $path;
         }
         return \Illuminate\Support\Facades\Storage::url($path);
@@ -138,9 +144,7 @@
     <div class="bg-gray-100 py-1.5 text-xs border-b border-gray-200">
         <div class="container mx-auto px-4 flex flex-wrap justify-between items-center gap-2">
             <div class="flex items-center space-x-2">
-                <span class="inline-block w-4 h-3 bg-red-600 border border-slate-300 shadow-sm"></span>
-                <span class="font-medium text-gray-700">Indonesian <i class="fas fa-chevron-down ml-1 text-[10px] text-gray-500"></i></span>
-            </div>
+                       </div>
             <div class="flex flex-wrap space-x-3 sm:space-x-4 items-center font-medium text-gray-700 text-[11px] sm:text-xs">
                 <a class="hover-text-primary transition hidden sm:inline" href="mailto:smadasit@yahoo.com">smadasit@yahoo.com</a>
                 <a class="hover-text-primary transition" href="tel:0338671618">(0338) 671618</a>
@@ -262,14 +266,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        @endif
-
-        @if(count($banners) > 1)
-            <div class="absolute bottom-12 sm:bottom-16 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
-                @foreach($banners as $index => $b)
-                    <button @click="activeSlide = {{ $index }}" class="w-3 h-3 rounded-full transition" :class="activeSlide === {{ $index }} ? 'bg-theme-secondary w-8' : 'bg-white/50'"></button>
-                @endforeach
             </div>
         @endif
     </section>
@@ -595,7 +591,7 @@
             <div class="flex items-center space-x-3.5 sm:space-x-4 overflow-x-auto pb-6 sm:pb-8 scrollbar-thin scrollbar-thumb-theme-secondary max-w-6xl mx-auto" data-aos="zoom-in-up" data-aos-duration="900" style="-webkit-overflow-scrolling: touch;">
                 @if(!empty($instagramPosts) && count($instagramPosts) > 0)
                     @foreach($instagramPosts as $idx => $photoUrl)
-                        <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="block flex-shrink-0 rounded-xl overflow-hidden shadow-xl transition transform cursor-pointer border spring-hover {{ $idx === 1 ? 'w-72 sm:w-80 h-80 sm:h-96 border-4 border-theme-secondary z-10 shadow-2xl' : 'w-56 sm:w-64 h-72 sm:h-80 border-2 border-white/20 hover:border-theme-secondary bg-black/40' }}" title="Klik untuk membuka postingan di Instagram @sman2situbondoofficial">
+                        <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="block flex-shrink-0 w-56 sm:w-64 h-72 sm:h-80 rounded-xl overflow-hidden shadow-xl transition transform cursor-pointer border-2 border-white/20 hover:border-theme-secondary bg-black/40 spring-hover" title="Klik untuk membuka postingan di Instagram @sman2situbondoofficial">
                             <img alt="Atmosfer Sekolah {{ $idx + 1 }}" class="w-full h-full object-cover" src="{{ $getImageUrl($photoUrl) }}" referrerpolicy="no-referrer">
                         </a>
                     @endforeach
@@ -603,7 +599,7 @@
                     <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-56 sm:w-64 h-72 sm:h-80 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-lg border-2 border-white/20 hover:border-theme-secondary block spring-hover">
                         <img alt="Atmosfer 1" class="w-full h-full object-cover" src="/build/assets/banner smada.png">
                     </a>
-                    <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-72 sm:w-80 h-80 sm:h-96 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-2xl border-4 border-theme-secondary z-10 block spring-hover">
+                    <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-56 sm:w-64 h-72 sm:h-80 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-lg border-2 border-white/20 hover:border-theme-secondary block spring-hover">
                         <img alt="Atmosfer 2 Poster" class="w-full h-full object-cover" src="/build/assets/banner smada.png">
                     </a>
                     <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-56 sm:w-64 h-72 sm:h-80 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-lg border-2 border-white/20 hover:border-theme-secondary block spring-hover">
@@ -659,15 +655,10 @@
             </div>
 
             <!-- Link Lainnya -->
-            <div data-aos="fade-up" data-aos-delay="300">
-                <h4 class="font-bold mb-3 sm:mb-4 text-xs sm:text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Link Lainnya</h4>
-                <ul class="space-y-2 sm:space-y-2.5 text-xs text-slate-200 font-medium">
-                    <li><a class="hover-text-secondary transition hover:underline" href="#elearning">&bull; Elearning</a></li>
-                    <li><a class="hover-text-secondary transition hover:underline" href="#media">&bull; Video Pembelajaran</a></li>
-                    <li><a class="hover-text-secondary transition hover:underline" href="#bukudigital">&bull; Buku Digital</a></li>
-                    <li><a class="hover-text-secondary transition hover:underline" href="#literasi">&bull; Literasi</a></li>
-                    <li><a class="hover-text-secondary transition hover:underline" href="#spmb">&bull; SPMB</a></li>
-                </ul>
+            <div data-aos="fade-up" data-aos-delay="200">
+                <h4 class="font-bold mb-3 sm:mb-4 text-xs sm:text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Aplikasi Kami</h4>
+                
+               
             </div>
 
             <!-- Kontak Kami -->
@@ -727,7 +718,9 @@
                 @foreach($popupsList as $pIdx => $popupItem)
                     <div x-show="popupIndex === {{ $pIdx }}" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
                         @if($popupItem->image_url)
-                            <img src="{{ $getImageUrl($popupItem->image_url) }}" alt="{{ $popupItem->title }}" class="w-full h-44 sm:h-48 object-cover">
+                            <div class="w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-100 p-2 sm:p-3">
+                                <img src="{{ $getImageUrl($popupItem->image_url) }}" alt="{{ $popupItem->title }}" class="w-full h-auto max-h-[300px] sm:max-h-[360px] object-contain rounded-lg">
+                            </div>
                         @endif
                         <div class="p-4 sm:p-5 space-y-3">
                             <h4 class="font-bold text-gray-900 text-sm sm:text-base leading-tight uppercase font-headline">{{ $popupItem->title }}</h4>
