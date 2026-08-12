@@ -11,6 +11,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
 
+<!-- AOS (Animate On Scroll) Library CDN for Buttery Smooth 60FPS Animations (13KB Lightweight) -->
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
 <style>
   :root {
     --primary-main: {{ $colorSetting?->primary_color ?? '#001c4d' }};
@@ -19,7 +23,8 @@
     --primary-light: color-mix(in srgb, var(--primary-main) 12%, white);
     --secondary-hover: color-mix(in srgb, var(--secondary-gold) 85%, black);
   }
-  body { font-family: 'Inter', sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; }
   .font-headline { font-family: 'Hanken Grotesk', sans-serif; }
   .font-serif-italic { font-family: 'Playfair Display', serif; }
 
@@ -40,6 +45,52 @@
 
   .hover-text-secondary:hover { color: var(--secondary-gold) !important; }
   .hover-bg-secondary:hover { background-color: var(--secondary-gold) !important; }
+
+  /* ========================================================================== */
+  /* HIGH-END SPRING PHYSICS & ULTRA-SMOOTH GPU ANIMATIONS                     */
+  /* ========================================================================== */
+  @media (prefers-reduced-motion: no-preference) {
+    /* Ultra-Smooth Spring Physics Hover Scaling */
+    .spring-hover {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease !important;
+      will-change: transform, box-shadow;
+    }
+    .spring-hover:hover {
+      transform: translateY(-6px) scale(1.02) !important;
+      box-shadow: 0 20px 30px -10px rgba(0, 28, 77, 0.2), 0 10px 15px -5px rgba(245, 158, 11, 0.15) !important;
+    }
+
+    /* Image Zoom Reveal Container */
+    .img-zoom-box {
+      overflow: hidden;
+    }
+    .img-zoom-box img {
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      will-change: transform;
+    }
+    .img-zoom-box:hover img {
+      transform: scale(1.08) !important;
+    }
+
+    /* Floating Micro-Animation */
+    @keyframes subtle-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-float {
+      animation: subtle-float 4.5s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    /* Pulse Glow Ring */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+      50% { box-shadow: 0 0 22px 6px rgba(245, 158, 11, 0.6); }
+    }
+    .glow-pulse {
+      animation: pulse-glow 3s infinite;
+    }
+  }
 </style>
 
 <div x-data="{ 
@@ -49,33 +100,36 @@
     popupIndex: 0,
     activeSlide: 0, 
     totalSlides: {{ count($banners) > 0 ? count($banners) : 1 }} 
-}" class="min-h-screen font-sans antialiased text-gray-800 bg-gray-50">
+}" class="min-h-screen font-sans antialiased text-gray-800 bg-gray-50 overflow-x-hidden">
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 1. TOP UTILITY BAR (EXACT FIGMA MATCH WITH DYNAMIC THEME) -->
+    <!-- 1. TOP UTILITY BAR (RESPONSIVE MULTI-DEVICE SUPPORT) -->
     <!-- ------------------------------------------------------------- -->
-    <div class="bg-gray-100 py-1 text-xs border-b border-gray-200">
-        <div class="container mx-auto px-4 flex justify-between items-center">
+    <div class="bg-gray-100 py-1.5 text-xs border-b border-gray-200">
+        <div class="container mx-auto px-4 flex flex-wrap justify-between items-center gap-2">
             <div class="flex items-center space-x-2">
                 <span class="inline-block w-4 h-3 bg-red-600 border border-slate-300 shadow-sm"></span>
                 <span class="font-medium text-gray-700">Indonesian <i class="fas fa-chevron-down ml-1 text-[10px] text-gray-500"></i></span>
             </div>
-            <div class="flex space-x-4 items-center font-medium text-gray-700">
-                <a class="hover-text-primary transition" href="mailto:smadasit@yahoo.com">smadasit@yahoo.com</a>
+            <div class="flex flex-wrap space-x-3 sm:space-x-4 items-center font-medium text-gray-700 text-[11px] sm:text-xs">
+                <a class="hover-text-primary transition hidden sm:inline" href="mailto:smadasit@yahoo.com">smadasit@yahoo.com</a>
                 <a class="hover-text-primary transition" href="tel:0338671618">(0338) 671618</a>
                 <a class="hover-text-primary transition" href="#alumni">Alumni</a>
                 <a class="hover-text-primary transition" href="#siklus">SIKLUS</a>
-                <a class="bg-theme-secondary text-slate-950 px-3.5 py-1 font-bold rounded-lg shadow-sm hover-bg-secondary transition" href="#mysmada">MySmada</a>
+                <a class="bg-theme-secondary text-slate-950 px-2.5 sm:px-3.5 py-0.5 sm:py-1 font-bold rounded-lg shadow-sm hover-bg-secondary transition spring-hover" href="#mysmada">MySmada</a>
             </div>
         </div>
     </div>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 2. MAIN HEADER NAVBAR (EXACT MATCH WITH DYNAMIC THEME HOVER) -->
+    <!-- 2. MAIN HEADER NAVBAR (WITH RESPONSIVE MOBILE TOGGLE MENU) -->
     <!-- ------------------------------------------------------------- -->
-    <header class="bg-white py-4 shadow-sm sticky top-0 z-50 border-b border-gray-100">
-        <div class="container mx-auto px-4 flex justify-end items-center">
-            <!-- Navigation Menu Dimulai dari Tengah ke Kanan (flex justify-end) -->
+    <header class="bg-white py-3.5 shadow-sm sticky top-0 z-50 border-b border-gray-100" x-data="{ mobileMenuOpen: false }">
+        <div class="container mx-auto px-4 flex justify-between md:justify-end items-center">
+            <!-- Mobile Brand Title (Mobile/Tablet Only) -->
+            <span class="md:hidden font-extrabold text-theme-primary text-base font-headline uppercase tracking-wider">SMAN 2 SITUBONDO</span>
+
+            <!-- Desktop Nav Menu -->
             <nav class="hidden md:flex space-x-6 text-sm font-semibold text-gray-700 items-center">
                 <a class="text-theme-primary font-bold border-b-2 border-theme-secondary pb-0.5" href="{{ route('home') }}">BERANDA</a>
                 
@@ -110,36 +164,50 @@
 
                 <a class="hover-text-primary flex items-center" href="#berita">BERITA</a>
                 <a class="hover-text-primary flex items-center" href="#contact">CONTACT</a>
-                <a class="bg-theme-secondary text-slate-950 px-3.5 py-1 rounded-full font-extrabold shadow-sm hover-bg-secondary transition uppercase" href="#spmb">SPMB</a>
+                <a class="bg-theme-secondary text-slate-950 px-3.5 py-1 rounded-full font-extrabold shadow-sm hover-bg-secondary transition uppercase spring-hover" href="#spmb">SPMB</a>
             </nav>
 
-            <button class="md:hidden text-gray-700">
-                <i class="fas fa-bars text-xl"></i>
+            <!-- Mobile Hamburger Toggle Button -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-700 p-2 focus:outline-none rounded-lg border border-gray-200 hover:bg-gray-50" aria-label="Toggle Mobile Menu">
+                <i class="fas text-xl" :class="mobileMenuOpen ? 'fa-times' : 'fa-bars'"></i>
             </button>
+        </div>
+
+        <!-- Mobile Navigation Menu Dropdown -->
+        <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="md:hidden bg-white border-t border-gray-100 px-4 pt-3 pb-4 space-y-2.5 shadow-lg">
+            <a @click="mobileMenuOpen = false" class="block text-theme-primary font-bold py-1.5 border-b border-gray-100 text-sm" href="{{ route('home') }}">BERANDA</a>
+            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#profil">PROFIL SEKOLAH</a>
+            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#tentang">TENTANG KAMI</a>
+            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#civitas">CIVITAS AKADEMIK</a>
+            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#pengumuman">PENGUMUMAN</a>
+            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#media">MEDIA</a>
+            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#berita">BERITA</a>
+            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#contact">CONTACT</a>
+            <a @click="mobileMenuOpen = false" class="block bg-theme-secondary text-slate-950 px-4 py-2 rounded-full font-extrabold text-center text-sm uppercase mt-2 shadow-sm" href="#spmb">SPMB</a>
         </div>
     </header>
 
     <!-- ------------------------------------------------------------- -->
     <!-- 3. HERO SECTION (DYNAMIC BANNERS LOOP FROM DATABASE) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="relative h-[550px] md:h-[600px] flex items-center overflow-hidden bg-theme-primary" x-init="if (totalSlides > 1) { setInterval(() => { activeSlide = (activeSlide + 1) % totalSlides }, 6000) }">
+    <section class="relative h-[480px] sm:h-[550px] md:h-[600px] flex items-center overflow-hidden bg-theme-primary" x-init="if (totalSlides > 1) { setInterval(() => { activeSlide = (activeSlide + 1) % totalSlides }, 6000) }">
         @if(count($banners) > 0)
             @foreach($banners as $index => $banner)
                 <div x-show="activeSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 scale-105" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0 w-full h-full flex items-center">
                     <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" class="absolute inset-0 w-full h-full object-cover opacity-40">
                     <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
                     <div class="container mx-auto px-4 relative z-10 text-white">
-                        <div class="max-w-2xl space-y-4">
-                            <h1 class="text-4xl md:text-5xl font-bold leading-tight font-headline text-white drop-shadow-md">
+                        <div class="max-w-2xl space-y-3 sm:space-y-4">
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight font-headline text-white drop-shadow-md" data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">
                                 {{ $banner->title }}
                             </h1>
-                            <p class="text-shadow text-sm md:text-base leading-relaxed text-slate-200">
+                            <p class="text-shadow text-xs sm:text-sm md:text-base leading-relaxed text-slate-200" data-aos="fade-up" data-aos-duration="900" data-aos-delay="200">
                                 <strong class="text-theme-secondary font-bold">Smada Prima</strong><br>
                                 {{ $banner->description ?? 'Assalamu\'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini, kami telah dapat mengembangkan website sekolah yang mengacu pada ICT-based learning.' }}
                             </p>
-                            <div class="flex space-x-4 pt-2">
-                                <a class="bg-theme-primary-deep hover:opacity-90 text-white font-bold py-2.5 px-7 rounded-full transition duration-300 shadow-lg text-sm uppercase tracking-wider" href="#spmb">SPMB</a>
-                                <a class="border-2 border-theme-secondary text-theme-secondary hover:bg-theme-secondary hover:text-slate-950 font-bold py-2.5 px-7 rounded-full transition duration-300 text-sm uppercase tracking-wider" href="#siklus">SIKLUS</a>
+                            <div class="flex flex-col sm:flex-row space-y-2.5 sm:space-y-0 sm:space-x-4 pt-2" data-aos="zoom-in-up" data-aos-duration="900" data-aos-delay="300">
+                                <a class="bg-theme-primary-deep hover:opacity-90 text-white font-bold py-2.5 px-7 rounded-full transition duration-300 shadow-lg text-xs sm:text-sm uppercase tracking-wider spring-hover text-center" href="#spmb">SPMB</a>
+                                <a class="border-2 border-theme-secondary text-theme-secondary hover:bg-theme-secondary hover:text-slate-950 font-bold py-2.5 px-7 rounded-full transition duration-300 text-xs sm:text-sm uppercase tracking-wider spring-hover text-center" href="#siklus">SIKLUS</a>
                             </div>
                         </div>
                     </div>
@@ -149,18 +217,18 @@
             <!-- Fallback Hero Frame -->
             <div class="absolute inset-0 w-full h-full flex items-center bg-gradient-to-r from-black/90 via-black/70 to-transparent bg-theme-primary">
                 <div class="container mx-auto px-4 relative z-10 text-white">
-                    <div class="max-w-2xl space-y-4">
-                        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-theme-secondary bg-white/10 border border-theme-secondary">
+                    <div class="max-w-2xl space-y-3 sm:space-y-4">
+                        <span class="inline-block px-3.5 py-1 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-theme-secondary bg-white/10 border border-theme-secondary animate-float">
                             Selamat Hari Jadi SMA Negeri 2 Situbondo
                         </span>
-                        <h1 class="text-4xl md:text-5xl font-bold leading-tight font-headline text-white">SMA Negeri 2<br>Situbondo</h1>
-                        <p class="text-shadow text-sm md:text-base leading-relaxed text-slate-200">
+                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight font-headline text-white" data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">SMA Negeri 2<br>Situbondo</h1>
+                        <p class="text-shadow text-xs sm:text-sm md:text-base leading-relaxed text-slate-200" data-aos="fade-up" data-aos-duration="900" data-aos-delay="200">
                             <strong class="text-theme-secondary font-bold">Smada Prima</strong><br>
                             Assalamu'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini, kami telah dapat mengembangkan website sekolah yang mengacu pada ICT-based learning. Berbagai informasi tentang pendidikan dapat diakses dalam website sekolah ini, Khususnya Informasi tentang SMAN 2 SITUBONDO.
                         </p>
-                        <div class="flex space-x-4 pt-2">
-                            <a class="bg-theme-primary-deep hover:opacity-90 text-white font-bold py-2.5 px-7 rounded-full transition duration-300 shadow-lg text-sm uppercase tracking-wider" href="#spmb">SPMB</a>
-                            <a class="border-2 border-theme-secondary text-theme-secondary hover:bg-theme-secondary hover:text-slate-950 font-bold py-2.5 px-7 rounded-full transition duration-300 text-sm uppercase tracking-wider" href="#siklus">SIKLUS</a>
+                        <div class="flex flex-col sm:flex-row space-y-2.5 sm:space-y-0 sm:space-x-4 pt-2" data-aos="zoom-in-up" data-aos-duration="900" data-aos-delay="300">
+                            <a class="bg-theme-primary-deep hover:opacity-90 text-white font-bold py-2.5 px-7 rounded-full transition duration-300 shadow-lg text-xs sm:text-sm uppercase tracking-wider spring-hover text-center" href="#spmb">SPMB</a>
+                            <a class="border-2 border-theme-secondary text-theme-secondary hover:bg-theme-secondary hover:text-slate-950 font-bold py-2.5 px-7 rounded-full transition duration-300 text-xs sm:text-sm uppercase tracking-wider spring-hover text-center" href="#siklus">SIKLUS</a>
                         </div>
                     </div>
                 </div>
@@ -168,7 +236,7 @@
         @endif
 
         @if(count($banners) > 1)
-            <div class="absolute bottom-16 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
+            <div class="absolute bottom-12 sm:bottom-16 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
                 @foreach($banners as $index => $b)
                     <button @click="activeSlide = {{ $index }}" class="w-3 h-3 rounded-full transition" :class="activeSlide === {{ $index }} ? 'bg-theme-secondary w-8' : 'bg-white/50'"></button>
                 @endforeach
@@ -179,37 +247,37 @@
     <!-- ------------------------------------------------------------- -->
     <!-- 4. QUICK LINKS GRID (DYNAMIC SECONDARY ACCENTS FOR ICONS) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-10 mb-12 md:mb-16 bg-white relative -mt-16 z-20 mx-4 md:mx-auto md:max-w-4xl rounded-xl shadow-xl border-t-4 border-theme-secondary" id="profil">
-        <div class="text-center mb-8">
-            <h2 class="text-xl font-bold text-gray-800 font-headline uppercase tracking-wider">PROFIL <span class="text-theme-primary">SEKOLAH</span></h2>
+    <section class="py-8 sm:py-10 mb-10 md:mb-16 bg-white relative -mt-14 sm:-mt-16 z-20 mx-4 md:mx-auto md:max-w-4xl rounded-xl shadow-xl border-t-4 border-theme-secondary" data-aos="zoom-in-up" data-aos-duration="900" id="profil">
+        <div class="text-center mb-6 sm:mb-8">
+            <h2 class="text-lg sm:text-xl font-bold text-gray-800 font-headline uppercase tracking-wider">PROFIL <span class="text-theme-primary">SEKOLAH</span></h2>
             <div class="w-16 h-1 bg-theme-secondary mx-auto mt-2 rounded-full"></div>
         </div>
 
         <!-- Row 1: 3 Buttons -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 px-8 pb-4">
-            <a class="bg-theme-primary-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md group" href="#profil">
-                <i class="fas fa-eye text-3xl mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
-                <span class="font-semibold text-sm">Visi Misi</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4 px-4 sm:px-8 pb-4">
+            <a class="bg-theme-primary-deep text-white rounded-lg p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="100" href="#profil">
+                <i class="fas fa-eye text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
+                <span class="font-semibold text-xs sm:text-sm">Visi Misi</span>
             </a>
-            <a class="bg-theme-primary-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md group" href="#profil">
-                <i class="fas fa-sitemap text-3xl mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
-                <span class="font-semibold text-sm">Struktur Organisasi</span>
+            <a class="bg-theme-primary-deep text-white rounded-lg p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="200" href="#profil">
+                <i class="fas fa-sitemap text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
+                <span class="font-semibold text-xs sm:text-sm">Struktur Organisasi</span>
             </a>
-            <a class="bg-theme-primary-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md group" href="#siswa">
-                <i class="fas fa-users text-3xl mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
-                <span class="font-semibold text-sm">Data Siswa</span>
+            <a class="bg-theme-primary-deep text-white rounded-lg p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="300" href="#siswa">
+                <i class="fas fa-users text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
+                <span class="font-semibold text-xs sm:text-sm">Data Siswa</span>
             </a>
         </div>
 
         <!-- Row 2: 2 Buttons Centered -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-8 pb-4 max-w-xl mx-auto">
-            <a class="bg-theme-primary-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md group" href="#spmb">
-                <i class="fas fa-user-plus text-3xl mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
-                <span class="font-semibold text-sm">SPMB</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 px-4 sm:px-8 pb-4 max-w-xl mx-auto">
+            <a class="bg-theme-primary-deep text-white rounded-lg p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="400" href="#spmb">
+                <i class="fas fa-user-plus text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
+                <span class="font-semibold text-xs sm:text-sm">SPMB</span>
             </a>
-            <a class="bg-theme-primary-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md group" href="#siklus">
-                <i class="fas fa-user-graduate text-3xl mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
-                <span class="font-semibold text-sm">SIKLUS</span>
+            <a class="bg-theme-primary-deep text-white rounded-lg p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="500" href="#siklus">
+                <i class="fas fa-user-graduate text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
+                <span class="font-semibold text-xs sm:text-sm">SIKLUS</span>
             </a>
         </div>
     </section>
@@ -217,22 +285,22 @@
     <!-- ------------------------------------------------------------- -->
     <!-- 5. SAPA KEPALA SEKOLAH (DYNAMIC THEME BACKGROUND & ACCENTS) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-12 text-white bg-theme-primary-deep">
+    <section class="py-10 sm:py-12 text-white bg-theme-primary-deep">
         <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center mb-8 border-b-2 border-theme-secondary pb-2">
-                <h2 class="text-2xl font-bold font-headline">Sapa <span class="text-theme-secondary">Kepala Sekolah</span></h2>
-                <a class="bg-theme-secondary text-slate-950 font-bold py-1.5 px-5 rounded-full text-sm hover:opacity-90 transition shadow" href="#profil">
+            <div class="flex justify-between items-center mb-6 sm:mb-8 border-b-2 border-theme-secondary pb-2" data-aos="fade-up">
+                <h2 class="text-xl sm:text-2xl font-bold font-headline">Sapa <span class="text-theme-secondary">Kepala Sekolah</span></h2>
+                <a class="bg-theme-secondary text-slate-950 font-bold py-1.5 px-4 sm:px-5 rounded-full text-xs sm:text-sm hover:opacity-90 transition shadow spring-hover" href="#profil">
                     Lainnya <i class="fas fa-arrow-right ml-1"></i>
                 </a>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-                <div class="md:col-span-1 flex justify-center">
-                    <img alt="NIKMATIL HASANAH, S.Pd, M.Pd" class="w-64 h-auto object-cover rounded-lg shadow-2xl border-2 border-theme-secondary" src="/build/assets/kepala sekolah smada.png">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center">
+                <div class="md:col-span-1 flex justify-center" data-aos="fade-right" data-aos-duration="1000">
+                    <img alt="NIKMATIL HASANAH, S.Pd, M.Pd" class="w-48 sm:w-64 h-auto object-cover rounded-lg shadow-2xl border-2 border-theme-secondary spring-hover" src="/build/assets/kepala sekolah smada.png">
                 </div>
-                <div class="md:col-span-2 space-y-3">
-                    <h3 class="font-bold text-2xl leading-tight font-headline text-white">NIKMATIL HASANAH, S.Pd, M.Pd</h3>
-                    <p class="text-sm text-theme-secondary font-bold">19640516 200604 2 012</p>
-                    <p class="text-base text-slate-100 leading-relaxed text-justify">
+                <div class="md:col-span-2 space-y-2.5 sm:space-y-3" data-aos="fade-left" data-aos-duration="1000">
+                    <h3 class="font-bold text-xl sm:text-2xl leading-tight font-headline text-white">NIKMATIL HASANAH, S.Pd, M.Pd</h3>
+                    <p class="text-xs sm:text-sm text-theme-secondary font-bold">19640516 200604 2 012</p>
+                    <p class="text-xs sm:text-base text-slate-100 leading-relaxed text-justify">
                         Assalamu'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini, kami telah dapat mengembangkan website sekolah yang mengacu pada ICT-based learning. Berbagai informasi tentang pendidikan dapat diakses dalam website sekolah ini, Khususnya Informasi tentang SMAN 2 SITUBONDO. Kami terus mengembangkan web ini mengikuti perkembangan teknologi yang sangat cepat. Dengan penuh harapan, kiranya website sekolah ini dapat memberikan manfaat yang maksimal dalam pengembangan dan pemanfaatannya untuk kebutuhan informasi dalam lingkungan sekolah SMAN 2 SITUBONDO and turut memajukan pendidikan di Indonesia. Wassalamu'alaikum Wr. Wb.
                     </p>
                 </div>
@@ -243,11 +311,11 @@
     <!-- ------------------------------------------------------------- -->
     <!-- 6. NEWS SECTION (BERITA SMADA WITH PURE WHITE MATCHING CARD BACKDROPS) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-12 bg-slate-100" id="berita">
+    <section class="py-10 sm:py-12 bg-slate-100" id="berita">
         <div class="container mx-auto px-4">
-            <div class="flex justify-between items-end mb-8 border-b-2 border-theme-secondary pb-2">
-                <h2 class="text-2xl font-bold text-gray-800 font-headline">Berita <span class="text-theme-secondary">Smada</span></h2>
-                <a class="text-sm text-gray-500 hover-text-primary transition flex items-center gap-1 font-semibold" href="#berita">
+            <div class="flex justify-between items-end mb-6 sm:mb-8 border-b-2 border-theme-secondary pb-2" data-aos="fade-up">
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-800 font-headline">Berita <span class="text-theme-secondary">Smada</span></h2>
+                <a class="text-xs sm:text-sm text-gray-500 hover-text-primary transition flex items-center gap-1 font-semibold" href="#berita">
                     Selengkapnya <i class="fas fa-arrow-right text-xs text-theme-secondary"></i>
                 </a>
             </div>
@@ -256,48 +324,48 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch">
                     <!-- Main News (Left 1 Featured Card) -->
                     @php $firstNews = $newsList->first(); @endphp
-                    <div class="lg:col-span-1 bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between">
+                    <div class="lg:col-span-1 bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between img-zoom-box spring-hover" data-aos="fade-right" data-aos-duration="900">
                         <div>
-                            <div class="w-full h-52 bg-white flex items-center justify-center overflow-hidden border-b border-gray-100">
+                            <div class="w-full h-48 sm:h-52 bg-white flex items-center justify-center overflow-hidden border-b border-gray-100">
                                 <img alt="{{ $firstNews->title }}" class="w-full h-full object-contain p-1.5" src="{{ $firstNews->thumbnail_url ?? '/build/assets/banner smada.png' }}">
                             </div>
-                            <div class="p-5 space-y-2">
-                                <h3 class="font-bold text-lg leading-snug hover-text-primary font-headline text-gray-900 uppercase">
+                            <div class="p-4 sm:p-5 space-y-2">
+                                <h3 class="font-bold text-base sm:text-lg leading-snug hover-text-primary font-headline text-gray-900 uppercase">
                                     <a href="#berita">{{ $firstNews->title }}</a>
                                 </h3>
-                                <p class="text-xs text-gray-500 flex items-center gap-1 font-medium">
+                                <p class="text-[11px] sm:text-xs text-gray-500 flex items-center gap-1 font-medium">
                                     <i class="far fa-calendar-alt text-theme-secondary"></i> {{ $firstNews->published_at ? $firstNews->published_at->format('F d, Y') : 'September 10, 2025' }}
                                 </p>
-                                <p class="text-sm text-gray-700 line-clamp-4 leading-relaxed font-normal">
+                                <p class="text-xs sm:text-sm text-gray-700 line-clamp-4 leading-relaxed font-normal">
                                     {{ $firstNews->summary }}
                                 </p>
                             </div>
                         </div>
-                        <div class="p-5 pt-0">
+                        <div class="p-4 sm:p-5 pt-0">
                             <a class="inline-block border border-theme-primary text-theme-primary hover-bg-secondary hover:text-slate-950 px-4 py-1.5 rounded-full text-xs font-bold transition shadow-sm" href="#berita">Selengkapnya</a>
                         </div>
                     </div>
 
                     <!-- News List Grid (Right 4 Side Cards in 2x2 with Zoomed-Out Image & Pure White Card Background) -->
                     <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 content-start">
-                        @foreach($newsList->slice(1, 4) as $item)
-                            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden flex items-stretch hover:shadow-md transition h-[176px]">
-                                <div class="w-32 md:w-36 h-[176px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
+                        @foreach($newsList->slice(1, 4) as $idx => $item)
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden flex items-stretch hover:shadow-md transition min-h-[160px] sm:h-[176px] img-zoom-box spring-hover" data-aos="fade-left" data-aos-duration="800" data-aos-delay="{{ ($idx + 1) * 100 }}">
+                                <div class="w-28 sm:w-32 md:w-36 min-h-[160px] sm:h-[176px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
                                     <img alt="{{ $item->title }}" class="w-full h-full object-contain p-1.5" src="{{ $item->thumbnail_url ?? '/build/assets/banner smada.png' }}">
                                 </div>
-                                <div class="p-4 flex flex-col justify-between flex-1 h-[176px]">
+                                <div class="p-3.5 sm:p-4 flex flex-col justify-between flex-1 min-h-[160px] sm:h-[176px]">
                                     <div>
                                         <h4 class="font-bold text-xs leading-tight hover-text-primary line-clamp-2 text-gray-900 uppercase font-headline">
                                             <a href="#berita">{{ $item->title }}</a>
                                         </h4>
-                                        <p class="text-[11px] text-gray-400 flex items-center gap-1 font-medium mt-1">
+                                        <p class="text-[10px] sm:text-[11px] text-gray-400 flex items-center gap-1 font-medium mt-1">
                                             <i class="far fa-calendar-alt text-theme-secondary text-[10px]"></i> {{ $item->published_at ? $item->published_at->format('F d, Y') : 'August 28, 2025' }}
                                         </p>
-                                        <p class="text-xs text-gray-700 line-clamp-2 leading-relaxed mt-1.5 font-normal">
+                                        <p class="text-xs text-gray-700 line-clamp-2 leading-relaxed mt-1 font-normal">
                                             {{ $item->summary }}
                                         </p>
                                     </div>
-                                    <div>
+                                    <div class="pt-1">
                                         <a href="#berita" class="text-xs text-theme-primary font-bold hover:text-theme-secondary inline-flex items-center gap-1">
                                             Selengkapnya <i class="fas fa-arrow-right text-[10px] text-theme-secondary"></i>
                                         </a>
@@ -318,81 +386,81 @@
     <!-- ------------------------------------------------------------- -->
     <!-- 7. SMADA FACT SECTION (DYNAMIC THEME ACCENTS) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-12 text-white relative bg-theme-primary">
+    <section class="py-10 sm:py-12 text-white relative bg-theme-primary overflow-hidden">
         <div class="absolute inset-0 bg-theme-primary-deep bg-opacity-70"></div>
         <div class="container mx-auto px-4 relative z-10 text-center">
             
-            <div class="inline-block bg-white text-theme-primary font-bold py-2 px-12 rounded-full mb-6 text-xl shadow border-2 border-theme-secondary">
+            <div class="inline-block bg-white text-theme-primary font-bold py-1.5 sm:py-2 px-8 sm:px-12 rounded-full mb-6 text-lg sm:text-xl shadow border-2 border-theme-secondary" data-aos="zoom-in">
                 SMADA <span class="text-theme-secondary">FACT</span>
             </div>
 
             <!-- Primary Tabs -->
-            <div class="flex flex-wrap justify-center gap-3 mb-4">
-                <button @click="activeTab = 'siswa'" :class="activeTab === 'siswa' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" class="px-6 py-2 rounded-full text-sm font-semibold border transition">
+            <div class="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <button @click="activeTab = 'siswa'" :class="activeTab === 'siswa' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" class="px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border transition spring-hover">
                     PESERTA DIDIK
                 </button>
-                <button @click="activeTab = 'guru'" :class="activeTab === 'guru' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" class="px-6 py-2 rounded-full text-sm font-semibold border transition">
+                <button @click="activeTab = 'guru'" :class="activeTab === 'guru' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" class="px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border transition spring-hover">
                     GURU
                 </button>
-                <button @click="activeTab = 'staf'" :class="activeTab === 'staf' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" class="px-6 py-2 rounded-full text-sm font-semibold border transition">
+                <button @click="activeTab = 'staf'" :class="activeTab === 'staf' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" class="px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border transition spring-hover">
                     STAFF
                 </button>
             </div>
 
             <!-- Sub-Filter Siswa (Filter Pills) -->
-            <div x-show="activeTab === 'siswa'" class="flex flex-wrap justify-center gap-2 mb-8">
-                <button @click="siswaSubTab = 'total'" :class="siswaSubTab === 'total' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-4 py-1.5 rounded-full text-xs transition">
+            <div x-show="activeTab === 'siswa'" class="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-8" data-aos="fade-up" data-aos-delay="200">
+                <button @click="siswaSubTab = 'total'" :class="siswaSubTab === 'total' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition">
                     Total Seluruh Siswa
                 </button>
-                <button @click="siswaSubTab = 'x'" :class="siswaSubTab === 'x' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-4 py-1.5 rounded-full text-xs transition">
+                <button @click="siswaSubTab = 'x'" :class="siswaSubTab === 'x' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition">
                     Siswa Kelas X
                 </button>
-                <button @click="siswaSubTab = 'xi'" :class="siswaSubTab === 'xi' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-4 py-1.5 rounded-full text-xs transition">
+                <button @click="siswaSubTab = 'xi'" :class="siswaSubTab === 'xi' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition">
                     Siswa Kelas XI
                 </button>
-                <button @click="siswaSubTab = 'xii'" :class="siswaSubTab === 'xii' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-4 py-1.5 rounded-full text-xs transition">
+                <button @click="siswaSubTab = 'xii'" :class="siswaSubTab === 'xii' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition">
                     Siswa Kelas XII
                 </button>
             </div>
 
             <!-- Tab Content: PESERTA DIDIK (1 Single Information Card Dynamic Filter) -->
-            <div x-show="activeTab === 'siswa'" class="max-w-md mx-auto bg-black/50 border-2 border-theme-secondary rounded-lg p-8 shadow-xl transition-all duration-300">
+            <div x-show="activeTab === 'siswa'" class="max-w-md mx-auto bg-black/50 border-2 border-theme-secondary rounded-lg p-6 sm:p-8 shadow-xl transition-all duration-300" data-aos="flip-up" data-aos-duration="800" data-aos-delay="300">
                 <template x-if="siswaSubTab === 'total'">
                     <div>
-                        <div class="text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['total'] }}</div>
-                        <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Total Seluruh Siswa</div>
+                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['total'] }}</div>
+                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Total Seluruh Siswa</div>
                     </div>
                 </template>
                 <template x-if="siswaSubTab === 'x'">
                     <div>
-                        <div class="text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['kelas_10'] }}</div>
-                        <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas X</div>
+                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['kelas_10'] }}</div>
+                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas X</div>
                     </div>
                 </template>
                 <template x-if="siswaSubTab === 'xi'">
                     <div>
-                        <div class="text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['kelas_11'] }}</div>
-                        <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas XI</div>
+                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['kelas_11'] }}</div>
+                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas XI</div>
                     </div>
                 </template>
                 <template x-if="siswaSubTab === 'xii'">
                     <div>
-                        <div class="text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['kelas_12'] }}</div>
-                        <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas XII</div>
+                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['kelas_12'] }}</div>
+                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas XII</div>
                     </div>
                 </template>
             </div>
 
             <!-- Tab Content: GURU -->
-            <div x-show="activeTab === 'guru'" class="max-w-md mx-auto bg-black/50 border-2 border-theme-secondary rounded-lg p-8 shadow-xl">
-                <div class="text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $employeeStats['guru'] }}</div>
-                <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Guru (Tenaga Pendidik)</div>
+            <div x-show="activeTab === 'guru'" class="max-w-md mx-auto bg-black/50 border-2 border-theme-secondary rounded-lg p-6 sm:p-8 shadow-xl" data-aos="flip-up" data-aos-duration="800" data-aos-delay="300">
+                <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $employeeStats['guru'] }}</div>
+                <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Guru (Tenaga Pendidik)</div>
             </div>
 
             <!-- Tab Content: STAFF -->
-            <div x-show="activeTab === 'staf'" class="max-w-md mx-auto bg-black/50 border-2 border-theme-secondary rounded-lg p-8 shadow-xl">
-                <div class="text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $employeeStats['staf'] }}</div>
-                <div class="text-sm font-medium uppercase tracking-wider text-slate-200">Staff (Tenaga Kependidikan)</div>
+            <div x-show="activeTab === 'staf'" class="max-w-md mx-auto bg-black/50 border-2 border-theme-secondary rounded-lg p-6 sm:p-8 shadow-xl" data-aos="flip-up" data-aos-duration="800" data-aos-delay="300">
+                <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $employeeStats['staf'] }}</div>
+                <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Staff (Tenaga Kependidikan)</div>
             </div>
 
         </div>
@@ -401,13 +469,13 @@
     <!-- ------------------------------------------------------------- -->
     <!-- 8. AGENDA & PENGUMUMAN + EKSTRAKURIKULER (IMAGE FULL HEIGHT & DYNAMIC THEME) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-12 bg-white" id="pengumuman">
+    <section class="py-10 sm:py-12 bg-white" id="pengumuman">
         <div class="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Agenda & Pengumuman Left -->
             <div class="lg:col-span-2 space-y-6">
-                <div class="flex justify-between items-end border-b-2 border-theme-secondary pb-2">
-                    <h2 class="text-2xl font-bold text-gray-800 font-headline">Agenda &amp; <span class="text-theme-secondary">Pengumuman</span></h2>
-                    <a class="text-sm text-gray-500 hover-text-primary transition flex items-center gap-1 font-semibold" href="#pengumuman">
+                <div class="flex justify-between items-end border-b-2 border-theme-secondary pb-2" data-aos="fade-up">
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 font-headline">Agenda &amp; <span class="text-theme-secondary">Pengumuman</span></h2>
+                    <a class="text-xs sm:text-sm text-gray-500 hover-text-primary transition flex items-center gap-1 font-semibold" href="#pengumuman">
                         Selengkapnya <i class="fas fa-arrow-right text-xs text-theme-secondary"></i>
                     </a>
                 </div>
@@ -416,11 +484,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
                         <!-- Main Announcement Card -->
                         @php $firstAnn = $announcementsList->first(); @endphp
-                        <div class="bg-gray-50 rounded-lg p-5 shadow flex flex-col justify-between border border-gray-100 h-full">
+                        <div class="bg-gray-50 rounded-lg p-4 sm:p-5 shadow flex flex-col justify-between border border-gray-100 h-full spring-hover" data-aos="fade-right" data-aos-duration="900">
                             <div>
-                                <img alt="{{ $firstAnn->title }}" class="w-full h-44 object-cover mb-4 rounded-lg" src="{{ $firstAnn->thumbnail_url ?? '/build/assets/banner smada.png' }}">
-                                <h3 class="font-bold mb-2 text-slate-900 text-sm uppercase leading-snug font-headline">{{ $firstAnn->title }}</h3>
-                                <p class="text-xs text-gray-500 mb-3 flex items-center gap-1 font-medium">
+                                <img alt="{{ $firstAnn->title }}" class="w-full h-40 sm:h-44 object-cover mb-4 rounded-lg" src="{{ $firstAnn->thumbnail_url ?? '/build/assets/banner smada.png' }}">
+                                <h3 class="font-bold mb-2 text-slate-900 text-xs sm:text-sm uppercase leading-snug font-headline">{{ $firstAnn->title }}</h3>
+                                <p class="text-[11px] sm:text-xs text-gray-500 mb-3 flex items-center gap-1 font-medium">
                                     <i class="far fa-calendar-alt text-theme-secondary"></i> {{ $firstAnn->published_at ? $firstAnn->published_at->format('F d, Y') : 'July 16, 2022' }}
                                 </p>
                                 <p class="text-xs text-gray-600 line-clamp-3 leading-relaxed mb-4">
@@ -434,15 +502,15 @@
 
                         <!-- Side Announcement Cards (Fixed Height per Card matching Berita Smada Image Frame) -->
                         <div class="flex flex-col justify-start gap-4">
-                            @foreach($announcementsList->slice(1, 2) as $annItem)
-                                <div class="bg-gray-50 rounded-lg shadow border border-gray-100 flex items-stretch overflow-hidden hover:shadow-md transition h-[180px]">
-                                    <div class="w-32 md:w-36 h-[180px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
+                            @foreach($announcementsList->slice(1, 2) as $idx => $annItem)
+                                <div class="bg-gray-50 rounded-lg shadow border border-gray-100 flex items-stretch overflow-hidden hover:shadow-md transition min-h-[160px] sm:h-[180px] img-zoom-box spring-hover" data-aos="fade-up" data-aos-duration="800" data-aos-delay="{{ ($idx + 1) * 200 }}">
+                                    <div class="w-28 sm:w-32 md:w-36 min-h-[160px] sm:h-[180px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
                                         <img alt="{{ $annItem->title }}" class="w-full h-full object-contain p-1.5" src="{{ $annItem->thumbnail_url ?? '/build/assets/banner smada.png' }}">
                                     </div>
-                                    <div class="p-4 flex flex-col justify-between flex-1 h-[180px]">
+                                    <div class="p-3.5 sm:p-4 flex flex-col justify-between flex-1 min-h-[160px] sm:h-[180px]">
                                         <div>
                                             <h3 class="font-bold mb-1 text-xs text-slate-900 uppercase leading-snug font-headline">{{ $annItem->title }}</h3>
-                                            <p class="text-[11px] text-gray-400 mb-1.5 flex items-center gap-1 font-medium">
+                                            <p class="text-[10px] sm:text-[11px] text-gray-400 mb-1.5 flex items-center gap-1 font-medium">
                                                 <i class="far fa-calendar-alt text-theme-secondary"></i> {{ $annItem->published_at ? $annItem->published_at->format('F d, Y') : 'May 05, 2022' }}
                                             </p>
                                             <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed mb-2">
@@ -465,17 +533,17 @@
             </div>
 
             <!-- Ekstrakurikuler Right -->
-            <div>
+            <div data-aos="fade-left">
                 <div class="mb-6 border-b-2 border-theme-secondary pb-2">
-                    <h2 class="text-2xl font-bold text-gray-800 font-headline">Ekstrakurikuler</h2>
+                    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 font-headline">Ekstrakurikuler</h2>
                 </div>
-                <ul class="space-y-4 font-semibold text-sm text-gray-700">
-                    <li class="border-b border-gray-200 pb-3 hover-text-primary transition"><span class="text-theme-secondary font-bold mr-2">&bull;</span><a href="#ekstra">Musik</a></li>
-                    <li class="border-b border-gray-200 pb-3 hover-text-primary transition"><span class="text-theme-secondary font-bold mr-2">&bull;</span><a href="#ekstra">Kharismada</a></li>
-                    <li class="border-b border-gray-200 pb-3 hover-text-primary transition"><span class="text-theme-secondary font-bold mr-2">&bull;</span><a href="#ekstra">Jurnalistik</a></li>
-                    <li class="border-b border-gray-200 pb-3 hover-text-primary transition"><span class="text-theme-secondary font-bold mr-2">&bull;</span><a href="#ekstra">Pecinta Alam</a></li>
+                <ul class="space-y-4 font-semibold text-xs sm:text-sm text-gray-700">
+                    <li class="border-b border-gray-200 pb-3 hover-text-primary transition" data-aos="fade-left" data-aos-delay="100"><span class="text-theme-secondary font-bold mr-2">&bull;</span><a href="#ekstra">Musik</a></li>
+                    <li class="border-b border-gray-200 pb-3 hover-text-primary transition" data-aos="fade-left" data-aos-delay="200"><span class="text-theme-secondary font-bold mr-2">&bull;</span><a href="#ekstra">Kharismada</a></li>
+                    <li class="border-b border-gray-200 pb-3 hover-text-primary transition" data-aos="fade-left" data-aos-delay="300"><span class="text-theme-secondary font-bold mr-2">&bull;</span><a href="#ekstra">Jurnalistik</a></li>
+                    <li class="border-b border-gray-200 pb-3 hover-text-primary transition" data-aos="fade-left" data-aos-delay="400"><span class="text-theme-secondary font-bold mr-2">&bull;</span><a href="#ekstra">Pecinta Alam</a></li>
                 </ul>
-                <a class="inline-block border border-theme-primary text-theme-primary hover-bg-secondary hover:text-slate-950 px-4 py-2 rounded-full text-sm font-bold transition mt-4 w-full text-center shadow-sm" href="#ekstra">Ekstrakurikuler Lainnya</a>
+                <a class="inline-block border border-theme-primary text-theme-primary hover-bg-secondary hover:text-slate-950 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition mt-4 w-full text-center shadow-sm spring-hover" data-aos="fade-up" data-aos-delay="500" href="#ekstra">Ekstrakurikuler Lainnya</a>
             </div>
         </div>
     </section>
@@ -483,32 +551,32 @@
     <!-- ------------------------------------------------------------- -->
     <!-- 9. ATMOSFER SEKOLAH (INSTAGRAM REAL FEED - DYNAMIC THEME ACCENTS) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-16 text-white relative overflow-hidden bg-theme-primary-deep" id="media">
+    <section class="py-12 sm:py-16 text-white relative overflow-hidden bg-theme-primary-deep" id="media">
         <!-- Glow Overlay Behind Carousel -->
         <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-theme-secondary opacity-15 rounded-full blur-3xl pointer-events-none"></div>
         
         <div class="container mx-auto px-4 relative z-10">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl md:text-4xl font-bold tracking-widest font-headline uppercase">ATMOSFER <span class="text-theme-secondary">SEKOLAH</span></h2>
+            <div class="text-center mb-8 sm:mb-10" data-aos="fade-up">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-widest font-headline uppercase">ATMOSFER <span class="text-theme-secondary">SEKOLAH</span></h2>
                 <div class="w-20 h-1 bg-theme-secondary mx-auto mt-2 rounded-full"></div>
             </div>
 
             <!-- Horizontal Carousel Frame - 10 Posts Real IG Scraping Direct Click -->
-            <div class="flex items-center space-x-4 overflow-x-auto pb-8 scrollbar-thin scrollbar-thumb-theme-secondary max-w-6xl mx-auto">
+            <div class="flex items-center space-x-3.5 sm:space-x-4 overflow-x-auto pb-6 sm:pb-8 scrollbar-thin scrollbar-thumb-theme-secondary max-w-6xl mx-auto" data-aos="zoom-in-up" data-aos-duration="900" style="-webkit-overflow-scrolling: touch;">
                 @if(!empty($instagramPosts) && count($instagramPosts) > 0)
                     @foreach($instagramPosts as $idx => $photoUrl)
-                        <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="block flex-shrink-0 rounded-xl overflow-hidden shadow-xl transition transform hover:scale-105 cursor-pointer border {{ $idx === 1 ? 'w-80 h-96 border-4 border-theme-secondary z-10 shadow-2xl' : 'w-64 h-80 border-2 border-white/20 hover:border-theme-secondary bg-black/40' }}" title="Klik untuk membuka postingan di Instagram @sman2situbondoofficial">
+                        <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="block flex-shrink-0 rounded-xl overflow-hidden shadow-xl transition transform cursor-pointer border spring-hover {{ $idx === 1 ? 'w-72 sm:w-80 h-80 sm:h-96 border-4 border-theme-secondary z-10 shadow-2xl' : 'w-56 sm:w-64 h-72 sm:h-80 border-2 border-white/20 hover:border-theme-secondary bg-black/40' }}" title="Klik untuk membuka postingan di Instagram @sman2situbondoofficial">
                             <img alt="Atmosfer Sekolah {{ $idx + 1 }}" class="w-full h-full object-cover" src="{{ $photoUrl }}" referrerpolicy="no-referrer">
                         </a>
                     @endforeach
                 @else
-                    <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-64 h-80 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-lg border-2 border-white/20 hover:border-theme-secondary block">
+                    <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-56 sm:w-64 h-72 sm:h-80 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-lg border-2 border-white/20 hover:border-theme-secondary block spring-hover">
                         <img alt="Atmosfer 1" class="w-full h-full object-cover" src="/build/assets/banner smada.png">
                     </a>
-                    <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-80 h-96 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-2xl border-4 border-theme-secondary z-10 block">
+                    <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-72 sm:w-80 h-80 sm:h-96 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-2xl border-4 border-theme-secondary z-10 block spring-hover">
                         <img alt="Atmosfer 2 Poster" class="w-full h-full object-cover" src="/build/assets/banner smada.png">
                     </a>
-                    <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-64 h-80 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-lg border-2 border-white/20 hover:border-theme-secondary block">
+                    <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-56 sm:w-64 h-72 sm:h-80 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-lg border-2 border-white/20 hover:border-theme-secondary block spring-hover">
                         <img alt="Atmosfer 3" class="w-full h-full object-cover" src="/build/assets/kepala sekolah smada.png">
                     </a>
                 @endif
@@ -519,11 +587,11 @@
     <!-- ------------------------------------------------------------- -->
     <!-- 10. MOTTO BANNER SECTION (DYNAMIC THEME ACCENTS) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-10 bg-white border-y-4 border-theme-secondary">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-serif-italic text-theme-primary font-headline">
+    <section class="py-8 sm:py-10 bg-white border-y-4 border-theme-secondary">
+        <div class="container mx-auto px-4 text-center" data-aos="zoom-in" data-aos-duration="900">
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-serif-italic text-theme-primary font-headline">
                 Dari<br>
-                <span class="font-bold uppercase tracking-widest text-4xl md:text-5xl text-theme-secondary font-sans">SMADA PRIMA</span><br>
+                <span class="font-bold uppercase tracking-widest text-3xl sm:text-4xl md:text-5xl text-theme-secondary font-sans">SMADA PRIMA</span><br>
                 Untuk Bangsa
             </h2>
         </div>
@@ -532,14 +600,14 @@
     <!-- ------------------------------------------------------------- -->
     <!-- 11. FOOTER (PREMIUM CLEAN DYNAMIC THEME) -->
     <!-- ------------------------------------------------------------- -->
-    <footer class="bg-theme-primary-deep text-white pt-12 pb-6 border-t border-white/10 relative overflow-hidden" id="contact">
+    <footer class="bg-theme-primary-deep text-white pt-10 sm:pt-12 pb-6 border-t border-white/10 relative overflow-hidden" id="contact">
         <!-- Ambient Subtle Lighting -->
         <div class="absolute top-0 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 relative z-10">
+        <div class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-8 relative z-10">
             <!-- Brand & Accreditation -->
-            <div class="text-center md:text-left flex flex-col items-center md:items-start">
-                <h3 class="font-extrabold text-white text-lg tracking-wider font-headline uppercase mb-3 border-b-2 border-theme-secondary pb-1 inline-block">
+            <div class="text-center sm:text-left flex flex-col items-center sm:items-start" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="font-extrabold text-white text-base sm:text-lg tracking-wider font-headline uppercase mb-3 border-b-2 border-theme-secondary pb-1 inline-block">
                     SMAN 2 SITUBONDO
                 </h3>
                 <p class="text-xs text-slate-200 leading-relaxed max-w-xs font-normal">
@@ -548,9 +616,9 @@
             </div>
 
             <!-- Informasi Tentang -->
-            <div>
-                <h4 class="font-bold mb-4 text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Informasi Tentang</h4>
-                <ul class="space-y-2.5 text-xs text-slate-200 font-medium">
+            <div data-aos="fade-up" data-aos-delay="200">
+                <h4 class="font-bold mb-3 sm:mb-4 text-xs sm:text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Informasi Tentang</h4>
+                <ul class="space-y-2 sm:space-y-2.5 text-xs text-slate-200 font-medium">
                     <li><a class="hover-text-secondary transition hover:underline" href="#profil">&bull; Visi Misi &amp; Tujuan</a></li>
                     <li><a class="hover-text-secondary transition hover:underline" href="#profil">&bull; Sejarah Singkat</a></li>
                     <li><a class="hover-text-secondary transition hover:underline" href="#profil">&bull; Struktur Organisasi</a></li>
@@ -561,9 +629,9 @@
             </div>
 
             <!-- Link Lainnya -->
-            <div>
-                <h4 class="font-bold mb-4 text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Link Lainnya</h4>
-                <ul class="space-y-2.5 text-xs text-slate-200 font-medium">
+            <div data-aos="fade-up" data-aos-delay="300">
+                <h4 class="font-bold mb-3 sm:mb-4 text-xs sm:text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Link Lainnya</h4>
+                <ul class="space-y-2 sm:space-y-2.5 text-xs text-slate-200 font-medium">
                     <li><a class="hover-text-secondary transition hover:underline" href="#elearning">&bull; Elearning</a></li>
                     <li><a class="hover-text-secondary transition hover:underline" href="#media">&bull; Video Pembelajaran</a></li>
                     <li><a class="hover-text-secondary transition hover:underline" href="#bukudigital">&bull; Buku Digital</a></li>
@@ -573,8 +641,8 @@
             </div>
 
             <!-- Kontak Kami -->
-            <div>
-                <h4 class="font-bold mb-4 text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Kontak Kami</h4>
+            <div data-aos="fade-up" data-aos-delay="400">
+                <h4 class="font-bold mb-3 sm:mb-4 text-xs sm:text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Kontak Kami</h4>
                 <p class="text-xs text-slate-200 mb-2 leading-relaxed">&bull; Jl. Anggrek No. 1 Patokan, Kab. Situbondo - Indonesia</p>
                 <p class="text-xs text-slate-200 mb-2 leading-relaxed">&bull; Telp. : (0338) 671618</p>
                 <p class="text-xs text-slate-200 leading-relaxed">&bull; Email : smadasit@yahoo.com</p>
@@ -598,17 +666,17 @@
     <!-- ------------------------------------------------------------- -->
     <!-- FLOATING ACTION BUTTONS (ACCESSIBILITY, WHATSAPP, TOP) -->
     <!-- ------------------------------------------------------------- -->
-    <div class="fixed bottom-4 right-4 flex flex-col space-y-2 z-50">
-        <a class="bg-theme-secondary text-slate-950 p-3 rounded-full shadow-lg hover:opacity-90 flex items-center justify-center h-12 w-12 transition" href="#" title="Aksesibilitas">
-            <i class="fas fa-universal-access text-xl"></i>
+    <div class="fixed bottom-4 right-4 flex flex-col space-y-2 z-50 animate-float">
+        <a class="bg-theme-secondary text-slate-950 p-3 rounded-full shadow-lg hover:opacity-90 flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 transition spring-hover glow-pulse" href="#" title="Aksesibilitas">
+            <i class="fas fa-universal-access text-lg sm:text-xl"></i>
         </a>
-        <a class="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 flex items-center justify-center h-12 w-12 transition" href="https://wa.me/628123456789" target="_blank" rel="noopener" title="WhatsApp">
-            <i class="fab fa-whatsapp text-2xl"></i>
+        <a class="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 transition spring-hover" href="https://wa.me/628123456789" target="_blank" rel="noopener" title="WhatsApp">
+            <i class="fab fa-whatsapp text-xl sm:text-2xl"></i>
         </a>
     </div>
     
-    <a class="fixed bottom-4 left-4 bg-black text-white p-3 rounded-lg shadow-lg hover:bg-gray-800 flex items-center justify-center h-10 w-10 z-50 transition" href="#" title="Ke Atas">
-        <i class="fas fa-chevron-up"></i>
+    <a class="fixed bottom-4 left-4 bg-black text-white p-2.5 sm:p-3 rounded-lg shadow-lg hover:bg-gray-800 flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 z-50 transition spring-hover" href="#" title="Ke Atas">
+        <i class="fas fa-chevron-up text-xs sm:text-sm"></i>
     </a>
 
     <!-- ------------------------------------------------------------- -->
@@ -629,14 +697,14 @@
                 @foreach($popupsList as $pIdx => $popupItem)
                     <div x-show="popupIndex === {{ $pIdx }}" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
                         @if($popupItem->image_url)
-                            <img src="{{ $popupItem->image_url }}" alt="{{ $popupItem->title }}" class="w-full h-48 object-cover">
+                            <img src="{{ $popupItem->image_url }}" alt="{{ $popupItem->title }}" class="w-full h-44 sm:h-48 object-cover">
                         @endif
-                        <div class="p-5 space-y-3">
-                            <h4 class="font-bold text-gray-900 text-base leading-tight uppercase font-headline">{{ $popupItem->title }}</h4>
+                        <div class="p-4 sm:p-5 space-y-3">
+                            <h4 class="font-bold text-gray-900 text-sm sm:text-base leading-tight uppercase font-headline">{{ $popupItem->title }}</h4>
                             <p class="text-xs text-gray-600 leading-relaxed">{{ $popupItem->description }}</p>
                             
                             <div class="pt-2">
-                                <button @click="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }" class="w-full py-2 rounded-lg font-bold text-xs text-white uppercase tracking-wider transition shadow bg-theme-primary hover:opacity-90">
+                                <button @click="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }" class="w-full py-2 rounded-lg font-bold text-xs text-white uppercase tracking-wider transition shadow bg-theme-primary hover:opacity-90 spring-hover">
                                     Tutup
                                 </button>
                             </div>
@@ -648,4 +716,21 @@
     @endif
 
 </div>
+
+<!-- ------------------------------------------------------------- -->
+<!-- INITIALIZE AOS ANIMATION ENGINE (BUTTERY SMOOTH 60FPS) -->
+<!-- ------------------------------------------------------------- -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 60,
+                disableMutationObserver: false
+            });
+        }
+    });
+</script>
 @endsection
