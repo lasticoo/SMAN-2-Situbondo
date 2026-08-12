@@ -1,6 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $getImageUrl = function (?string $path, string $default = '/build/assets/banner smada.png'): string {
+        if (empty($path)) return $default;
+        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://', '/'])) {
+            return $path;
+        }
+        return \Illuminate\Support\Facades\Storage::url($path);
+    };
+@endphp
+
 <!-- Tailwind CDN & Alpine.js for 100% Exact Layout Parsing -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -194,7 +204,7 @@
         @if(count($banners) > 0)
             @foreach($banners as $index => $banner)
                 <div x-show="activeSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 scale-105" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0 w-full h-full flex items-center">
-                    <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" class="absolute inset-0 w-full h-full object-cover opacity-40">
+                    <img src="{{ $getImageUrl($banner->image_url) }}" alt="{{ $banner->title }}" class="absolute inset-0 w-full h-full object-cover opacity-40">
                     <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
                     <div class="container mx-auto px-4 relative z-10 text-white">
                         <div class="max-w-2xl space-y-3 sm:space-y-4">
@@ -327,7 +337,7 @@
                     <div class="lg:col-span-1 bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between img-zoom-box spring-hover" data-aos="fade-right" data-aos-duration="900">
                         <div>
                             <div class="w-full h-48 sm:h-52 bg-white flex items-center justify-center overflow-hidden border-b border-gray-100">
-                                <img alt="{{ $firstNews->title }}" class="w-full h-full object-contain p-1.5" src="{{ $firstNews->thumbnail_url ?? '/build/assets/banner smada.png' }}">
+                                <img alt="{{ $firstNews->title }}" class="w-full h-full object-contain p-1.5" src="{{ $getImageUrl($firstNews->thumbnail_url) }}">
                             </div>
                             <div class="p-4 sm:p-5 space-y-2">
                                 <h3 class="font-bold text-base sm:text-lg leading-snug hover-text-primary font-headline text-gray-900 uppercase">
@@ -351,7 +361,7 @@
                         @foreach($newsList->slice(1, 4) as $idx => $item)
                             <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden flex items-stretch hover:shadow-md transition min-h-[160px] sm:h-[176px] img-zoom-box spring-hover" data-aos="fade-left" data-aos-duration="800" data-aos-delay="{{ ($idx + 1) * 100 }}">
                                 <div class="w-28 sm:w-32 md:w-36 min-h-[160px] sm:h-[176px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
-                                    <img alt="{{ $item->title }}" class="w-full h-full object-contain p-1.5" src="{{ $item->thumbnail_url ?? '/build/assets/banner smada.png' }}">
+                                    <img alt="{{ $item->title }}" class="w-full h-full object-contain p-1.5" src="{{ $getImageUrl($item->thumbnail_url) }}">
                                 </div>
                                 <div class="p-3.5 sm:p-4 flex flex-col justify-between flex-1 min-h-[160px] sm:h-[176px]">
                                     <div>
@@ -486,7 +496,7 @@
                         @php $firstAnn = $announcementsList->first(); @endphp
                         <div class="bg-gray-50 rounded-lg p-4 sm:p-5 shadow flex flex-col justify-between border border-gray-100 h-full spring-hover" data-aos="fade-right" data-aos-duration="900">
                             <div>
-                                <img alt="{{ $firstAnn->title }}" class="w-full h-40 sm:h-44 object-cover mb-4 rounded-lg" src="{{ $firstAnn->thumbnail_url ?? '/build/assets/banner smada.png' }}">
+                                <img alt="{{ $firstAnn->title }}" class="w-full h-40 sm:h-44 object-cover mb-4 rounded-lg" src="{{ $getImageUrl($firstAnn->thumbnail_url) }}">
                                 <h3 class="font-bold mb-2 text-slate-900 text-xs sm:text-sm uppercase leading-snug font-headline">{{ $firstAnn->title }}</h3>
                                 <p class="text-[11px] sm:text-xs text-gray-500 mb-3 flex items-center gap-1 font-medium">
                                     <i class="far fa-calendar-alt text-theme-secondary"></i> {{ $firstAnn->published_at ? $firstAnn->published_at->format('F d, Y') : 'July 16, 2022' }}
@@ -505,7 +515,7 @@
                             @foreach($announcementsList->slice(1, 2) as $idx => $annItem)
                                 <div class="bg-gray-50 rounded-lg shadow border border-gray-100 flex items-stretch overflow-hidden hover:shadow-md transition min-h-[160px] sm:h-[180px] img-zoom-box spring-hover" data-aos="fade-up" data-aos-duration="800" data-aos-delay="{{ ($idx + 1) * 200 }}">
                                     <div class="w-28 sm:w-32 md:w-36 min-h-[160px] sm:h-[180px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
-                                        <img alt="{{ $annItem->title }}" class="w-full h-full object-contain p-1.5" src="{{ $annItem->thumbnail_url ?? '/build/assets/banner smada.png' }}">
+                                        <img alt="{{ $annItem->title }}" class="w-full h-full object-contain p-1.5" src="{{ $getImageUrl($annItem->thumbnail_url) }}">
                                     </div>
                                     <div class="p-3.5 sm:p-4 flex flex-col justify-between flex-1 min-h-[160px] sm:h-[180px]">
                                         <div>
@@ -566,7 +576,7 @@
                 @if(!empty($instagramPosts) && count($instagramPosts) > 0)
                     @foreach($instagramPosts as $idx => $photoUrl)
                         <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="block flex-shrink-0 rounded-xl overflow-hidden shadow-xl transition transform cursor-pointer border spring-hover {{ $idx === 1 ? 'w-72 sm:w-80 h-80 sm:h-96 border-4 border-theme-secondary z-10 shadow-2xl' : 'w-56 sm:w-64 h-72 sm:h-80 border-2 border-white/20 hover:border-theme-secondary bg-black/40' }}" title="Klik untuk membuka postingan di Instagram @sman2situbondoofficial">
-                            <img alt="Atmosfer Sekolah {{ $idx + 1 }}" class="w-full h-full object-cover" src="{{ $photoUrl }}" referrerpolicy="no-referrer">
+                            <img alt="Atmosfer Sekolah {{ $idx + 1 }}" class="w-full h-full object-cover" src="{{ $getImageUrl($photoUrl) }}" referrerpolicy="no-referrer">
                         </a>
                     @endforeach
                 @else
@@ -697,7 +707,7 @@
                 @foreach($popupsList as $pIdx => $popupItem)
                     <div x-show="popupIndex === {{ $pIdx }}" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
                         @if($popupItem->image_url)
-                            <img src="{{ $popupItem->image_url }}" alt="{{ $popupItem->title }}" class="w-full h-44 sm:h-48 object-cover">
+                            <img src="{{ $getImageUrl($popupItem->image_url) }}" alt="{{ $popupItem->title }}" class="w-full h-44 sm:h-48 object-cover">
                         @endif
                         <div class="p-4 sm:p-5 space-y-3">
                             <h4 class="font-bold text-gray-900 text-sm sm:text-base leading-tight uppercase font-headline">{{ $popupItem->title }}</h4>
