@@ -100,6 +100,16 @@
     .glow-pulse {
       animation: pulse-glow 3s infinite;
     }
+
+    /* Slow Rotating Clock Icon for Countdown */
+    @keyframes spin-slow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+      animation: spin-slow 12s linear infinite;
+      will-change: transform;
+    }
   }
 </style>
 
@@ -690,7 +700,7 @@
     </a>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- POP-UP EVENT MODAL (SEQUENTIAL DISPLAY ON CLOSE) -->
+    <!-- POP-UP EVENT MODAL (WITH DYNAMIC REALTIME COUNTDOWN TO END_DATE) -->
     <!-- ------------------------------------------------------------- -->
     @php
         $popupsList = isset($activePopups) && count($activePopups) > 0 ? $activePopups : ($activePopup ? collect([$activePopup]) : collect());
@@ -712,8 +722,43 @@
                         <div class="p-4 sm:p-5 space-y-3">
                             <h4 class="font-bold text-gray-900 text-sm sm:text-base leading-tight uppercase font-headline">{{ $popupItem->title }}</h4>
                             <p class="text-xs text-gray-600 leading-relaxed">{{ $popupItem->description }}</p>
-                            
-                            <div class="pt-2">
+
+                            <!-- Dynamic Real-time Countdown Timer targeting end_date -->
+                            @if($popupItem->end_date)
+                                <div x-data="popupCountdown('{{ \Illuminate\Support\Carbon::parse($popupItem->end_date)->endOfDay()->toIso8601String() }}')"
+                                     x-init="startTimer()"
+                                     x-destroy="stopTimer()"
+                                     class="my-3">
+                                    <template x-if="isValid && !isExpired">
+                                        <div class="bg-slate-50 rounded-xl p-3 border border-gray-200/80 shadow-inner">
+                                            <div class="flex items-center justify-between text-[11px] font-semibold text-gray-600 mb-2">
+                                                <span class="flex items-center gap-1.5 text-theme-primary font-headline uppercase tracking-wider">
+                                                    <i class="far fa-clock text-theme-secondary text-xs animate-spin-slow"></i> Berakhir Dalam:
+                                                </span>
+                                                <span class="text-[10px] bg-theme-secondary text-slate-950 font-bold px-2 py-0.5 rounded-full shadow-sm">
+                                                    REALTIME
+                                                </span>
+                                            </div>
+                                            <div class="grid grid-cols-3 gap-2 text-center">
+                                                <div class="bg-white rounded-lg p-2 shadow-sm border border-gray-100 spring-hover">
+                                                    <span class="block text-base sm:text-lg font-extrabold text-theme-primary font-headline" x-text="days">0</span>
+                                                    <span class="block text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Hari</span>
+                                                </div>
+                                                <div class="bg-white rounded-lg p-2 shadow-sm border border-gray-100 spring-hover">
+                                                    <span class="block text-base sm:text-lg font-extrabold text-theme-primary font-headline" x-text="hours">00</span>
+                                                    <span class="block text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Jam</span>
+                                                </div>
+                                                <div class="bg-white rounded-lg p-2 shadow-sm border border-gray-100 spring-hover">
+                                                    <span class="block text-base sm:text-lg font-extrabold text-theme-primary font-headline" x-text="minutes">00</span>
+                                                    <span class="block text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Menit</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            @endif
+
+                            <div class="pt-1">
                                 <button @click="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }" class="w-full py-2 rounded-lg font-bold text-xs text-white uppercase tracking-wider transition shadow bg-theme-primary hover:opacity-90 spring-hover">
                                     Tutup
                                 </button>
@@ -728,7 +773,7 @@
 </div>
 
 <!-- ------------------------------------------------------------- -->
-<!-- INITIALIZE AOS ANIMATION ENGINE (BUTTERY SMOOTH 60FPS) -->
+<!-- INITIALIZE AOS ANIMATION ENGINE & POPUP COUNTDOWN CONTROLLER -->
 <!-- ------------------------------------------------------------- -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -742,5 +787,57 @@
             });
         }
     });
+
+    /**
+     * Client-Side Lightweight Real-Time Popup Countdown Engine
+     */
+    function popupCountdown(targetIso) {
+        return {
+            targetTime: targetIso ? new Date(targetIso).getTime() : null,
+            days: 0,
+            hours: '00',
+            minutes: '00',
+            isValid: false,
+            isExpired: false,
+            timer: null,
+
+            startTimer() {
+                if (!this.targetTime || isNaN(this.targetTime)) {
+                    this.isValid = false;
+                    return;
+                }
+                this.isValid = true;
+                this.updateCountdown();
+                this.timer = setInterval(() => {
+                    this.updateCountdown();
+                }, 1000);
+            },
+
+            updateCountdown() {
+                const now = new Date().getTime();
+                const distance = this.targetTime - now;
+
+                if (distance <= 0) {
+                    this.isExpired = true;
+                    this.days = 0;
+                    this.hours = '00';
+                    this.minutes = '00';
+                    this.stopTimer();
+                    return;
+                }
+
+                this.days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                this.hours = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                this.minutes = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            },
+
+            stopTimer() {
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                }
+            }
+        };
+    }
 </script>
 @endsection
