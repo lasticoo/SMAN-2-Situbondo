@@ -45,7 +45,8 @@
 <div x-data="{ 
     activeTab: 'siswa', 
     siswaSubTab: 'total',
-    showPopup: {{ $activePopup ? 'true' : 'false' }}, 
+    showPopup: {{ (isset($activePopups) && count($activePopups) > 0) || $activePopup ? 'true' : 'false' }}, 
+    popupIndex: 0,
     activeSlide: 0, 
     totalSlides: {{ count($banners) > 0 ? count($banners) : 1 }} 
 }" class="min-h-screen font-sans antialiased text-gray-800 bg-gray-50">
@@ -202,13 +203,13 @@
 
         <!-- Row 2: 2 Buttons Centered -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-8 pb-4 max-w-xl mx-auto">
-            <a class="bg-theme-primary-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md group" href="#elearning">
-                <i class="fas fa-laptop text-3xl mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
-                <span class="font-semibold text-sm">E-Learning</span>
+            <a class="bg-theme-primary-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md group" href="#spmb">
+                <i class="fas fa-user-plus text-3xl mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
+                <span class="font-semibold text-sm">SPMB</span>
             </a>
-            <a class="bg-theme-primary-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md group" href="#bukudigital">
-                <i class="fas fa-book text-3xl mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
-                <span class="font-semibold text-sm">Buku Digital</span>
+            <a class="bg-theme-primary-deep text-white rounded-lg p-5 flex flex-col items-center justify-center hover:shadow-2xl transition transform hover:-translate-y-1 shadow-md group" href="#siklus">
+                <i class="fas fa-user-graduate text-3xl mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
+                <span class="font-semibold text-sm">SIKLUS</span>
             </a>
         </div>
     </section>
@@ -278,13 +279,13 @@
                     </div>
 
                     <!-- News List Grid (Right 4 Side Cards in 2x2 with Zoomed-Out Image & Pure White Card Background) -->
-                    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
+                    <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 content-start">
                         @foreach($newsList->slice(1, 4) as $item)
-                            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden flex items-stretch hover:shadow-md transition h-full">
-                                <div class="w-32 md:w-36 h-full bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden flex items-stretch hover:shadow-md transition h-[176px]">
+                                <div class="w-32 md:w-36 h-[176px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
                                     <img alt="{{ $item->title }}" class="w-full h-full object-contain p-1.5" src="{{ $item->thumbnail_url ?? '/build/assets/banner smada.png' }}">
                                 </div>
-                                <div class="p-4 flex flex-col justify-between flex-1">
+                                <div class="p-4 flex flex-col justify-between flex-1 h-[176px]">
                                     <div>
                                         <h4 class="font-bold text-xs leading-tight hover-text-primary line-clamp-2 text-gray-900 uppercase font-headline">
                                             <a href="#berita">{{ $item->title }}</a>
@@ -292,11 +293,11 @@
                                         <p class="text-[11px] text-gray-400 flex items-center gap-1 font-medium mt-1">
                                             <i class="far fa-calendar-alt text-theme-secondary text-[10px]"></i> {{ $item->published_at ? $item->published_at->format('F d, Y') : 'August 28, 2025' }}
                                         </p>
-                                        <p class="text-sm text-gray-700 line-clamp-3 leading-relaxed mt-2 font-normal">
+                                        <p class="text-xs text-gray-700 line-clamp-2 leading-relaxed mt-1.5 font-normal">
                                             {{ $item->summary }}
                                         </p>
                                     </div>
-                                    <div class="pt-2">
+                                    <div>
                                         <a href="#berita" class="text-xs text-theme-primary font-bold hover:text-theme-secondary inline-flex items-center gap-1">
                                             Selengkapnya <i class="fas fa-arrow-right text-[10px] text-theme-secondary"></i>
                                         </a>
@@ -431,12 +432,14 @@
                             </div>
                         </div>
 
-                        <!-- Side Announcement Cards (2 Cards Equal Height to Main Card with FULL HEIGHT TOP-TO-BOTTOM IMAGE) -->
-                        <div class="flex flex-col justify-between gap-4 h-full">
+                        <!-- Side Announcement Cards (Fixed Height per Card matching Berita Smada Image Frame) -->
+                        <div class="flex flex-col justify-start gap-4">
                             @foreach($announcementsList->slice(1, 2) as $annItem)
-                                <div class="flex-1 bg-gray-50 rounded-lg shadow border border-gray-100 flex items-stretch overflow-hidden hover:shadow-md transition h-full">
-                                    <img alt="{{ $annItem->title }}" class="w-28 sm:w-32 h-full object-cover flex-shrink-0" src="{{ $annItem->thumbnail_url ?? '/build/assets/banner smada.png' }}">
-                                    <div class="p-4 flex flex-col justify-between flex-1 h-full">
+                                <div class="bg-gray-50 rounded-lg shadow border border-gray-100 flex items-stretch overflow-hidden hover:shadow-md transition h-[180px]">
+                                    <div class="w-32 md:w-36 h-[180px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
+                                        <img alt="{{ $annItem->title }}" class="w-full h-full object-contain p-1.5" src="{{ $annItem->thumbnail_url ?? '/build/assets/banner smada.png' }}">
+                                    </div>
+                                    <div class="p-4 flex flex-col justify-between flex-1 h-[180px]">
                                         <div>
                                             <h3 class="font-bold mb-1 text-xs text-slate-900 uppercase leading-snug font-headline">{{ $annItem->title }}</h3>
                                             <p class="text-[11px] text-gray-400 mb-1.5 flex items-center gap-1 font-medium">
@@ -609,24 +612,37 @@
     </a>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- POP-UP EVENT MODAL -->
+    <!-- POP-UP EVENT MODAL (SEQUENTIAL DISPLAY ON CLOSE) -->
     <!-- ------------------------------------------------------------- -->
-    @if($activePopup)
+    @php
+        $popupsList = isset($activePopups) && count($activePopups) > 0 ? $activePopups : ($activePopup ? collect([$activePopup]) : collect());
+    @endphp
+
+    @if(count($popupsList) > 0)
         <div x-show="showPopup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm" x-transition>
             <div class="bg-white rounded-xl overflow-hidden max-w-md w-full shadow-2xl relative border border-gray-200">
-                <button @click="showPopup = false" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-xs font-bold z-10 hover:bg-red-600 transition">
+                <!-- Close Button (Sequential Close if More Popups Exist) -->
+                <button @click="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70 text-white flex items-center justify-center text-xs font-bold z-20 hover:bg-red-600 transition shadow" title="Tutup">
                     <i class="fas fa-times"></i>
                 </button>
-                @if($activePopup->image_url)
-                    <img src="{{ $activePopup->image_url }}" alt="{{ $activePopup->title }}" class="w-full h-44 object-cover">
-                @endif
-                <div class="p-5 space-y-2">
-                    <h4 class="font-bold text-gray-900 text-base leading-tight uppercase font-headline">{{ $activePopup->title }}</h4>
-                    <p class="text-xs text-gray-600 leading-relaxed">{{ $activePopup->description }}</p>
-                    <button @click="showPopup = false" class="w-full py-2 rounded-lg font-bold text-xs text-white uppercase tracking-wider transition shadow bg-theme-primary hover:opacity-90">
-                        Tutup
-                    </button>
-                </div>
+
+                @foreach($popupsList as $pIdx => $popupItem)
+                    <div x-show="popupIndex === {{ $pIdx }}" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+                        @if($popupItem->image_url)
+                            <img src="{{ $popupItem->image_url }}" alt="{{ $popupItem->title }}" class="w-full h-48 object-cover">
+                        @endif
+                        <div class="p-5 space-y-3">
+                            <h4 class="font-bold text-gray-900 text-base leading-tight uppercase font-headline">{{ $popupItem->title }}</h4>
+                            <p class="text-xs text-gray-600 leading-relaxed">{{ $popupItem->description }}</p>
+                            
+                            <div class="pt-2">
+                                <button @click="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }" class="w-full py-2 rounded-lg font-bold text-xs text-white uppercase tracking-wider transition shadow bg-theme-primary hover:opacity-90">
+                                    Tutup
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     @endif

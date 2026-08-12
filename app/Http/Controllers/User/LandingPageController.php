@@ -28,13 +28,22 @@ class LandingPageController extends Controller
             ->orderBy('sort_order', 'asc')
             ->get();
 
-        // 2. Fetch Active Popup Event within current date range
+        // 2. Fetch Active Popup Events within current date range
         $today = Carbon::today()->toDateString();
-        $activePopup = Popup::where('is_active', true)
-            ->whereDate('start_date', '<=', $today)
-            ->whereDate('end_date', '>=', $today)
-            ->latest('id')
-            ->first();
+        $activePopups = Popup::where('is_active', true)
+            ->where(function ($query) use ($today) {
+                $query->whereNull('start_date')
+                      ->orWhereDate('start_date', '<=', $today);
+            })
+            ->where(function ($query) use ($today) {
+                $query->whereNull('end_date')
+                      ->orWhereDate('end_date', '>=', $today);
+            })
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $activePopup = $activePopups->first();
 
         // 3. Fetch School Profile
         $schoolProfile = SchoolProfile::first();
@@ -106,6 +115,7 @@ class LandingPageController extends Controller
         return view('user.landing.index', compact(
             'banners',
             'activePopup',
+            'activePopups',
             'schoolProfile',
             'newsList',
             'announcementsList',
