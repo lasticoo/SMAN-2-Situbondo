@@ -57,7 +57,7 @@ class LandingPageTestDataSeeder extends Seeder
             Popup::create([
                 'title' => 'Sosialisasi SPMB & Pembelajaran Digital SMAN 2 Situbondo',
                 'description' => 'Informasi penting mengenai pelaksanaan SPMB 2026 dan kegiatan MPLS siswa baru.',
-                'image_url' => '/build/assets/banner smada.png',
+                'image_url' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6kXTlqW4082njJ1YE7lErBRJ9CE9MzICAWcPPazjRXQ&s=10',
                 'start_date' => Carbon::now()->subDays(5)->toDateString(),
                 'end_date' => Carbon::now()->addDays(30)->toDateString(),
                 'is_active' => true,

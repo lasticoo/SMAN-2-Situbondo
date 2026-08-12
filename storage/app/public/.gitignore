@@ -1,2 +1,7 @@
-*
+/*
 !.gitignore
+!banners/
+!popups/
+!news/
+!announcements/
+!profiles/
