@@ -26,8 +26,8 @@ class AdminSeeder extends Seeder
         ColorSetting::updateOrCreate(
             ['id' => 1],
             [
-                'primary_color' => '#1e3a8a',
-                'secondary_color' => '#0284c7',
+                'primary_color' => '#0B1F3A',
+                'secondary_color' => '#FACC15',
                 'updated_by' => $admin->id,
             ]
         );

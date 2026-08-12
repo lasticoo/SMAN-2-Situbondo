@@ -110,6 +110,16 @@
       animation: spin-slow 12s linear infinite;
       will-change: transform;
     }
+
+    /* Lightweight GPU-Accelerated Tick Animation for Countdown Seconds */
+    @keyframes tick-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.9; }
+    }
+    .animate-tick-pulse {
+      animation: tick-pulse 1s infinite ease-in-out;
+      will-change: transform;
+    }
   }
 </style>
 
@@ -733,24 +743,28 @@
                                         <div class="bg-slate-50 rounded-xl p-3 border border-gray-200/80 shadow-inner">
                                             <div class="flex items-center justify-between text-[11px] font-semibold text-gray-600 mb-2">
                                                 <span class="flex items-center gap-1.5 text-theme-primary font-headline uppercase tracking-wider">
-                                                    <i class="far fa-clock text-theme-secondary text-xs animate-spin-slow"></i> Berakhir Dalam:
+                                                    <i class="far fa-clock text-theme-secondary text-xs animate-spin-slow"></i> Berlangsung Sampai:
                                                 </span>
-                                                <span class="text-[10px] bg-theme-secondary text-slate-950 font-bold px-2 py-0.5 rounded-full shadow-sm">
-                                                    REALTIME
+                                                <span class="text-[10px] bg-theme-secondary text-slate-950 font-bold px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
+                                                    <i class="fas fa-bullhorn text-[9px]"></i> INFO PENTING
                                                 </span>
                                             </div>
-                                            <div class="grid grid-cols-3 gap-2 text-center">
-                                                <div class="bg-white rounded-lg p-2 shadow-sm border border-gray-100 spring-hover">
-                                                    <span class="block text-base sm:text-lg font-extrabold text-theme-primary font-headline" x-text="days">0</span>
-                                                    <span class="block text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Hari</span>
+                                            <div class="grid grid-cols-4 gap-1.5 sm:gap-2 text-center">
+                                                <div class="bg-white rounded-lg p-1.5 sm:p-2 shadow-sm border border-gray-100 spring-hover">
+                                                    <span class="block text-sm sm:text-base font-extrabold text-theme-primary font-headline" x-text="days">0</span>
+                                                    <span class="block text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Hari</span>
                                                 </div>
-                                                <div class="bg-white rounded-lg p-2 shadow-sm border border-gray-100 spring-hover">
-                                                    <span class="block text-base sm:text-lg font-extrabold text-theme-primary font-headline" x-text="hours">00</span>
-                                                    <span class="block text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Jam</span>
+                                                <div class="bg-white rounded-lg p-1.5 sm:p-2 shadow-sm border border-gray-100 spring-hover">
+                                                    <span class="block text-sm sm:text-base font-extrabold text-theme-primary font-headline" x-text="hours">00</span>
+                                                    <span class="block text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Jam</span>
                                                 </div>
-                                                <div class="bg-white rounded-lg p-2 shadow-sm border border-gray-100 spring-hover">
-                                                    <span class="block text-base sm:text-lg font-extrabold text-theme-primary font-headline" x-text="minutes">00</span>
-                                                    <span class="block text-[9px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Menit</span>
+                                                <div class="bg-white rounded-lg p-1.5 sm:p-2 shadow-sm border border-gray-100 spring-hover">
+                                                    <span class="block text-sm sm:text-base font-extrabold text-theme-primary font-headline" x-text="minutes">00</span>
+                                                    <span class="block text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Menit</span>
+                                                </div>
+                                                <div class="bg-white rounded-lg p-1.5 sm:p-2 shadow-sm border border-gray-100 spring-hover">
+                                                    <span class="block text-sm sm:text-base font-extrabold text-theme-secondary font-headline animate-tick-pulse" x-text="seconds">00</span>
+                                                    <span class="block text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Detik</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -797,6 +811,7 @@
             days: 0,
             hours: '00',
             minutes: '00',
+            seconds: '00',
             isValid: false,
             isExpired: false,
             timer: null,
@@ -822,6 +837,7 @@
                     this.days = 0;
                     this.hours = '00';
                     this.minutes = '00';
+                    this.seconds = '00';
                     this.stopTimer();
                     return;
                 }
@@ -829,6 +845,7 @@
                 this.days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 this.hours = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
                 this.minutes = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                this.seconds = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
             },
 
             stopTimer() {
