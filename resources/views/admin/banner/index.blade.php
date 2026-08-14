@@ -1,322 +1,537 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="min-h-screen bg-slate-100">
+@php
+    $currentAdmin = Auth::guard('admin')->user();
+@endphp
+
+<div class="flex min-h-screen bg-slate-50 text-slate-800 font-sans">
 
     {{-- =====================================================================
-         HEADER / TOPBAR
+         SIDEBAR NAVIGATION (PATEN FIXED SIDEBAR - NO OVERLAP)
     ====================================================================== --}}
-    <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800">Manajemen Landing Page &amp; Pop-up</h1>
-            <p class="text-sm text-slate-500 mt-0.5">Kelola konten banner utama dan pop-up event.</p>
+    <aside class="w-64 bg-white border-r border-slate-200 flex flex-col shrink-0 sticky top-0 h-screen z-30">
+        <!-- Brand Header -->
+        <div class="h-16 shrink-0 flex items-center gap-3 px-6 border-b border-slate-100">
+            <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold shadow-sm shadow-indigo-600/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                </svg>
+            </div>
+            <div>
+                <h1 class="font-bold text-slate-900 text-sm tracking-tight leading-tight">SMAN 2 Situbondo</h1>
+                <p class="text-[11px] text-slate-500 font-medium">Admin Portal</p>
+            </div>
         </div>
-        {{-- Tombol "+ Tambah Baru" membuka modal pilihan --}}
-        <button
-            id="btn-tambah-baru"
-            onclick="document.getElementById('modal-pilih-tambah').classList.remove('hidden')"
-            class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors duration-150 shadow"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-            Tambah Baru
-        </button>
-    </header>
 
-    {{-- =====================================================================
-         FLASH MESSAGES
-    ====================================================================== --}}
-    @if(session('success'))
-    <div id="flash-success" class="mx-6 mt-4 flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm px-4 py-3 rounded-lg shadow-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        {{ session('success') }}
-        <button onclick="document.getElementById('flash-success').remove()" class="ml-auto text-emerald-600 hover:text-emerald-800">✕</button>
-    </div>
-    @endif
+        <!-- Navigation Links -->
+        <nav class="flex-1 px-4 py-5 space-y-1 overflow-y-auto custom-scrollbar">
+            <!-- Dashboard -->
+            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+                <span>Dashboard</span>
+            </a>
 
-    @if(session('error'))
-    <div id="flash-error" class="mx-6 mt-4 flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 text-sm px-4 py-3 rounded-lg shadow-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z"/>
-        </svg>
-        {{ session('error') }}
-        <button onclick="document.getElementById('flash-error').remove()" class="ml-auto text-red-600 hover:text-red-800">✕</button>
-    </div>
-    @endif
+            <div class="pt-4 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3">Konten Web</div>
 
-    {{-- =====================================================================
-         MAIN CONTENT GRID: Banner (kiri) + Popup (kanan)
-    ====================================================================== --}}
-    <main class="p-6 grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
-
-        {{-- ----------------------------------------------------------------
-             KOLOM KIRI — Banner Landing Page (3/5)
-        ----------------------------------------------------------------- --}}
-        <section class="lg:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-
-            {{-- Section header --}}
-            <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <!-- Manajemen Landing Page (ACTIVE) -->
+            <a href="{{ Route::has('admin.banners.index') ? route('admin.banners.index') : url('/admin/banners') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-semibold text-sm bg-indigo-50 text-indigo-700 transition-all border border-indigo-100 shadow-xs">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
-                <h2 class="font-semibold text-slate-800">Banner Landing Page</h2>
-                <span class="ml-auto text-xs font-medium bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">{{ $banners->count() }} banner</span>
+                <span>Manajemen Landing Page</span>
+            </a>
+
+            <!-- Berita -->
+            <a href="{{ url('/admin/news') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                </svg>
+                <span>Berita Sekolah</span>
+            </a>
+
+            <!-- Pengumuman -->
+            <a href="{{ url('/admin/announcements') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+                </svg>
+                <span>Pengumuman</span>
+            </a>
+
+            <!-- Galeri & Video -->
+            <a href="{{ url('/admin/galleries') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <span>Galeri Foto</span>
+            </a>
+
+            <a href="{{ url('/admin/videos') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <span>Video Youtube</span>
+            </a>
+
+            <div class="pt-4 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3">Master Data & Dokumen</div>
+
+            <!-- Siswa -->
+            <a href="{{ url('/admin/students') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+                <span>Data Siswa</span>
+            </a>
+
+            <!-- Pegawai -->
+            <a href="{{ url('/admin/employees') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <span>Data Pegawai</span>
+            </a>
+
+            <!-- SPMB -->
+            <a href="{{ url('/admin/spmb') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span>Kelola SPMB</span>
+            </a>
+
+            <!-- Contact Messages -->
+            <a href="{{ url('/admin/contact') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <span>Pesan Masuk</span>
+            </a>
+
+            <!-- Admin Profile (Tepat di bawah Pesan Masuk) -->
+            <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between px-2">
+                <div class="flex items-center gap-3 overflow-hidden">
+                    <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-white text-xs shrink-0 shadow-sm">
+                        {{ strtoupper(substr($currentAdmin->name ?? 'Admin', 0, 1)) }}
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-xs font-bold text-slate-800 truncate">{{ $currentAdmin->name ?? 'Administrator SMAN 2 Situbondo' }}</p>
+                        <p class="text-[10px] text-slate-500 truncate">{{ $currentAdmin->email ?? 'admin@smada.sch.id' }}</p>
+                    </div>
+                </div>
+                <form action="{{ route('admin.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" title="Logout" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </nav>
+    </aside>
+
+    {{-- =====================================================================
+         MAIN CONTENT AREA (RIGHT CANVAS SIDE-BY-SIDE WITH SIDEBAR)
+    ====================================================================== --}}
+    <div class="flex-1 flex flex-col min-w-0 bg-slate-50">
+
+        <!-- Top Header Bar -->
+        <header class="h-16 shrink-0 bg-white border-b border-slate-200 px-6 md:px-8 flex items-center justify-between sticky top-0 z-20 shadow-xs">
+            <div>
+                <h2 class="text-lg font-bold text-slate-800">Manajemen Landing Page</h2>
+                <p class="text-xs text-slate-500">Kelola judul &amp; deskripsi utama landing page, gambar banner slider, dan pop-up event</p>
             </div>
 
-            {{-- Tabel banner --}}
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="bg-slate-50 border-b border-slate-100 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                            <th class="px-4 py-3 text-left">Gambar</th>
-                            <th class="px-4 py-3 text-left">Judul</th>
-                            <th class="px-4 py-3 text-center">Urutan</th>
-                            <th class="px-4 py-3 text-center">Status</th>
-                            <th class="px-4 py-3 text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-50">
-                        @forelse($banners as $banner)
-                        <tr class="hover:bg-slate-50 transition-colors duration-100 group">
-                            {{-- Thumbnail --}}
-                            <td class="px-4 py-3">
-                                @if($banner->image_url)
-                                <img
-                                    src="{{ Storage::disk('public')->url($banner->image_url) }}"
-                                    alt="{{ $banner->title }}"
-                                    class="w-16 h-10 object-cover rounded-md border border-slate-200 bg-slate-100"
-                                >
-                                @else
-                                <div class="w-16 h-10 bg-slate-100 rounded-md border border-slate-200 flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <!-- Header Right Items -->
+            <div class="flex items-center gap-3">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold border border-emerald-200">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Sistem Normal
+                </span>
+
+                <div class="h-6 w-px bg-slate-200 mx-1"></div>
+
+                <div class="flex items-center gap-3">
+                    <div class="text-right">
+                        <p class="text-xs font-bold text-slate-800">{{ $currentAdmin->name ?? 'Administrator SMAN 2 Situbondo' }}</p>
+                        <p class="text-[11px] text-slate-500">Role: Admin</p>
+                    </div>
+                    <button
+                        id="btn-tambah-baru"
+                        onclick="document.getElementById('modal-pilih-tambah').classList.remove('hidden')"
+                        class="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-xs ml-2"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Tambah Baru
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Canvas Content -->
+        <main class="flex-1 p-6 md:p-8 space-y-8">
+
+            {{-- =====================================================================
+                 FLASH MESSAGES
+            ====================================================================== --}}
+            @if(session('success'))
+            <div id="flash-success" class="flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm px-4 py-3 rounded-xl shadow-xs">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                {{ session('success') }}
+                <button onclick="document.getElementById('flash-success').remove()" class="ml-auto text-emerald-600 hover:text-emerald-800 font-bold">✕</button>
+            </div>
+            @endif
+
+            @if(session('error'))
+            <div id="flash-error" class="flex items-center gap-3 bg-red-50 border border-red-200 text-red-800 text-sm px-4 py-3 rounded-xl shadow-xs">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z"/>
+                </svg>
+                {{ session('error') }}
+                <button onclick="document.getElementById('flash-error').remove()" class="ml-auto text-red-600 hover:text-red-800 font-bold">✕</button>
+            </div>
+            @endif
+
+            {{-- =====================================================================
+                 MAIN CONTENT GRID: Layout Kiri (Judul + Banner Gambar) & Kanan (Pop-up)
+            ====================================================================== --}}
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+
+                {{-- ----------------------------------------------------------------
+                     KOLOM KIRI — Judul & Gambar Banner Landing Page (3/5)
+                ----------------------------------------------------------------- --}}
+                <div class="lg:col-span-3 space-y-8">
+
+                    {{-- SECTION 1: KELOLA JUDUL & DESKRIPSI UTAMA LANDING PAGE --}}
+                    <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
                                 </div>
-                                @endif
-                            </td>
+                                <div>
+                                    <h2 class="font-bold text-slate-800 text-sm">Judul &amp; Deskripsi Landing Page</h2>
+                                    <p class="text-xs text-slate-500">Teks utama yang selalu tampil konsisten di landing page</p>
+                                </div>
+                            </div>
+                            <span class="text-[11px] font-bold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-100">
+                                Teks Utama
+                            </span>
+                        </div>
 
-                            {{-- Judul --}}
-                            <td class="px-4 py-3">
-                                <p class="font-semibold text-slate-800 leading-tight">{{ $banner->title }}</p>
-                                @if($banner->description)
-                                <p class="text-xs text-slate-400 mt-0.5 line-clamp-1">{{ $banner->description }}</p>
-                                @endif
-                            </td>
+                        <form method="POST" action="{{ route('admin.banners.updateHeadline') }}" class="p-6 space-y-4">
+                            @csrf
+                            @method('PUT')
 
-                            {{-- Urutan --}}
-                            <td class="px-4 py-3 text-center">
-                                <span class="inline-flex items-center justify-center w-7 h-7 bg-slate-100 text-slate-600 text-xs font-bold rounded-full">
-                                    {{ $banner->sort_order }}
-                                </span>
-                            </td>
-
-                            {{-- Status toggle --}}
-                            <td class="px-4 py-3 text-center">
-                                <form
-                                    id="toggle-banner-{{ $banner->id }}"
-                                    method="POST"
-                                    action="{{ route('admin.banners.toggleActive', $banner) }}"
+                            <div>
+                                <label for="headline_title" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                                    Judul Utama Landing Page <span class="text-rose-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="headline_title"
+                                    name="title"
+                                    value="{{ old('title', $mainHeadline->title ?? 'SMA Negeri 2 Situbondo') }}"
+                                    required
+                                    maxlength="150"
+                                    placeholder="Contoh: SMA Negeri 2 Situbondo"
+                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                                 >
+                                @error('title')
+                                    <p class="text-xs text-rose-600 mt-1 font-medium">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="headline_description" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                                    Deskripsi Singkat Landing Page
+                                </label>
+                                <textarea
+                                    id="headline_description"
+                                    name="description"
+                                    rows="3"
+                                    placeholder="Contoh: Smada Prima — Selamat datang di website resmi SMA Negeri 2 Situbondo. Sekolah unggulan..."
+                                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none leading-relaxed"
+                                >{{ old('description', $mainHeadline->description ?? '') }}</textarea>
+                                @error('description')
+                                    <p class="text-xs text-rose-600 mt-1 font-medium">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="pt-2 flex justify-end">
+                                <button
+                                    type="submit"
+                                    class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-xs"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                    Simpan Judul &amp; Deskripsi
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+
+                    {{-- SECTION 2: DAFTAR GAMBAR BANNER SLIDER --}}
+                    <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="font-bold text-slate-800 text-sm">Gambar Banner Slider</h2>
+                                    <p class="text-xs text-slate-500">Upload multiple gambar untuk tayangan slider tanpa mengubah judul</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Tabel gambar banner --}}
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="bg-slate-50 border-b border-slate-100 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                        <th class="px-4 py-3 text-left">Gambar Banner</th>
+                                        <th class="px-4 py-3 text-center">Urutan</th>
+                                        <th class="px-4 py-3 text-center">Status</th>
+                                        <th class="px-4 py-3 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    @forelse($banners as $banner)
+                                    <tr class="hover:bg-slate-50 transition-colors duration-100 group">
+                                        {{-- Thumbnail --}}
+                                        <td class="px-4 py-3">
+                                            <div class="flex items-center gap-3">
+                                                @if($banner->display_image_url)
+                                                <img
+                                                    src="{{ $banner->display_image_url }}"
+                                                    alt="{{ $banner->title }}"
+                                                    class="w-24 h-14 object-cover rounded-lg border border-slate-200 bg-slate-100 shadow-xs"
+                                                >
+                                                @else
+                                                <div class="w-24 h-14 bg-slate-100 rounded-lg border border-slate-200 flex items-center justify-center">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                                </div>
+                                                @endif
+                                                <div>
+                                                    <p class="text-xs font-bold text-slate-800">Banner #{{ $banner->id }}</p>
+                                                    <p class="text-[10px] text-slate-400 break-all truncate max-w-[180px]">{{ basename($banner->image_url) }}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        {{-- Urutan --}}
+                                        <td class="px-4 py-3 text-center">
+                                            <span class="inline-flex items-center justify-center w-7 h-7 bg-slate-100 text-slate-700 text-xs font-bold rounded-full">
+                                                {{ $banner->sort_order }}
+                                            </span>
+                                        </td>
+
+                                        {{-- Status toggle --}}
+                                        <td class="px-4 py-3 text-center">
+                                            <form
+                                                id="toggle-banner-{{ $banner->id }}"
+                                                method="POST"
+                                                action="{{ route('admin.banners.toggleActive', $banner) }}"
+                                            >
+                                                @csrf
+                                                @method('PATCH')
+                                                <button
+                                                    type="submit"
+                                                    class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-colors duration-150 {{ $banner->is_active ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' : 'bg-slate-100 text-slate-500 hover:bg-slate-200' }}"
+                                                    title="Klik untuk mengubah status"
+                                                >
+                                                    <span class="w-1.5 h-1.5 rounded-full {{ $banner->is_active ? 'bg-emerald-500' : 'bg-slate-400' }}"></span>
+                                                    {{ $banner->is_active ? 'Aktif' : 'Nonaktif' }}
+                                                </button>
+                                            </form>
+                                        </td>
+
+                                        {{-- Aksi --}}
+                                        <td class="px-4 py-3 text-center">
+                                            <div class="flex items-center justify-center gap-2">
+                                                <a
+                                                    href="{{ route('admin.banners.edit', $banner) }}"
+                                                    class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                                    </svg>
+                                                </a>
+
+                                                <button
+                                                    type="button"
+                                                    onclick="confirmDelete('{{ route('admin.banners.destroy', $banner) }}', 'Gambar Banner #{{ $banner->id }}')"
+                                                    class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                                                    title="Hapus"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="4" class="px-4 py-10 text-center text-slate-400">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 mx-auto text-slate-200 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                            <p class="text-sm font-medium">Belum ada gambar banner terupload.</p>
+                                            <a href="{{ route('admin.banners.create') }}" class="inline-block mt-2 text-xs font-bold text-indigo-600 hover:underline">+ Upload Gambar Pertama</a>
+                                        </td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                </div>
+
+                {{-- ----------------------------------------------------------------
+                     KOLOM KANAN — Pop-up Event (2/5)
+                ----------------------------------------------------------------- --}}
+                <section class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+                        <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-slate-800 text-sm">Pop-up Event</h2>
+                            <p class="text-xs text-slate-500">Kelola pop-up event promosi &amp; pengumuman</p>
+                        </div>
+                        <span class="ml-auto text-xs font-bold bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full border border-amber-100">{{ $popups->count() }} popup</span>
+                    </div>
+
+                    <div class="p-4 flex flex-col gap-3 max-h-[600px] overflow-y-auto">
+                        @forelse($popups as $popup)
+                        @php
+                            $now       = now()->toDateString();
+                            $inPeriod  = (! $popup->start_date || $popup->start_date->toDateString() <= $now)
+                                      && (! $popup->end_date   || $popup->end_date->toDateString()   >= $now);
+                            $isLive    = $popup->is_active && $inPeriod;
+                        @endphp
+                        <div class="border border-slate-200 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow duration-150">
+                            <div class="px-4 pt-3 pb-1 flex items-start justify-between gap-2">
+                                <div>
+                                    <p class="font-semibold text-slate-800 text-sm leading-tight">{{ $popup->title }}</p>
+                                    <p class="text-xs text-slate-400 mt-0.5">
+                                        @if($popup->start_date || $popup->end_date)
+                                            {{ $popup->start_date ? $popup->start_date->format('d M Y') : '—' }}
+                                            &rarr;
+                                            {{ $popup->end_date ? $popup->end_date->format('d M Y') : '—' }}
+                                        @else
+                                            Tanpa periode
+                                        @endif
+                                    </p>
+                                </div>
+                                @if($isLive)
+                                    <span class="flex-shrink-0 inline-flex items-center gap-1 text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
+                                        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Live
+                                    </span>
+                                @elseif($popup->is_active && !$inPeriod)
+                                    <span class="flex-shrink-0 text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Terjadwal</span>
+                                @else
+                                    <span class="flex-shrink-0 text-xs font-semibold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">Draft</span>
+                                @endif
+                            </div>
+
+                            @if($popup->display_image_url)
+                            <div class="mx-4 mb-2 rounded-lg overflow-hidden bg-slate-100 border border-slate-100">
+                                <img
+                                    src="{{ $popup->display_image_url }}"
+                                    alt="{{ $popup->title }}"
+                                    class="w-full h-28 object-cover"
+                                >
+                            </div>
+                            @else
+                            <div class="mx-4 mb-2 rounded-lg bg-slate-50 border border-dashed border-slate-200 h-20 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            </div>
+                            @endif
+
+                            <div class="px-4 pb-3 flex items-center justify-between">
+                                <form method="POST" action="{{ route('admin.popups.toggleActive', $popup) }}">
                                     @csrf
                                     @method('PATCH')
                                     <button
                                         type="submit"
-                                        title="{{ $banner->is_active ? 'Nonaktifkan banner' : 'Aktifkan banner' }}"
-                                        class="relative inline-flex items-center h-6 w-11 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-slate-400 {{ $banner->is_active ? 'bg-emerald-500' : 'bg-slate-300' }}"
-                                        onclick="this.closest('form').submit(); return false;"
+                                        class="text-xs font-semibold px-2.5 py-1 rounded-md transition-colors {{ $popup->is_active ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' : 'bg-amber-50 text-amber-700 hover:bg-amber-100' }}"
                                     >
-                                        <span class="sr-only">Toggle status</span>
-                                        <span class="inline-block w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 {{ $banner->is_active ? 'translate-x-6' : 'translate-x-1' }}"></span>
+                                        {{ $popup->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
                                     </button>
                                 </form>
-                                <span class="block text-xs mt-1 {{ $banner->is_active ? 'text-emerald-600 font-semibold' : 'text-slate-400' }}">
-                                    {{ $banner->is_active ? 'Aktif' : 'Nonaktif' }}
-                                </span>
-                            </td>
 
-                            {{-- Aksi --}}
-                            <td class="px-4 py-3 text-center">
-                                <div class="flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                                    {{-- Edit --}}
+                                <div class="flex items-center gap-1">
                                     <a
-                                        href="{{ route('admin.banners.edit', $banner) }}"
-                                        title="Edit banner"
-                                        class="p-1.5 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-150"
+                                        href="{{ route('admin.popups.edit', $popup) }}"
+                                        class="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                                        title="Edit"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
                                     </a>
-                                    {{-- Hapus --}}
                                     <button
                                         type="button"
-                                        title="Hapus banner"
-                                        onclick="confirmDelete('{{ route('admin.banners.destroy', $banner) }}', '{{ addslashes($banner->title) }}')"
-                                        class="p-1.5 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors duration-150"
+                                        onclick="confirmDelete('{{ route('admin.popups.destroy', $popup) }}', '{{ $popup->title }}')"
+                                        class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                                        title="Hapus"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                         </svg>
                                     </button>
                                 </div>
-                                {{-- Aksi selalu terlihat di mobile --}}
-                                <div class="flex items-center justify-center gap-1.5 lg:hidden">
-                                    <a href="{{ route('admin.banners.edit', $banner) }}" class="p-1.5 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                    </a>
-                                    <button type="button" onclick="confirmDelete('{{ route('admin.banners.destroy', $banner) }}', '{{ addslashes($banner->title) }}')" class="p-1.5 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
                         @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-12 text-center">
-                                <div class="flex flex-col items-center gap-3 text-slate-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                    <p class="text-sm font-medium">Belum ada banner</p>
-                                    <p class="text-xs">Klik <strong>+ Tambah Baru</strong> untuk menambahkan banner pertama.</p>
-                                </div>
-                            </td>
-                        </tr>
+                        <div class="py-10 text-center flex flex-col items-center gap-2 text-slate-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                            <p class="text-sm font-medium">Belum ada pop-up</p>
+                        </div>
                         @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </section>
 
-        {{-- ----------------------------------------------------------------
-             KOLOM KANAN — Pop-up Event (2/5)
-        ----------------------------------------------------------------- --}}
-        <section class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-
-            {{-- Section header --}}
-            <div class="px-5 py-4 border-b border-slate-100 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-                </svg>
-                <h2 class="font-semibold text-slate-800">Pop-up Event</h2>
-                <span class="ml-auto text-xs font-medium bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">{{ $popups->count() }}</span>
-            </div>
-
-            {{-- Daftar popup sebagai cards --}}
-            <div class="p-4 flex flex-col gap-3 max-h-[520px] overflow-y-auto">
-                @forelse($popups as $popup)
-                @php
-                    $now       = now()->toDateString();
-                    $inPeriod  = (! $popup->start_date || $popup->start_date->toDateString() <= $now)
-                              && (! $popup->end_date   || $popup->end_date->toDateString()   >= $now);
-                    $isLive    = $popup->is_active && $inPeriod;
-                @endphp
-                <div class="border border-slate-200 rounded-xl overflow-hidden bg-white hover:shadow-md transition-shadow duration-150">
-                    {{-- Header card: judul + badge status --}}
-                    <div class="px-4 pt-3 pb-1 flex items-start justify-between gap-2">
-                        <div>
-                            <p class="font-semibold text-slate-800 text-sm leading-tight">{{ $popup->title }}</p>
-                            <p class="text-xs text-slate-400 mt-0.5">
-                                @if($popup->start_date || $popup->end_date)
-                                    {{ $popup->start_date ? $popup->start_date->format('d M Y') : '—' }}
-                                    &rarr;
-                                    {{ $popup->end_date ? $popup->end_date->format('d M Y') : '—' }}
-                                @else
-                                    Tanpa periode
-                                @endif
-                            </p>
-                        </div>
-                        @if($isLive)
-                            <span class="flex-shrink-0 inline-flex items-center gap-1 text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
-                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Live
-                            </span>
-                        @elseif($popup->is_active && !$inPeriod)
-                            <span class="flex-shrink-0 text-xs font-semibold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">Terjadwal</span>
-                        @else
-                            <span class="flex-shrink-0 text-xs font-semibold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">Draft</span>
-                        @endif
-                    </div>
-
-                    {{-- Gambar popup --}}
-                    @if($popup->image_url)
-                    <div class="mx-4 mb-2 rounded-lg overflow-hidden bg-slate-100 border border-slate-100">
-                        <img
-                            src="{{ Storage::disk('public')->url($popup->image_url) }}"
-                            alt="{{ $popup->title }}"
-                            class="w-full h-28 object-cover"
+                        <a
+                            href="{{ route('admin.popups.create') }}"
+                            class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 rounded-xl py-5 text-slate-400 hover:text-slate-600 hover:border-slate-400 hover:bg-slate-50 transition-colors duration-150 group"
                         >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-slate-300 group-hover:text-slate-500 transition-colors duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            <span class="text-sm font-medium">Tambah Pop-up</span>
+                        </a>
                     </div>
-                    @else
-                    <div class="mx-4 mb-2 rounded-lg bg-slate-50 border border-dashed border-slate-200 h-20 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    </div>
-                    @endif
-
-                    {{-- Footer card: toggle + aksi --}}
-                    <div class="px-4 pb-3 flex items-center justify-between">
-                        {{-- Toggle is_active --}}
-                        <form method="POST" action="{{ route('admin.popups.toggleActive', $popup) }}">
-                            @csrf
-                            @method('PATCH')
-                            <button
-                                type="submit"
-                                title="{{ $popup->is_active ? 'Nonaktifkan pop-up' : 'Aktifkan pop-up' }}"
-                                class="relative inline-flex items-center h-6 w-11 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-slate-400 {{ $popup->is_active ? 'bg-emerald-500' : 'bg-slate-300' }}"
-                            >
-                                <span class="sr-only">Toggle status</span>
-                                <span class="inline-block w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 {{ $popup->is_active ? 'translate-x-6' : 'translate-x-1' }}"></span>
-                            </button>
-                        </form>
-
-                        {{-- Edit & Delete --}}
-                        <div class="flex items-center gap-1.5">
-                            <a
-                                href="{{ route('admin.popups.edit', $popup) }}"
-                                title="Edit pop-up"
-                                class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-150"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                </svg>
-                            </a>
-                            <button
-                                type="button"
-                                title="Hapus pop-up"
-                                onclick="confirmDelete('{{ route('admin.popups.destroy', $popup) }}', '{{ addslashes($popup->title) }}')"
-                                class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors duration-150"
-                            >
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                @empty
-                <div class="py-10 text-center flex flex-col items-center gap-2 text-slate-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-                    <p class="text-sm font-medium">Belum ada pop-up</p>
-                </div>
-                @endforelse
-
-                {{-- Tombol Tambah Pop-up (selalu tampil di bawah daftar) --}}
-                <a
-                    href="{{ route('admin.popups.create') }}"
-                    class="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-200 rounded-xl py-5 text-slate-400 hover:text-slate-600 hover:border-slate-400 hover:bg-slate-50 transition-colors duration-150 group"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-slate-300 group-hover:text-slate-500 transition-colors duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    <span class="text-sm font-medium">Tambah Pop-up</span>
-                </a>
+                </section>
             </div>
-        </section>
-    </main>
+
+        </main>
+
+        <!-- Page Footer -->
+        <footer class="mt-auto bg-white border-t border-slate-200 py-4 px-8 text-center text-xs text-slate-400">
+            &copy; {{ date('Y') }} SMAN 2 Situbondo. Panel Administrasi Sistem. All rights reserved.
+        </footer>
+    </div>
+
 </div>
 
 {{-- =========================================================================
-     MODAL — Pilih Tambah Banner atau Pop-up
+     MODAL — Pilih Tambah Banner Gambar atau Pop-up Event
 ========================================================================== --}}
 <div
     id="modal-pilih-tambah"
@@ -325,48 +540,44 @@
     aria-modal="true"
     aria-labelledby="modal-pilih-title"
 >
-    {{-- Backdrop --}}
     <div
         class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
         onclick="document.getElementById('modal-pilih-tambah').classList.add('hidden')"
     ></div>
 
-    {{-- Panel --}}
     <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 animate-in fade-in zoom-in duration-200">
         <h3 id="modal-pilih-title" class="text-lg font-bold text-slate-800 mb-1">Tambah Konten Baru</h3>
         <p class="text-sm text-slate-500 mb-5">Pilih jenis konten yang ingin ditambahkan.</p>
 
         <div class="grid grid-cols-2 gap-3">
-            {{-- Tambah Banner --}}
             <a
                 href="{{ route('admin.banners.create') }}"
-                class="flex flex-col items-center gap-3 p-5 rounded-xl border-2 border-slate-200 hover:border-slate-800 hover:bg-slate-50 transition-all duration-150 group"
+                class="flex flex-col items-center gap-3 p-5 rounded-xl border-2 border-slate-200 hover:border-indigo-600 hover:bg-indigo-50/50 transition-all duration-150 group"
             >
-                <div class="w-12 h-12 bg-slate-100 group-hover:bg-slate-200 rounded-xl flex items-center justify-center transition-colors duration-150">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <div class="w-12 h-12 bg-indigo-50 group-hover:bg-indigo-100 rounded-xl flex items-center justify-center transition-colors duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                 </div>
-                <span class="text-sm font-semibold text-slate-700">Banner</span>
+                <span class="text-xs font-bold text-slate-800">Gambar Banner</span>
             </a>
 
-            {{-- Tambah Pop-up --}}
             <a
                 href="{{ route('admin.popups.create') }}"
-                class="flex flex-col items-center gap-3 p-5 rounded-xl border-2 border-slate-200 hover:border-slate-800 hover:bg-slate-50 transition-all duration-150 group"
+                class="flex flex-col items-center gap-3 p-5 rounded-xl border-2 border-slate-200 hover:border-amber-600 hover:bg-amber-50/50 transition-all duration-150 group"
             >
-                <div class="w-12 h-12 bg-slate-100 group-hover:bg-slate-200 rounded-xl flex items-center justify-center transition-colors duration-150">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <div class="w-12 h-12 bg-amber-50 group-hover:bg-amber-100 rounded-xl flex items-center justify-center transition-colors duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                     </svg>
                 </div>
-                <span class="text-sm font-semibold text-slate-700">Pop-up</span>
+                <span class="text-xs font-bold text-slate-800">Pop-up Event</span>
             </a>
         </div>
 
         <button
             onclick="document.getElementById('modal-pilih-tambah').classList.add('hidden')"
-            class="mt-4 w-full text-sm text-slate-500 hover:text-slate-700 py-2 rounded-lg hover:bg-slate-50 transition-colors duration-150"
+            class="mt-4 w-full text-xs font-semibold text-slate-500 hover:text-slate-700 py-2 rounded-lg hover:bg-slate-50 transition-colors duration-150"
         >
             Batal
         </button>
@@ -430,7 +641,6 @@ function confirmDelete(url, nama) {
 function closeDeleteModal() {
     document.getElementById('modal-hapus').classList.add('hidden');
 }
-// Tutup modal dengan Escape
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         document.getElementById('modal-hapus').classList.add('hidden');

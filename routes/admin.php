@@ -28,18 +28,27 @@ use Illuminate\Support\Facades\Route;
 // Developer Admin dapat langsung mendaftarkan route untuk masing-masing fitur di bawah ini:
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
+use Illuminate\Support\Facades\Auth;
 
 Route::withoutMiddleware(['auth:admin', 'role:admin'])->group(function () {
+    Route::get('/', function () {
+        if (Auth::guard('admin')->check()) {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('admin.login');
+    });
     Route::get('/login', [AuthController::class, 'create'])->name('admin.login');
     Route::post('/login', [AuthController::class, 'store']);
 });
 
 Route::post('/logout', [AuthController::class, 'destroy'])->name('admin.logout');
-// Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
 // =============================================================================
 // AD-01 — Manajemen Banner Web User
 // =============================================================================
+Route::put('banners/headline', [App\Http\Controllers\Admin\BannerController::class, 'updateHeadline'])->name('admin.banners.updateHeadline');
 Route::resource('banners', App\Http\Controllers\Admin\BannerController::class)
     ->except(['show'])
     ->names([

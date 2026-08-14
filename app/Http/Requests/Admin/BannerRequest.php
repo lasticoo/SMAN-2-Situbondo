@@ -26,7 +26,7 @@ class BannerRequest extends FormRequest
             : 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048';
 
         return [
-            'title'      => 'required|string|max:150',
+            'title'      => 'nullable|string|max:150',
             'description'=> 'nullable|string',
             'image'      => $imageRule,
             'is_active'  => 'boolean',
