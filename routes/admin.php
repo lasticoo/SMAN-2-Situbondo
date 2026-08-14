@@ -48,7 +48,6 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.das
 // =============================================================================
 // AD-01 — Manajemen Banner Web User
 // =============================================================================
-Route::put('banners/headline', [App\Http\Controllers\Admin\BannerController::class, 'updateHeadline'])->name('admin.banners.updateHeadline');
 Route::resource('banners', App\Http\Controllers\Admin\BannerController::class)
     ->except(['show'])
     ->names([

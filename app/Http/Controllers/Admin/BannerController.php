@@ -18,50 +18,14 @@ class BannerController extends Controller
 
     /**
      * Tampilkan halaman utama Manajemen Landing Page:
-     * menampilkan Judul Landing Page, daftar gambar banner, dan daftar popup.
+     * menampilkan daftar banner (kiri) dan daftar popup (kanan) sesuai desain.
      */
     public function index(): View
     {
-        $banners      = Banner::orderBy('sort_order')->orderBy('id')->get();
-        $popups       = \App\Models\Popup::orderBy('sort_order')->orderBy('id')->get();
-        $mainHeadline = Banner::whereNotNull('title')->orderBy('id')->first();
+        $banners = Banner::orderBy('sort_order')->orderBy('id')->get();
+        $popups  = \App\Models\Popup::orderBy('sort_order')->orderBy('id')->get();
 
-        return view('admin.banner.index', compact('banners', 'popups', 'mainHeadline'));
-    }
-
-    /**
-     * Perbarui / Simpan Judul & Deskripsi Utama Landing Page.
-     */
-    public function updateHeadline(\Illuminate\Http\Request $request): RedirectResponse
-    {
-        $request->validate([
-            'title'       => 'required|string|max:150',
-            'description' => 'nullable|string',
-        ], [
-            'title.required' => 'Judul Landing Page wajib diisi.',
-            'title.max'      => 'Judul Landing Page maksimal 150 karakter.',
-        ]);
-
-        $headline = Banner::orderBy('id')->first();
-
-        if ($headline) {
-            $headline->update([
-                'title'       => $request->title,
-                'description' => $request->description,
-            ]);
-        } else {
-            Banner::create([
-                'title'       => $request->title,
-                'description' => $request->description,
-                'image_url'   => '/build/assets/banner smada.png',
-                'is_active'   => true,
-                'sort_order'  => 1,
-            ]);
-        }
-
-        return redirect()
-            ->route('admin.banners.index')
-            ->with('success', 'Judul & Deskripsi Landing Page berhasil diperbarui.');
+        return view('admin.banner.index', compact('banners', 'popups'));
     }
 
     /**
@@ -75,29 +39,24 @@ class BannerController extends Controller
     }
 
     /**
-     * Simpan gambar banner baru ke database.
+     * Simpan banner baru ke database.
      * Gambar di-upload, dikompres, dan dikonversi ke WebP sebelum disimpan.
      */
     public function store(BannerRequest $request): RedirectResponse
     {
         $imagePath = $this->processAndStoreImage($request);
 
-        $mainHeadline = Banner::orderBy('id')->first();
-        $title = $request->filled('title') 
-            ? $request->title 
-            : ($mainHeadline ? $mainHeadline->title : 'Banner Slider');
-
         Banner::create([
-            'title'       => $title,
+            'title'       => $request->title,
             'description' => $request->description,
             'image_url'   => $imagePath,
             'is_active'   => $request->boolean('is_active', true),
-            'sort_order'  => $request->sort_order ?? (Banner::max('sort_order') + 1),
+            'sort_order'  => $request->sort_order,
         ]);
 
         return redirect()
             ->route('admin.banners.index')
-            ->with('success', 'Gambar banner berhasil ditambahkan.');
+            ->with('success', 'Banner berhasil ditambahkan.');
     }
 
     /**

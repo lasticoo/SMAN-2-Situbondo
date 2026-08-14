@@ -26,8 +26,8 @@ class BannerRequest extends FormRequest
             : 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048';
 
         return [
-            'title'      => 'nullable|string|max:150',
-            'description'=> 'nullable|string',
+            'title'      => 'required|string|max:150',
+            'description'=> 'required|string',
             'image'      => $imageRule,
             'is_active'  => 'boolean',
             'sort_order' => 'required|integer|min:0',
@@ -42,6 +42,7 @@ class BannerRequest extends FormRequest
         return [
             'title.required'      => 'Judul banner wajib diisi.',
             'title.max'           => 'Judul banner maksimal 150 karakter.',
+            'description.required'=> 'Deskripsi banner wajib diisi.',
             'image.required'      => 'Gambar banner wajib diupload.',
             'image.file'          => 'Upload harus berupa file gambar.',
             'image.mimes'         => 'Format gambar harus JPG, JPEG, PNG, atau WebP.',

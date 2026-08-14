@@ -48,4 +48,18 @@ class AdminAuthenticationTest extends TestCase
 
         $this->assertGuest();
     }
+
+    public function test_guest_cannot_access_any_admin_pages_without_login(): void
+    {
+        $protectedRoutes = [
+            '/admin/dashboard',
+            '/admin/banners',
+            '/admin/popups',
+        ];
+
+        foreach ($protectedRoutes as $route) {
+            $response = $this->get($route);
+            $response->assertRedirect(route('admin.login'));
+        }
+    }
 }
