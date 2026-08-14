@@ -23,30 +23,37 @@ class LandingPageController extends Controller
      */
     public function index()
     {
-        // 1. Fetch Active Banners ordered by sort_order
-        $banners = Banner::where('is_active', true)
-            ->orderBy('sort_order', 'asc')
-            ->get();
+        // 1. Fetch Active Banners ordered by sort_order (Cached 5 minutes)
+        $banners = Cache::remember('landing_active_banners', 300, function () {
+            return Banner::where('is_active', true)
+                ->orderBy('sort_order', 'asc')
+                ->orderBy('id', 'asc')
+                ->get();
+        });
 
-        // 2. Fetch Active Popup Events within current date range
+        // 2. Fetch Active Popup Events within current date range (Cached 5 minutes)
         $today = Carbon::today()->toDateString();
-        $activePopups = Popup::where('is_active', true)
-            ->where(function ($query) use ($today) {
-                $query->whereNull('start_date')
-                      ->orWhereDate('start_date', '<=', $today);
-            })
-            ->where(function ($query) use ($today) {
-                $query->whereNull('end_date')
-                      ->orWhereDate('end_date', '>=', $today);
-            })
-            ->orderBy('sort_order', 'asc')
-            ->orderBy('id', 'desc')
-            ->get();
+        $activePopups = Cache::remember('landing_active_popups_' . $today, 300, function () use ($today) {
+            return Popup::where('is_active', true)
+                ->where(function ($query) use ($today) {
+                    $query->whereNull('start_date')
+                          ->orWhereDate('start_date', '<=', $today);
+                })
+                ->where(function ($query) use ($today) {
+                    $query->whereNull('end_date')
+                          ->orWhereDate('end_date', '>=', $today);
+                })
+                ->orderBy('sort_order', 'asc')
+                ->orderBy('id', 'desc')
+                ->get();
+        });
 
         $activePopup = $activePopups->first();
 
-        // 3. Fetch School Profile
-        $schoolProfile = SchoolProfile::first();
+        // 3. Fetch School Profile (Cached 10 minutes)
+        $schoolProfile = Cache::remember('landing_school_profile', 600, function () {
+            return SchoolProfile::first();
+        });
 
         // 4. Fetch Top 5 Published News
         $newsList = News::where('status', 'published')
@@ -60,55 +67,63 @@ class LandingPageController extends Controller
             ->take(5)
             ->get();
 
-        // 6. Fetch Student Statistics (SMADA Fact) - Total, Kelas X, XI, XII
-        $studentStats = [
-            'total' => Student::where('is_public', true)->count(),
-            'kelas_10' => Student::where('is_public', true)
+        // 6. Fetch Student Statistics (SMADA Fact) - Total, Kelas X, XI, XII (Cached 10 minutes)
+        $studentStats = Cache::remember('landing_student_stats', 600, function () {
+            return [
+                'total' => Student::where('is_public', true)->count(),
+                'kelas_10' => Student::where('is_public', true)
+                    ->where(function ($q) {
+                        $q->where('class', 'like', 'X-%')
+                          ->orWhere('class', 'like', 'X %')
+                          ->orWhere('class', 'X')
+                          ->orWhere('class', 'like', '10%');
+                    })->count(),
+                'kelas_11' => Student::where('is_public', true)
+                    ->where(function ($q) {
+                        $q->where('class', 'like', 'XI-%')
+                          ->orWhere('class', 'like', 'XI %')
+                          ->orWhere('class', 'XI')
+                          ->orWhere('class', 'like', '11%');
+                    })->count(),
+                'kelas_12' => Student::where('is_public', true)
+                    ->where(function ($q) {
+                        $q->where('class', 'like', 'XII-%')
+                          ->orWhere('class', 'like', 'XII %')
+                          ->orWhere('class', 'XII')
+                          ->orWhere('class', 'like', '12%');
+                    })->count(),
+            ];
+        });
+
+        // 7. Fetch Employee Statistics (Guru & Staf) (Cached 10 minutes)
+        $employeeStats = Cache::remember('landing_employee_stats', 600, function () {
+            $totalEmployees = Employee::where('is_active', true)->count();
+            $guruCount = Employee::where('is_active', true)
                 ->where(function ($q) {
-                    $q->where('class', 'like', 'X-%')
-                      ->orWhere('class', 'like', 'X %')
-                      ->orWhere('class', 'X')
-                      ->orWhere('class', 'like', '10%');
-                })->count(),
-            'kelas_11' => Student::where('is_public', true)
-                ->where(function ($q) {
-                    $q->where('class', 'like', 'XI-%')
-                      ->orWhere('class', 'like', 'XI %')
-                      ->orWhere('class', 'XI')
-                      ->orWhere('class', 'like', '11%');
-                })->count(),
-            'kelas_12' => Student::where('is_public', true)
-                ->where(function ($q) {
-                    $q->where('class', 'like', 'XII-%')
-                      ->orWhere('class', 'like', 'XII %')
-                      ->orWhere('class', 'XII')
-                      ->orWhere('class', 'like', '12%');
-                })->count(),
-        ];
+                    $q->where('position', 'like', '%Guru%')
+                      ->orWhere('position', 'like', '%Kepala Sekolah%')
+                      ->orWhere('position', 'like', '%Wakil Kepala Sekolah%')
+                      ->orWhere('position', 'like', '%Pengajar%');
+                })->count();
+            
+            $stafCount = max(0, $totalEmployees - $guruCount);
 
-        // 7. Fetch Employee Statistics (Guru & Staf)
-        $totalEmployees = Employee::where('is_active', true)->count();
-        $guruCount = Employee::where('is_active', true)
-            ->where(function ($q) {
-                $q->where('position', 'like', '%Guru%')
-                  ->orWhere('position', 'like', '%Kepala Sekolah%')
-                  ->orWhere('position', 'like', '%Wakil Kepala Sekolah%')
-                  ->orWhere('position', 'like', '%Pengajar%');
-            })->count();
-        
-        $stafCount = max(0, $totalEmployees - $guruCount);
+            return [
+                'total' => $totalEmployees,
+                'guru' => $guruCount,
+                'staf' => $stafCount,
+            ];
+        });
 
-        $employeeStats = [
-            'total' => $totalEmployees,
-            'guru' => $guruCount,
-            'staf' => $stafCount,
-        ];
+        // 8. Real Live Fetch for Instagram Posts (@sman2situbondoofficial / 10 Posts - Non-blocking Cached 30 Minutes)
+        $instagramPosts = Cache::remember('instagram_feed_sman2situbondo_cached_response', 1800, function () {
+            return $this->fetchInstagramFeedPosts();
+        });
 
-        // 8. Real Live Fetch for Instagram Posts (@sman2situbondoofficial / 10 Posts)
-        $instagramPosts = $this->fetchInstagramFeedPosts();
-
-        // 9. Fetch Theme Colors
-        $colorSetting = ColorSetting::first();
+        // 9. Fetch Theme Colors (Cached 10 minutes)
+        $colorSetting = Cache::remember('landing_color_setting', 600, function () {
+            return ColorSetting::first();
+        });
 
         return view('user.landing.index', compact(
             'banners',
@@ -131,6 +146,12 @@ class LandingPageController extends Controller
     private function fetchInstagramFeedPosts(): array
     {
         $cachedPosts = Cache::get('instagram_feed_sman2situbondo_fifo', []);
+        
+        // If we already have 10 cached posts, return them instantly without blocking network execution
+        if (is_array($cachedPosts) && count($cachedPosts) >= 10) {
+            return $cachedPosts;
+        }
+
         $newFetchedPhotos = [];
         $username = 'sman2situbondoofficial';
 
@@ -139,7 +160,8 @@ class LandingPageController extends Controller
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 2);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
@@ -180,19 +202,20 @@ class LandingPageController extends Controller
                 $ch = curl_init("https://www.instagram.com/{$username}/");
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 2);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
                 curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
-                $html = curl_exec($ch);
+                $response = curl_exec($ch);
                 curl_close($ch);
 
-                if (!empty($html)) {
-                    preg_match_all('/"(display_url|thumbnail_src)":"([^"]+)"/', $html, $imgMatches);
-                    if (!empty($imgMatches[2])) {
-                        foreach ($imgMatches[2] as $rawUrl) {
+                if (!empty($response)) {
+                    preg_match_all('/"(?:display_url|thumbnail_src)":"([^"]+)"/', $response, $matches);
+                    if (!empty($matches[1])) {
+                        foreach ($matches[1] as $rawUrl) {
                             $cleanUrl = str_replace(['\\u0026', '\\/'], ['&', '/'], $rawUrl);
-                            if (str_contains($cleanUrl, 'scontent') && !in_array($cleanUrl, $newFetchedPhotos)) {
+                            if ($cleanUrl && !in_array($cleanUrl, $newFetchedPhotos)) {
                                 $newFetchedPhotos[] = $cleanUrl;
                             }
                             if (count($newFetchedPhotos) >= 10) break;

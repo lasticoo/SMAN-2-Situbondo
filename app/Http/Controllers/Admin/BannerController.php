@@ -54,6 +54,8 @@ class BannerController extends Controller
             'sort_order'  => $request->sort_order,
         ]);
 
+        \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+
         return redirect()
             ->route('admin.banners.index')
             ->with('success', 'Banner berhasil ditambahkan.');
@@ -91,6 +93,8 @@ class BannerController extends Controller
 
         $banner->update($data);
 
+        \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+
         return redirect()
             ->route('admin.banners.index')
             ->with('success', 'Banner berhasil diperbarui.');
@@ -108,6 +112,8 @@ class BannerController extends Controller
 
         $banner->delete();
 
+        \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+
         return redirect()
             ->route('admin.banners.index')
             ->with('success', 'Banner berhasil dihapus.');
@@ -119,6 +125,8 @@ class BannerController extends Controller
     public function toggleActive(Banner $banner): RedirectResponse
     {
         $banner->update(['is_active' => ! $banner->is_active]);
+
+        \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
 
         $status = $banner->is_active ? 'diaktifkan' : 'dinonaktifkan';
 

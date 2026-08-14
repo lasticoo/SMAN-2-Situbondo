@@ -54,6 +54,9 @@ class PopupController extends Controller
             'sort_order'  => $request->sort_order,
         ]);
 
+        \Illuminate\Support\Facades\Cache::forget('landing_active_popups_' . \Illuminate\Support\Carbon::today()->toDateString());
+        \Illuminate\Support\Facades\Cache::forget('landing_active_popups');
+
         return redirect()
             ->route('admin.banners.index')
             ->with('success', 'Pop-up event berhasil ditambahkan.');
@@ -93,6 +96,9 @@ class PopupController extends Controller
 
         $popup->update($data);
 
+        \Illuminate\Support\Facades\Cache::forget('landing_active_popups_' . \Illuminate\Support\Carbon::today()->toDateString());
+        \Illuminate\Support\Facades\Cache::forget('landing_active_popups');
+
         return redirect()
             ->route('admin.banners.index')
             ->with('success', 'Pop-up event berhasil diperbarui.');
@@ -110,6 +116,9 @@ class PopupController extends Controller
 
         $popup->delete();
 
+        \Illuminate\Support\Facades\Cache::forget('landing_active_popups_' . \Illuminate\Support\Carbon::today()->toDateString());
+        \Illuminate\Support\Facades\Cache::forget('landing_active_popups');
+
         return redirect()
             ->route('admin.banners.index')
             ->with('success', 'Pop-up event berhasil dihapus.');
@@ -121,6 +130,9 @@ class PopupController extends Controller
     public function toggleActive(Popup $popup): RedirectResponse
     {
         $popup->update(['is_active' => ! $popup->is_active]);
+
+        \Illuminate\Support\Facades\Cache::forget('landing_active_popups_' . \Illuminate\Support\Carbon::today()->toDateString());
+        \Illuminate\Support\Facades\Cache::forget('landing_active_popups');
 
         $status = $popup->is_active ? 'diaktifkan' : 'dinonaktifkan';
 

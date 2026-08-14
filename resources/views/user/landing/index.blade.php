@@ -17,6 +17,11 @@
     };
 @endphp
 
+<!-- Dynamic High-Priority Preloading for Above-The-Fold Assets & Active Popup -->
+@if(isset($activePopup) && $activePopup->image_url)
+    <link rel="preload" as="image" href="{{ $getImageUrl($activePopup->image_url) }}" fetchpriority="high">
+@endif
+
 <!-- Tailwind CDN & Alpine.js for 100% Exact Layout Parsing -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -32,6 +37,8 @@
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 
 <style>
+  [x-cloak] { display: none !important; }
+
   :root {
     --primary-main: {{ $colorSetting?->primary_color ?? '#001c4d' }};
     --secondary-gold: {{ $colorSetting?->secondary_color ?? '#f59e0b' }};
@@ -43,6 +50,13 @@
   body { font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100%; }
   .font-headline { font-family: 'Hanken Grotesk', sans-serif; }
   .font-serif-italic { font-family: 'Playfair Display', serif; }
+
+  /* Hardware Acceleration (GPU Layer Compositing) for Buttery Smooth 60FPS Animations */
+  .spring-hover, .animate-tick-pulse, .animate-spin-slow {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
 
   /* Dynamic CSS Theme Classes mapped to Database Theme Colors */
   .bg-theme-primary { background-color: var(--primary-main) !important; }
@@ -708,7 +722,7 @@
     @endphp
 
     @if(count($popupsList) > 0)
-        <div x-show="showPopup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70 backdrop-blur-sm" x-transition>
+        <div x-cloak x-show="showPopup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
             <div class="bg-white rounded-xl overflow-hidden max-w-md w-full shadow-2xl relative border border-gray-200">
                 <!-- Close Button (Sequential Close if More Popups Exist) -->
                 <button @click="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70 text-white flex items-center justify-center text-xs font-bold z-20 hover:bg-red-600 transition shadow" title="Tutup">
@@ -716,10 +730,10 @@
                 </button>
 
                 @foreach($popupsList as $pIdx => $popupItem)
-                    <div x-show="popupIndex === {{ $pIdx }}" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+                    <div x-cloak x-show="popupIndex === {{ $pIdx }}" x-transition:enter="transition ease-out duration-200 transform-gpu" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
                         @if($popupItem->image_url)
-                            <div class="w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-100 p-2 sm:p-3">
-                                <img src="{{ $getImageUrl($popupItem->image_url) }}" alt="{{ $popupItem->title }}" class="w-full h-auto max-h-[300px] sm:max-h-[360px] object-contain rounded-lg">
+                            <div class="w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-100 p-2 sm:p-3 min-h-[180px] sm:min-h-[220px]">
+                                <img src="{{ $getImageUrl($popupItem->image_url) }}" alt="{{ $popupItem->title }}" class="w-full h-auto max-h-[300px] sm:max-h-[360px] object-contain rounded-lg transform-gpu" loading="eager" fetchpriority="high" decoding="sync">
                             </div>
                         @endif
                         <div class="p-4 sm:p-5 space-y-3">
