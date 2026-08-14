@@ -190,8 +190,6 @@
                     </div>
                 </div>
 
-                <a class="hover-text-primary flex items-center" href="#tentang">TENTANG KAMI</a>
-
                 <div class="relative group">
                     <button class="hover-text-primary flex items-center uppercase py-1">CIVITAS AKADEMIK <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i></button>
                     <div class="absolute left-0 mt-2 w-52 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
