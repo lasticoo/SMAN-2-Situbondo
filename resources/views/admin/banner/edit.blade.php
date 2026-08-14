@@ -36,19 +36,20 @@
                     {{-- Judul --}}
                     <div>
                         <label for="title" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                            Judul Banner <span class="text-red-500">*</span>
+                            Judul Banner <span class="text-rose-500">*</span>
                         </label>
                         <input
                             type="text"
                             id="title"
                             name="title"
                             value="{{ old('title', $banner->title) }}"
+                            required
                             maxlength="150"
-                            placeholder="Contoh: Penerimaan Siswa Baru 2025"
+                            placeholder="Contoh: SMA Negeri 2 Situbondo"
                             class="w-full px-4 py-2.5 rounded-xl border {{ $errors->has('title') ? 'border-red-400 bg-red-50' : 'border-slate-200' }} text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-colors duration-150"
                         >
                         @error('title')
-                        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1 font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z"/></svg>
                             {{ $message }}
                         </p>
@@ -58,17 +59,18 @@
                     {{-- Deskripsi --}}
                     <div>
                         <label for="description" class="block text-sm font-semibold text-slate-700 mb-1.5">
-                            Deskripsi <span class="text-slate-400 font-normal">(opsional)</span>
+                            Deskripsi Banner <span class="text-rose-500">*</span>
                         </label>
                         <textarea
                             id="description"
                             name="description"
                             rows="3"
+                            required
                             placeholder="Deskripsi singkat untuk banner ini..."
                             class="w-full px-4 py-2.5 rounded-xl border {{ $errors->has('description') ? 'border-red-400 bg-red-50' : 'border-slate-200' }} text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-colors duration-150 resize-none"
                         >{{ old('description', $banner->description) }}</textarea>
                         @error('description')
-                        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                        <p class="mt-1.5 text-xs text-red-600 flex items-center gap-1 font-medium">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z"/></svg>
                             {{ $message }}
                         </p>
@@ -86,10 +88,10 @@
                         </p>
 
                         {{-- Preview gambar saat ini --}}
-                        @if($banner->image_url)
+                        @if($banner->display_image_url)
                         <div class="mb-3 flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl">
                             <img
-                                src="{{ Storage::disk('public')->url($banner->image_url) }}"
+                                src="{{ $banner->display_image_url }}"
                                 alt="{{ $banner->title }}"
                                 class="w-20 h-14 object-cover rounded-lg border border-slate-200"
                             >

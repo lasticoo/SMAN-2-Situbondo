@@ -22,4 +22,30 @@ class Popup extends Model
         'is_active' => 'boolean',
         'sort_order' => 'integer',
     ];
+
+    /**
+     * Accessor URL Gambar publik yang mengarah ke storage/app/public/popups/
+     */
+    public function getDisplayImageUrlAttribute(): ?string
+    {
+        if (! $this->image_url) {
+            return null;
+        }
+
+        $path = str_replace('\\', '/', $this->image_url);
+
+        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+            return $path;
+        }
+
+        if (\Illuminate\Support\Str::startsWith($path, ['/build/', 'build/'])) {
+            return asset(ltrim($path, '/'));
+        }
+
+        if (\Illuminate\Support\Str::startsWith($path, ['storage/', '/storage/'])) {
+            return asset(ltrim($path, '/'));
+        }
+
+        return asset('storage/' . ltrim($path, '/'));
+    }
 }

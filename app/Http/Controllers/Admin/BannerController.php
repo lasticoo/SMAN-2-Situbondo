@@ -28,7 +28,6 @@ class BannerController extends Controller
         return view('admin.banner.index', compact('banners', 'popups'));
     }
 
-
     /**
      * Tampilkan form tambah banner baru.
      */

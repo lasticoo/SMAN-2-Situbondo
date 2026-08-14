@@ -84,10 +84,10 @@
                         </p>
 
                         {{-- Preview gambar saat ini --}}
-                        @if($popup->image_url)
+                        @if($popup->display_image_url)
                         <div class="mb-3 flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl">
                             <img
-                                src="{{ Storage::disk('public')->url($popup->image_url) }}"
+                                src="{{ $popup->display_image_url }}"
                                 alt="{{ $popup->title }}"
                                 class="w-20 h-14 object-cover rounded-lg border border-slate-200"
                             >
