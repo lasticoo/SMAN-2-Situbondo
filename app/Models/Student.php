@@ -22,4 +22,18 @@ class Student extends Model
     {
         return $this->hasMany(GraduationRecord::class, 'nisn', 'nisn');
     }
+
+    /**
+     * Auto-clear caches on update or delete (Invalidate-on-Write)
+     */
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('landing_student_stats');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('landing_student_stats');
+        });
+    }
 }

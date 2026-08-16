@@ -38,10 +38,20 @@ class Banner extends Model
             return asset(ltrim($path, '/'));
         }
 
-        if (\Illuminate\Support\Str::startsWith($path, ['storage/', '/storage/'])) {
-            return asset(ltrim($path, '/'));
-        }
-
         return asset('storage/' . ltrim($path, '/'));
+    }
+
+    /**
+     * Auto-clear caches on update or delete (Invalidate-on-Write)
+     */
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+        });
     }
 }

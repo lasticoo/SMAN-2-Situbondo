@@ -79,9 +79,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<!-- Font Awesome, Google Fonts, & AOS Animation Library -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Tailwind CDN & Alpine.js for 100% Exact Layout & Animation Parsing Across All Pages -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<!-- Font Awesome 6 Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- Google Fonts: Inter, Plus Jakarta Sans, & Hanken Grotesk for Figma Typography -->
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+<!-- AOS (Animate On Scroll) Library CDN for Buttery Smooth 60FPS Animations -->
 <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 
@@ -235,8 +242,8 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
                                 {{ !empty(trim($visionSummary)) ? Str::limit($visionSummary, 120, '...') : 'Menjadi institusi pendidikan terdepan yang menghasilkan lulusan berakhlak mulia, berprestasi akademik, dan siap...' }}
                             </p>
                         </div>
-                        <button @click="openModal('vision')" class="inline-flex items-center text-xs sm:text-sm font-bold text-theme-secondary hover-text-primary transition group cursor-pointer mt-auto self-start">
-                            Lihat Detail <i class="fas fa-arrow-right ml-1.5 text-xs group-hover:translate-x-1 transition-transform"></i>
+                        <button @click="openModal('vision')" class="inline-flex items-center text-xs sm:text-sm font-bold text-theme-primary hover-text-secondary transition group cursor-pointer mt-auto self-start">
+                            Lihat Detail <i class="fas fa-arrow-right ml-1.5 text-xs text-theme-secondary group-hover:translate-x-1 transition-transform"></i>
                         </button>
                         </div>
                     </div>
@@ -260,8 +267,8 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
                                 {{ !empty(trim($historySummary)) ? Str::limit($historySummary, 120, '...') : 'Sejak didirikan, SMAN 2 Situbondo telah mengukir sejarah panjang dalam dunia pendidikan lokal, terus berkembang dan...' }}
                             </p>
                         </div>
-                        <button @click="openModal('history')" class="inline-flex items-center text-xs sm:text-sm font-bold text-theme-secondary hover-text-primary transition group cursor-pointer mt-auto self-start">
-                            Lihat Detail <i class="fas fa-arrow-right ml-1.5 text-xs group-hover:translate-x-1 transition-transform"></i>
+                        <button @click="openModal('history')" class="inline-flex items-center text-xs sm:text-sm font-bold text-theme-primary hover-text-secondary transition group cursor-pointer mt-auto self-start">
+                            Lihat Detail <i class="fas fa-arrow-right ml-1.5 text-xs text-theme-secondary group-hover:translate-x-1 transition-transform"></i>
                         </button>
                         </div>
                     </div>
@@ -282,8 +289,8 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
                                 Tata kelola sekolah didukung oleh struktur organisasi yang profesional dan transparan, memastikan setiap aspek...
                             </p>
                         </div>
-                        <button @click="openModal('structure')" class="inline-flex items-center text-xs sm:text-sm font-bold text-theme-secondary hover-text-primary transition group cursor-pointer mt-auto self-start">
-                            Lihat Detail <i class="fas fa-arrow-right ml-1.5 text-xs group-hover:translate-x-1 transition-transform"></i>
+                        <button @click="openModal('structure')" class="inline-flex items-center text-xs sm:text-sm font-bold text-theme-primary hover-text-secondary transition group cursor-pointer mt-auto self-start">
+                            Lihat Detail <i class="fas fa-arrow-right ml-1.5 text-xs text-theme-secondary group-hover:translate-x-1 transition-transform"></i>
                         </button>
                         </div>
                     </div>
@@ -345,9 +352,10 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
          x-transition:leave="transition ease-in duration-150 transform-gpu"
          x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-95"
-         class="fixed inset-0 z-50 bg-black/80 flex items-start justify-center p-4 sm:p-6 overflow-y-auto">
+         style="z-index: 99999;"
+         class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
         
-        <div @click.away="closeModal()" class="bg-white rounded-2xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl relative border-2 border-theme-primary/20" style="margin-top: 2rem; margin-bottom: 2rem;">
+        <div @click.away="closeModal()" class="bg-white rounded-2xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl relative border-2 border-theme-primary/20 my-auto">
             <!-- Close Button X -->
             <button @click="closeModal()" type="button" aria-label="Tutup Modal Visi Misi" class="absolute top-4 right-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-100 text-gray-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition duration-200 focus:outline-none z-50 cursor-pointer shadow-md border border-gray-200" title="Tutup Modal (Esc)">
                 <i class="fas fa-times text-base sm:text-lg"></i>
@@ -410,9 +418,10 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
          x-transition:leave="transition ease-in duration-150 transform-gpu"
          x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-95"
-         class="fixed inset-0 z-50 bg-black/80 flex items-start justify-center p-4 sm:p-6 overflow-y-auto">
+         style="z-index: 99999;"
+         class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
         
-        <div @click.away="closeModal()" class="bg-white rounded-2xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl relative border-2 border-theme-primary/20" style="margin-top: 2rem; margin-bottom: 2rem;">
+        <div @click.away="closeModal()" class="bg-white rounded-2xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl relative border-2 border-theme-primary/20 my-auto">
             <!-- Close Button X -->
             <button @click="closeModal()" type="button" aria-label="Tutup Modal Sejarah Singkat" class="absolute top-4 right-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-100 text-gray-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition duration-200 focus:outline-none z-50 cursor-pointer shadow-md border border-gray-200" title="Tutup Modal (Esc)">
                 <i class="fas fa-times text-base sm:text-lg"></i>
@@ -452,9 +461,10 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
          x-transition:leave="transition ease-in duration-150 transform-gpu"
          x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-95"
-         class="fixed inset-0 z-50 bg-black/80 flex items-start justify-center p-4 sm:p-6 overflow-y-auto">
+         style="z-index: 99999;"
+         class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
         
-        <div @click.away="closeModal()" class="bg-white rounded-2xl max-w-5xl w-full p-6 sm:p-8 shadow-2xl relative border-2 border-theme-primary/20 my-auto" style="margin-top: 2rem; margin-bottom: 2rem;">
+        <div @click.away="closeModal()" class="bg-white rounded-2xl max-w-5xl w-full p-6 sm:p-8 shadow-2xl relative border-2 border-theme-primary/20 my-auto">
             <!-- Close Button X (Explicitly requested in Point 3) -->
             <button @click="closeModal()" type="button" aria-label="Tutup Modal Struktur Organisasi" class="absolute top-4 right-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-100 text-gray-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition duration-200 focus:outline-none z-50 cursor-pointer shadow-md border border-gray-200" title="Tutup Modal (Esc)">
                 <i class="fas fa-times text-base sm:text-lg"></i>

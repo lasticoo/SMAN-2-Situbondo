@@ -23,52 +23,46 @@ class LandingPageController extends Controller
      */
     public function index()
     {
-        // 1. Fetch Active Banners ordered by sort_order (Cached 5 minutes)
-        $banners = Cache::remember('landing_active_banners', 300, function () {
-            return Banner::where('is_active', true)
-                ->orderBy('sort_order', 'asc')
-                ->orderBy('id', 'asc')
-                ->get();
-        });
+        // 1. Fetch Active Banners ordered by sort_order (Realtime)
+        $banners = Banner::where('is_active', true)
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('id', 'asc')
+            ->get();
 
-        // 2. Fetch Active Popup Events within current date range (Cached 5 minutes)
+        // 2. Fetch Active Popup Events within current date range (Realtime)
         $today = Carbon::today()->toDateString();
-        $activePopups = Cache::remember('landing_active_popups_' . $today, 300, function () use ($today) {
-            return Popup::where('is_active', true)
-                ->where(function ($query) use ($today) {
-                    $query->whereNull('start_date')
-                          ->orWhereDate('start_date', '<=', $today);
-                })
-                ->where(function ($query) use ($today) {
-                    $query->whereNull('end_date')
-                          ->orWhereDate('end_date', '>=', $today);
-                })
-                ->orderBy('sort_order', 'asc')
-                ->orderBy('id', 'desc')
-                ->get();
-        });
+        $activePopups = Popup::where('is_active', true)
+            ->where(function ($query) use ($today) {
+                $query->whereNull('start_date')
+                      ->orWhereDate('start_date', '<=', $today);
+            })
+            ->where(function ($query) use ($today) {
+                $query->whereNull('end_date')
+                      ->orWhereDate('end_date', '>=', $today);
+            })
+            ->orderBy('sort_order', 'asc')
+            ->orderBy('id', 'desc')
+            ->get();
 
         $activePopup = $activePopups->first();
 
-        // 3. Fetch School Profile (Cached 10 minutes)
-        $schoolProfile = Cache::remember('landing_school_profile', 600, function () {
-            return SchoolProfile::first();
-        });
+        // 3. Fetch School Profile (Realtime)
+        $schoolProfile = SchoolProfile::first();
 
-        // 4. Fetch Top 5 Published News
+        // 4. Fetch Top 5 Published News (Realtime)
         $newsList = News::where('status', 'published')
             ->latest('published_at')
             ->take(5)
             ->get();
 
-        // 5. Fetch Top 5 Published Announcements
+        // 5. Fetch Top 5 Published Announcements / Agenda (Realtime)
         $announcementsList = Announcement::where('status', 'published')
             ->latest('published_at')
             ->take(5)
             ->get();
 
-        // 6. Fetch Student Statistics (SMADA Fact) - Total, Kelas X, XI, XII (Cached 10 minutes)
-        $studentStats = Cache::remember('landing_student_stats', 600, function () {
+        // 6. Fetch Student Statistics (SMADA Fact) (Cache-on-Read, Invalidate-on-Write)
+        $studentStats = Cache::remember('landing_student_stats', 86400, function () {
             return [
                 'total' => Student::where('is_public', true)->count(),
                 'kelas_10' => Student::where('is_public', true)
@@ -95,8 +89,8 @@ class LandingPageController extends Controller
             ];
         });
 
-        // 7. Fetch Employee Statistics (Guru & Staf) (Cached 10 minutes)
-        $employeeStats = Cache::remember('landing_employee_stats', 600, function () {
+        // 7. Fetch Employee Statistics (Guru & Staf) (Cache-on-Read, Invalidate-on-Write)
+        $employeeStats = Cache::remember('landing_employee_stats', 86400, function () {
             $totalEmployees = Employee::where('is_active', true)->count();
             $guruCount = Employee::where('is_active', true)
                 ->where(function ($q) {
@@ -120,10 +114,8 @@ class LandingPageController extends Controller
             return $this->fetchInstagramFeedPosts();
         });
 
-        // 9. Fetch Theme Colors (Cached 10 minutes)
-        $colorSetting = Cache::remember('landing_color_setting', 600, function () {
-            return ColorSetting::first();
-        });
+        // 9. Fetch Theme Colors Realtime from Database (100% Dynamic)
+        $colorSetting = ColorSetting::first();
 
         return view('user.landing.index', compact(
             'banners',
@@ -140,73 +132,101 @@ class LandingPageController extends Controller
     }
 
     /**
-     * Real Instagram scraping engine for @sman2situbondoofficial (10 Photos, FIFO Slide logic)
-     * Rule 7: Direct live scraping without asset/DB fallbacks.
+     * Multi-Tiered Self-Healing Instagram Scraping Engine for @sman2situbondoofficial
+     * Fetches live posts, saves to local storage, and loops back from Tier 4 to Tier 1-3 on subsequent refreshes.
      */
     private function fetchInstagramFeedPosts(): array
     {
-        $cachedPosts = Cache::get('instagram_feed_sman2situbondo_fifo', []);
-        
-        // If we already have 10 cached posts, return them instantly without blocking network execution
-        if (is_array($cachedPosts) && count($cachedPosts) >= 10) {
-            return $cachedPosts;
+        $storageDir = public_path('storage/instagram_cache');
+        if (!file_exists($storageDir)) {
+            @mkdir($storageDir, 0755, true);
         }
 
-        $newFetchedPhotos = [];
-        $username = 'sman2situbondoofficial';
+        // Check if we are in a brief Tier 4 cooldown period (e.g. 60 seconds after a failed network attempt)
+        // Once this 60-second cooldown expires, the next refresh automatically retries Tier 1 -> Tier 2 -> Tier 3!
+        $isInRetryCooldown = Cache::has('instagram_tier4_retry_cooldown');
 
-        try {
-            $url = "https://www.instagram.com/api/v1/users/web_profile_info/?username={$username}";
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'X-IG-App-ID: 936619743392459',
-                'Accept: */*',
-                'Accept-Language: id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Sec-Fetch-Mode: cors',
-                'Sec-Fetch-Site: same-origin',
-            ]);
-
-            $response = curl_exec($ch);
-            $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if ($status === 200 && !empty($response)) {
-                $json = json_decode($response, true);
-                if (isset($json['data']['user']['edge_owner_to_timeline_media']['edges'])) {
-                    $edges = $json['data']['user']['edge_owner_to_timeline_media']['edges'];
-                    foreach ($edges as $edge) {
-                        $node = $edge['node'] ?? [];
-                        // 7c. Take ONLY the first photo of the post (display_url / thumbnail_src)
-                        $photoUrl = $node['display_url'] ?? $node['thumbnail_src'] ?? null;
-                        if ($photoUrl && !in_array($photoUrl, $newFetchedPhotos)) {
-                            $newFetchedPhotos[] = $photoUrl;
-                        }
-                        if (count($newFetchedPhotos) >= 10) break;
-                    }
+        // If in short cooldown and we have disk files, serve them immediately to avoid network blocking
+        if ($isInRetryCooldown) {
+            $existingDiskPosts = [];
+            for ($i = 1; $i <= 10; $i++) {
+                $filename = 'post_' . $i . '.jpg';
+                if (file_exists($storageDir . '/' . $filename) && filesize($storageDir . '/' . $filename) > 1000) {
+                    $existingDiskPosts[] = '/storage/instagram_cache/' . $filename;
                 }
             }
-        } catch (\Throwable $e) {
-            // Silently handle exceptions
+            if (count($existingDiskPosts) >= 10) {
+                return $existingDiskPosts;
+            }
         }
 
-        // Secondary fallback to HTML Regex extraction if API header format changes
+        $username = 'sman2situbondoofficial';
+        $newFetchedPhotos = [];
+
+        // =========================================================================
+        // --- TIER 1: Live Instagram Profile Info API (Primary & Alternate App IDs) ---
+        // =========================================================================
+        $appIds = ['936619743392459', '1217981644879628'];
+        foreach ($appIds as $appId) {
+            try {
+                $url = "https://www.instagram.com/api/v1/users/web_profile_info/?username={$username}";
+                $ch = curl_init($url);
+                curl_setopt_array($ch, [
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_CONNECTTIMEOUT => 2,
+                    CURLOPT_TIMEOUT => 4,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_SSL_VERIFYHOST => false,
+                    CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                    CURLOPT_HTTPHEADER => [
+                        "X-IG-App-ID: {$appId}",
+                        'Accept: */*',
+                        'Accept-Language: id-ID,id;q=0.9,en-US;q=0.8',
+                        'Sec-Fetch-Mode: cors',
+                        'Sec-Fetch-Site: same-origin',
+                    ],
+                ]);
+
+                $response = curl_exec($ch);
+                $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+
+                if ($status === 200 && !empty($response)) {
+                    $json = json_decode($response, true);
+                    $edges = $json['data']['user']['edge_owner_to_timeline_media']['edges'] ?? [];
+                    if (!empty($edges)) {
+                        foreach ($edges as $edge) {
+                            $node = $edge['node'] ?? [];
+                            $photoUrl = $node['display_url'] ?? $node['thumbnail_src'] ?? null;
+                            if ($photoUrl && !in_array($photoUrl, $newFetchedPhotos)) {
+                                $newFetchedPhotos[] = $photoUrl;
+                            }
+                            if (count($newFetchedPhotos) >= 10) break;
+                        }
+                    }
+                }
+            } catch (\Throwable $e) {
+                // Try next App ID or next tier
+            }
+            if (!empty($newFetchedPhotos)) break;
+        }
+
+        // =========================================================================
+        // --- TIER 2: Secondary Fallback - Direct Instagram Profile HTML Scraping ---
+        // =========================================================================
         if (empty($newFetchedPhotos)) {
             try {
                 $ch = curl_init("https://www.instagram.com/{$username}/");
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 2);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-                curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36');
+                curl_setopt_array($ch, [
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_CONNECTTIMEOUT => 2,
+                    CURLOPT_TIMEOUT => 4,
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_SSL_VERIFYHOST => false,
+                    CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                ]);
                 $response = curl_exec($ch);
                 curl_close($ch);
 
@@ -223,29 +243,69 @@ class LandingPageController extends Controller
                     }
                 }
             } catch (\Throwable $e) {
-                // Silently handle
+                // Try next tier
             }
         }
 
-        // 7e. FIFO Rotation & Cache Logic (Newest post enters Slide 1, Slide 10 drops off)
+        // =========================================================================
+        // --- TIER 3: Download & Persist Live Photos Locally ---
+        // =========================================================================
         if (!empty($newFetchedPhotos)) {
-            if (empty($cachedPosts)) {
-                $cachedPosts = array_slice($newFetchedPhotos, 0, 10);
-            } else {
-                foreach (array_reverse($newFetchedPhotos) as $latestPhoto) {
-                    if (!in_array($latestPhoto, $cachedPosts)) {
-                        array_unshift($cachedPosts, $latestPhoto);
-                        if (count($cachedPosts) > 10) {
-                            array_pop($cachedPosts); // Slide 10 drops off
-                        }
+            $savedLocalPosts = [];
+            foreach ($newFetchedPhotos as $i => $remoteUrl) {
+                $filename = 'post_' . ($i + 1) . '.jpg';
+                $localPath = $storageDir . '/' . $filename;
+
+                try {
+                    $imgCh = curl_init($remoteUrl);
+                    curl_setopt_array($imgCh, [
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_TIMEOUT => 6,
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                    ]);
+                    $imgData = curl_exec($imgCh);
+                    $imgStatus = curl_getinfo($imgCh, CURLINFO_HTTP_CODE);
+                    curl_close($imgCh);
+
+                    if ($imgStatus === 200 && !empty($imgData)) {
+                        @file_put_contents($localPath, $imgData);
+                        $savedLocalPosts[] = '/storage/instagram_cache/' . $filename;
                     }
+                } catch (\Throwable $e) {
+                    // Continue to next photo
                 }
             }
-            Cache::put('instagram_feed_sman2situbondo_fifo', $cachedPosts, 300);
-            return $cachedPosts;
+
+            if (!empty($savedLocalPosts)) {
+                // Clear any fallback retry flags on success and cache normal sync
+                Cache::forget('instagram_tier4_retry_cooldown');
+                Cache::put('instagram_feed_sman2situbondo_local', $savedLocalPosts, 1800);
+                return $savedLocalPosts;
+            }
         }
 
-        return !empty($cachedPosts) ? array_slice($cachedPosts, 0, 10) : [];
+        // =========================================================================
+        // --- TIER 4: Persistent Disk Fallback & Scheduled Retry Trigger ---
+        // =========================================================================
+        // If live scraping failed, set a short 60s cooldown so on the next refresh after 60s,
+        // the system automatically tries Tier 1 -> Tier 2 -> Tier 3 again!
+        Cache::put('instagram_tier4_retry_cooldown', true, 60);
+
+        $existingDiskPosts = [];
+        for ($i = 1; $i <= 10; $i++) {
+            $filename = 'post_' . $i . '.jpg';
+            if (file_exists($storageDir . '/' . $filename) && filesize($storageDir . '/' . $filename) > 1000) {
+                $existingDiskPosts[] = '/storage/instagram_cache/' . $filename;
+            }
+        }
+
+        if (!empty($existingDiskPosts)) {
+            return $existingDiskPosts;
+        }
+
+        return [];
     }
 
     /**

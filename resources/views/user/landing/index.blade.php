@@ -3,21 +3,87 @@
 @section('content')
 @php
     $getImageUrl = function (?string $path, string $default = '/build/assets/banner smada.png'): string {
+        static $resolvedCache = [];
         if (empty($path)) return $default;
-        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
-            if (\Illuminate\Support\Str::contains($path, ['fbcdn.net', 'cdninstagram.com', 'instagram.com'])) {
-                return route('instagram.proxy', ['url' => base64_encode($path)]);
+        
+        // 1. Normalize Windows backslashes, leading/trailing whitespace
+        $clean = trim(str_replace('\\', '/', $path));
+        if (empty($clean)) return $default;
+        
+        if (isset($resolvedCache[$clean])) {
+            return $resolvedCache[$clean];
+        }
+        
+        // 2. Full external URL or Data URI
+        if (\Illuminate\Support\Str::startsWith($clean, ['http://', 'https://', '//', 'data:image/'])) {
+            return $resolvedCache[$clean] = $clean;
+        }
+        
+        // 3. Absolute local filesystem path on server (e.g. C:/laragon/www/smada/public/...)
+        $publicBasePath = str_replace('\\', '/', public_path());
+        if (\Illuminate\Support\Str::startsWith($clean, $publicBasePath)) {
+            $rel = ltrim(substr($clean, strlen($publicBasePath)), '/');
+            return $resolvedCache[$clean] = asset($rel);
+        }
+        
+        // 4. Starts with / (e.g. /images/..., /storage/..., /build/..., /uploads/...)
+        if (\Illuminate\Support\Str::startsWith($clean, '/')) {
+            return $resolvedCache[$clean] = asset(ltrim($clean, '/'));
+        }
+        
+        // 5. Stored as public/... or app/public/...
+        if (\Illuminate\Support\Str::startsWith($clean, 'public/')) {
+            $clean = substr($clean, 7);
+        }
+        if (\Illuminate\Support\Str::startsWith($clean, 'app/public/')) {
+            $clean = substr($clean, 11);
+        }
+        
+        // 6. Stored with storage/ prefix (e.g. storage/news/xyz.jpg)
+        if (\Illuminate\Support\Str::startsWith($clean, 'storage/')) {
+            return $resolvedCache[$clean] = asset($clean);
+        }
+        
+        // 7. Direct file in public/ directory
+        if (file_exists(public_path($clean))) {
+            return $resolvedCache[$clean] = asset($clean);
+        }
+        
+        // 8. Stored on Laravel public disk (e.g. news/xyz.jpg, announcements/xyz.jpg)
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($clean)) {
+            return $resolvedCache[$clean] = \Illuminate\Support\Facades\Storage::disk('public')->url($clean);
+        }
+        
+        // 9. Stored in subfolder without folder prefix (check common folders for filename only)
+        $subfolders = ['news/', 'berita/', 'announcements/', 'announcement/', 'pengumuman/', 'banners/', 'banner/', 'popups/', 'popup/', 'employees/', 'employee/', 'guru/', 'pegawai/', 'school_profile/', 'structure/', 'images/static/', 'images/', 'uploads/'];
+        foreach ($subfolders as $folder) {
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($folder . $clean)) {
+                return $resolvedCache[$clean] = \Illuminate\Support\Facades\Storage::disk('public')->url($folder . $clean);
             }
-            return $path;
+            if (file_exists(public_path($folder . $clean))) {
+                return $resolvedCache[$clean] = asset($folder . $clean);
+            }
+            if (file_exists(public_path('storage/' . $folder . $clean))) {
+                return $resolvedCache[$clean] = asset('storage/' . $folder . $clean);
+            }
         }
-        if (\Illuminate\Support\Str::startsWith($path, '/')) {
-            return $path;
-        }
-        return \Illuminate\Support\Facades\Storage::url($path);
+        
+        // 10. Fallback: Storage disk URL or Asset URL
+        return $resolvedCache[$clean] = \Illuminate\Support\Facades\Storage::disk('public')->url($clean);
     };
 @endphp
 
-<!-- Dynamic High-Priority Preloading for Above-The-Fold Assets & Active Popup -->
+<!-- High-Speed Resource Hints & Asset Preloading -->
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+<link rel="dns-prefetch" href="//fonts.gstatic.com">
+<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+<link rel="dns-prefetch" href="//unpkg.com">
+<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Dynamic High-Priority Preloading for Above-The-Fold Assets -->
+<link rel="preload" as="image" href="{{ asset('build/assets/banner smada.png') }}" fetchpriority="high">
 @if(isset($activePopup) && $activePopup->image_url)
     <link rel="preload" as="image" href="{{ $getImageUrl($activePopup->image_url) }}" fetchpriority="high">
 @endif
@@ -28,8 +94,6 @@
 <!-- Font Awesome 6 Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Google Fonts: Inter & Hanken Grotesk for Figma Typography -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
 
 <!-- AOS (Animate On Scroll) Library CDN for Buttery Smooth 60FPS Animations (13KB Lightweight) -->
@@ -164,7 +228,7 @@
         @if(count($banners) > 0)
             @foreach($banners as $index => $banner)
                 <div x-show="activeSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 scale-105" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0 w-full h-full flex items-center">
-                    <img src="{{ $getImageUrl($banner->image_url) }}" alt="{{ $banner->title }}" class="absolute inset-0 w-full h-full object-cover opacity-40">
+                    <img src="{{ $getImageUrl($banner->image_url) }}" alt="{{ $banner->title }}" class="absolute inset-0 w-full h-full object-cover opacity-40" loading="{{ $index === 0 ? 'eager' : 'lazy' }}" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
                     <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
                     <div class="container mx-auto px-4 relative z-10 text-white">
                         <div class="max-w-2xl space-y-3 sm:space-y-4">
@@ -292,7 +356,7 @@
                     <div class="lg:col-span-1 bg-white rounded-lg shadow-md overflow-hidden border border-gray-100 flex flex-col justify-between img-zoom-box spring-hover" data-aos="fade-right" data-aos-duration="900">
                         <div>
                             <div class="w-full h-48 sm:h-52 bg-white flex items-center justify-center overflow-hidden border-b border-gray-100">
-                                <img alt="{{ $firstNews->title }}" class="w-full h-full object-contain p-1.5" src="{{ $getImageUrl($firstNews->thumbnail_url) }}">
+                                <img alt="{{ $firstNews->title }}" class="w-full h-full object-contain p-1.5" src="{{ $getImageUrl($firstNews->thumbnail_url) }}" loading="lazy" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
                             </div>
                             <div class="p-4 sm:p-5 space-y-2">
                                 <h3 class="font-bold text-base sm:text-lg leading-snug hover-text-primary font-headline text-gray-900 uppercase">
@@ -316,7 +380,7 @@
                         @foreach($newsList->slice(1, 4) as $idx => $item)
                             <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden flex items-stretch hover:shadow-md transition min-h-[160px] sm:h-[176px] img-zoom-box spring-hover" data-aos="fade-left" data-aos-duration="800" data-aos-delay="{{ ($idx + 1) * 100 }}">
                                 <div class="w-28 sm:w-32 md:w-36 min-h-[160px] sm:h-[176px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
-                                    <img alt="{{ $item->title }}" class="w-full h-full object-contain p-1.5" src="{{ $getImageUrl($item->thumbnail_url) }}">
+                                    <img alt="{{ $item->title }}" class="w-full h-full object-contain p-1.5" src="{{ $getImageUrl($item->thumbnail_url) }}" loading="lazy" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
                                 </div>
                                 <div class="p-3.5 sm:p-4 flex flex-col justify-between flex-1 min-h-[160px] sm:h-[176px]">
                                     <div>
@@ -451,7 +515,7 @@
                         @php $firstAnn = $announcementsList->first(); @endphp
                         <div class="bg-gray-50 rounded-lg p-4 sm:p-5 shadow flex flex-col justify-between border border-gray-100 h-full spring-hover" data-aos="fade-right" data-aos-duration="900">
                             <div>
-                                <img alt="{{ $firstAnn->title }}" class="w-full h-40 sm:h-44 object-cover mb-4 rounded-lg" src="{{ $getImageUrl($firstAnn->thumbnail_url) }}">
+                                <img alt="{{ $firstAnn->title }}" class="w-full h-40 sm:h-44 object-cover mb-4 rounded-lg" src="{{ $getImageUrl($firstAnn->thumbnail_url) }}" loading="lazy" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
                                 <h3 class="font-bold mb-2 text-slate-900 text-xs sm:text-sm uppercase leading-snug font-headline">{{ $firstAnn->title }}</h3>
                                 <p class="text-[11px] sm:text-xs text-gray-500 mb-3 flex items-center gap-1 font-medium">
                                     <i class="far fa-calendar-alt text-theme-secondary"></i> {{ $firstAnn->published_at ? $firstAnn->published_at->format('F d, Y') : 'July 16, 2022' }}
@@ -470,7 +534,7 @@
                             @foreach($announcementsList->slice(1, 2) as $idx => $annItem)
                                 <div class="bg-gray-50 rounded-lg shadow border border-gray-100 flex items-stretch overflow-hidden hover:shadow-md transition min-h-[160px] sm:h-[180px] img-zoom-box spring-hover" data-aos="fade-up" data-aos-duration="800" data-aos-delay="{{ ($idx + 1) * 200 }}">
                                     <div class="w-28 sm:w-32 md:w-36 min-h-[160px] sm:h-[180px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
-                                        <img alt="{{ $annItem->title }}" class="w-full h-full object-contain p-1.5" src="{{ $getImageUrl($annItem->thumbnail_url) }}">
+                                        <img alt="{{ $annItem->title }}" class="w-full h-full object-contain p-1.5" src="{{ $getImageUrl($annItem->thumbnail_url) }}" loading="lazy" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
                                     </div>
                                     <div class="p-3.5 sm:p-4 flex flex-col justify-between flex-1 min-h-[160px] sm:h-[180px]">
                                         <div>
@@ -578,10 +642,24 @@
     @endphp
 
     @if(count($popupsList) > 0)
-        <div x-cloak x-show="showPopup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
-            <div class="bg-white rounded-xl overflow-hidden max-w-md w-full shadow-2xl relative border border-gray-200">
-                <!-- Close Button (Sequential Close if More Popups Exist) -->
-                <button @click="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70 text-white flex items-center justify-center text-xs font-bold z-20 hover:bg-red-600 transition shadow" title="Tutup">
+        <div x-cloak 
+             x-show="showPopup" 
+             style="z-index: 99999;"
+             class="fixed inset-0 flex items-center justify-center p-3 sm:p-4 bg-black/80 overflow-y-auto" 
+             x-transition:enter="transition ease-out duration-150" 
+             x-transition:enter-start="opacity-0" 
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-100"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+            <div @click.away="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }"
+                 class="bg-white rounded-2xl overflow-hidden max-w-md w-full shadow-2xl relative border border-gray-200 my-auto max-h-[92vh] flex flex-col transform-gpu">
+                <!-- Close Button (Always visible on mobile, elevated z-30, large touch target) -->
+                <button @click="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }" 
+                        type="button"
+                        aria-label="Tutup Popup"
+                        class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/75 hover:bg-red-600 text-white flex items-center justify-center text-sm font-bold z-30 transition-all duration-150 shadow-lg cursor-pointer border border-white/20 active:scale-95" 
+                        title="Tutup Popup">
                     <i class="fas fa-times"></i>
                 </button>
 
@@ -589,7 +667,7 @@
                     <div x-cloak x-show="popupIndex === {{ $pIdx }}" x-transition:enter="transition ease-out duration-200 transform-gpu" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
                         @if($popupItem->image_url)
                             <div class="w-full bg-white flex items-center justify-center overflow-hidden border-b border-gray-100 p-2 sm:p-3 min-h-[180px] sm:min-h-[220px]">
-                                <img src="{{ $getImageUrl($popupItem->image_url) }}" alt="{{ $popupItem->title }}" class="w-full h-auto max-h-[300px] sm:max-h-[360px] object-contain rounded-lg transform-gpu" loading="eager" fetchpriority="high" decoding="sync">
+                                <img src="{{ $getImageUrl($popupItem->image_url) }}" alt="{{ $popupItem->title }}" class="w-full h-auto max-h-[300px] sm:max-h-[360px] object-contain rounded-lg transform-gpu" loading="eager" fetchpriority="high" decoding="sync" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
                             </div>
                         @endif
                         <div class="p-4 sm:p-5 space-y-3">

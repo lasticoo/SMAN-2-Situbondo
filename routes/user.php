@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\LandingPageController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,4 +30,10 @@ Route::get('/instagram-proxy', [LandingPageController::class, 'proxyInstagramIma
 // US-02 Profil Sekolah
 Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
 Route::get('/profile', [ProfileController::class, 'index']);
+
+// US-03 Civitas Akademik (Data Pegawai & Guru)
+Route::get('/civitas-akademik', [EmployeeController::class, 'index'])->name('civitas.index');
+Route::get('/pegawai', [EmployeeController::class, 'index'])->name('employee.index');
+Route::get('/guru-dan-pegawai', [EmployeeController::class, 'index']);
+
 

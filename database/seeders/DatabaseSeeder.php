@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminSeeder::class,
             LandingPageTestDataSeeder::class,
+            SchoolProfileSeeder::class,
         ]);
     }
 }
