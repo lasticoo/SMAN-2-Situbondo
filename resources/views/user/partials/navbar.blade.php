@@ -115,12 +115,12 @@
                  @mouseleave="closeDropdownWithDelay()">
                 <button type="button" 
                         @click="toggleDropdown('civitas')"
-                        class="relative py-1 flex items-center gap-1.5 uppercase transition-colors duration-200 cursor-pointer {{ request()->routeIs('civitas.*') || request()->routeIs('employee.*') ? 'text-theme-primary font-bold' : 'hover-text-primary' }}"
-                        aria-haspopup="true"
+                        class="relative py-1 flex items-center gap-1.5 uppercase transition-colors duration-200 cursor-pointer {{ request()->routeIs('civitas.*') || request()->routeIs('employee.*') || request()->routeIs('student.*') ? 'text-theme-primary font-bold' : 'hover-text-primary' }}"
+                        aria-haspopup="true" 
                         :aria-expanded="activeDropdown === 'civitas'">
                     <span>CIVITAS AKADEMIK</span>
                     <i class="fas fa-chevron-down text-[9px] transition-transform duration-250" :class="activeDropdown === 'civitas' ? 'rotate-180 text-theme-primary' : ''"></i>
-                    <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('civitas.*') || request()->routeIs('employee.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'civitas' ? 'w-full' : ''"></span>
+                    <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('civitas.*') || request()->routeIs('employee.*') || request()->routeIs('student.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'civitas' ? 'w-full' : ''"></span>
                 </button>
                 <div x-show="activeDropdown === 'civitas'" 
                      x-cloak
@@ -139,7 +139,7 @@
                             <span>Data Pegawai</span>
                             <i class="fas fa-chevron-right text-[9px] opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 transition-all text-theme-secondary"></i>
                         </a>
-                        <a class="flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-slate-900 hover:text-theme-primary hover:bg-slate-100 rounded-xl transition-all duration-150 group/item" href="{{ route('home') }}#siswa">
+                        <a class="flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-slate-900 hover:text-theme-primary hover:bg-slate-100 rounded-xl transition-all duration-150 group/item {{ request()->routeIs('student.*') ? 'text-theme-primary bg-slate-50' : '' }}" href="{{ route('student.index') }}">
                             <span>Data Siswa</span>
                             <i class="fas fa-chevron-right text-[9px] opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 transition-all text-theme-secondary"></i>
                         </a>
@@ -250,7 +250,7 @@
             </button>
             <div x-show="mobileCivitasOpen" x-collapse class="space-y-1 pl-3 border-l-2 border-theme-secondary my-1">
                 <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('civitas.*') || request()->routeIs('employee.*') ? 'text-theme-primary font-bold' : 'text-gray-600' }}" href="{{ route('civitas.index') }}">Data Pegawai</a>
-                <a class="block py-1.5 text-gray-600 hover-text-primary text-xs" href="{{ route('home') }}#siswa">Data Siswa</a>
+                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('student.*') ? 'text-theme-primary font-bold' : 'text-gray-600' }}" href="{{ route('student.index') }}">Data Siswa</a>
             </div>
         </div>
 
