@@ -153,85 +153,9 @@
 }" class="min-h-screen font-sans antialiased text-gray-800 bg-gray-50 overflow-x-hidden">
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 1. TOP UTILITY BAR (RESPONSIVE MULTI-DEVICE SUPPORT) -->
+    <!-- 1 & 2. SHARED NAVBAR & TOPBAR COMPONENT -->
     <!-- ------------------------------------------------------------- -->
-    <div class="bg-gray-100 py-1.5 text-xs border-b border-gray-200">
-        <div class="container mx-auto px-4 flex flex-wrap justify-between items-center gap-2">
-            <div class="flex items-center space-x-2">
-                       </div>
-            <div class="flex flex-wrap space-x-3 sm:space-x-4 items-center font-medium text-gray-700 text-[11px] sm:text-xs">
-                <a class="hover-text-primary transition hidden sm:inline" href="mailto:smadasit@yahoo.com">smadasit@yahoo.com</a>
-                <a class="hover-text-primary transition" href="tel:0338671618">(0338) 671618</a>
-                <a class="hover-text-primary transition" href="#alumni">Alumni</a>
-                <a class="hover-text-primary transition" href="#siklus">SIKLUS</a>
-                <a class="bg-theme-secondary text-slate-950 px-2.5 sm:px-3.5 py-0.5 sm:py-1 font-bold rounded-lg shadow-sm hover-bg-secondary transition spring-hover" href="#mysmada">MySmada</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ------------------------------------------------------------- -->
-    <!-- 2. MAIN HEADER NAVBAR (WITH RESPONSIVE MOBILE TOGGLE MENU) -->
-    <!-- ------------------------------------------------------------- -->
-    <header class="bg-white py-3.5 shadow-sm sticky top-0 z-50 border-b border-gray-100" x-data="{ mobileMenuOpen: false }">
-        <div class="container mx-auto px-4 flex justify-between md:justify-end items-center">
-            <!-- Mobile Brand Title (Mobile/Tablet Only) -->
-            <span class="md:hidden font-extrabold text-theme-primary text-base font-headline uppercase tracking-wider">SMAN 2 SITUBONDO</span>
-
-            <!-- Desktop Nav Menu -->
-            <nav class="hidden md:flex space-x-6 text-sm font-semibold text-gray-700 items-center">
-                <a class="text-theme-primary font-bold border-b-2 border-theme-secondary pb-0.5" href="{{ route('home') }}">BERANDA</a>
-                
-                <div class="relative group">
-                    <button class="hover-text-primary flex items-center uppercase py-1">PROFIL <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i></button>
-                    <div class="absolute left-0 mt-2 w-52 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover-text-primary" href="#profil">Visi, Misi &amp; Tujuan</a>
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover-text-primary" href="#profil">Sejarah Singkat</a>
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover-text-primary" href="#profil">Struktur Organisasi</a>
-                    </div>
-                </div>
-
-                <div class="relative group">
-                    <button class="hover-text-primary flex items-center uppercase py-1">CIVITAS AKADEMIK <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i></button>
-                    <div class="absolute left-0 mt-2 w-52 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover-text-primary" href="#civitas">Data Pegawai</a>
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover-text-primary" href="#siswa">Data Siswa</a>
-                    </div>
-                </div>
-
-                <a class="hover-text-primary flex items-center" href="#pengumuman">PENGUMUMAN</a>
-
-                <div class="relative group">
-                    <button class="hover-text-primary flex items-center uppercase py-1">MEDIA <i class="fas fa-chevron-down ml-1.5 text-[10px]"></i></button>
-                    <div class="absolute left-0 mt-2 w-52 bg-white shadow-xl rounded-lg py-2 hidden group-hover:block z-50 border border-gray-100">
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover-text-primary" href="#media">Galeri</a>
-                        <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover-text-primary" href="#media">Video</a>
-                    </div>
-                </div>
-
-                <a class="hover-text-primary flex items-center" href="#berita">BERITA</a>
-                <a class="hover-text-primary flex items-center" href="#contact">CONTACT</a>
-                <a class="bg-theme-secondary text-slate-950 px-3.5 py-1 rounded-full font-extrabold shadow-sm hover-bg-secondary transition uppercase spring-hover" href="#spmb">SPMB</a>
-            </nav>
-
-            <!-- Mobile Hamburger Toggle Button -->
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-700 p-2 focus:outline-none rounded-lg border border-gray-200 hover:bg-gray-50" aria-label="Toggle Mobile Menu">
-                <i class="fas text-xl" :class="mobileMenuOpen ? 'fa-times' : 'fa-bars'"></i>
-            </button>
-        </div>
-
-        <!-- Mobile Navigation Menu Dropdown -->
-        <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" class="md:hidden bg-white border-t border-gray-100 px-4 pt-3 pb-4 space-y-2.5 shadow-lg">
-            <a @click="mobileMenuOpen = false" class="block text-theme-primary font-bold py-1.5 border-b border-gray-100 text-sm" href="{{ route('home') }}">BERANDA</a>
-            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#profil">PROFIL SEKOLAH</a>
-            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#tentang">TENTANG KAMI</a>
-            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#civitas">CIVITAS AKADEMIK</a>
-            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#pengumuman">PENGUMUMAN</a>
-            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#media">MEDIA</a>
-            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#berita">BERITA</a>
-            <a @click="mobileMenuOpen = false" class="block text-gray-700 hover:text-theme-primary font-semibold py-1.5 border-b border-gray-100 text-sm" href="#contact">CONTACT</a>
-            <a @click="mobileMenuOpen = false" class="block bg-theme-secondary text-slate-950 px-4 py-2 rounded-full font-extrabold text-center text-sm uppercase mt-2 shadow-sm" href="#spmb">SPMB</a>
-        </div>
-    </header>
+    @include('user.partials.navbar')
 
     <!-- ------------------------------------------------------------- -->
     <!-- 3. HERO SECTION (DYNAMIC BANNERS LOOP FROM DATABASE) -->
@@ -333,7 +257,10 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center">
                 <div class="md:col-span-1 flex justify-center" data-aos="fade-right" data-aos-duration="1000">
-                    <img alt="NIKMATIL HASANAH, S.Pd, M.Pd" class="w-48 sm:w-64 h-auto object-cover rounded-lg shadow-2xl border-2 border-theme-secondary spring-hover" src="/build/assets/kepala sekolah smada.png">
+                    <picture>
+                        <source srcset="{{ asset('images/static/kepseksmada.webp') }}" type="image/webp">
+                        <img alt="NIKMATIL HASANAH, S.Pd, M.Pd" class="w-48 sm:w-64 h-auto object-cover rounded-lg shadow-2xl border-2 border-theme-secondary spring-hover" src="{{ asset('images/static/kepseksmada.png') }}" loading="lazy" decoding="async" width="256" height="427">
+                    </picture>
                 </div>
                 <div class="md:col-span-2 space-y-2.5 sm:space-y-3" data-aos="fade-left" data-aos-duration="1000">
                     <h3 class="font-bold text-xl sm:text-2xl leading-tight font-headline text-white">NIKMATIL HASANAH, S.Pd, M.Pd</h3>
@@ -638,79 +565,10 @@
     <!-- ------------------------------------------------------------- -->
     <!-- 11. FOOTER (PREMIUM CLEAN DYNAMIC THEME) -->
     <!-- ------------------------------------------------------------- -->
-    <footer class="bg-theme-primary-deep text-white pt-10 sm:pt-12 pb-6 border-t border-white/10 relative overflow-hidden" id="contact">
-        <!-- Ambient Subtle Lighting -->
-        <div class="absolute top-0 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-8 relative z-10">
-            <!-- Brand & Accreditation -->
-            <div class="text-center sm:text-left flex flex-col items-center sm:items-start" data-aos="fade-up" data-aos-delay="100">
-                <h3 class="font-extrabold text-white text-base sm:text-lg tracking-wider font-headline uppercase mb-3 border-b-2 border-theme-secondary pb-1 inline-block">
-                    SMAN 2 SITUBONDO
-                </h3>
-                <p class="text-xs text-slate-200 leading-relaxed max-w-xs font-normal">
-                    SMA Negeri 2 Situbondo berkomitmen mencetak generasi bangsa unggul, berakhlak mulia, dan berwawasan lingkungan.
-                </p>
-            </div>
-
-            <!-- Informasi Tentang -->
-            <div data-aos="fade-up" data-aos-delay="200">
-                <h4 class="font-bold mb-3 sm:mb-4 text-xs sm:text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Informasi Tentang</h4>
-                <ul class="space-y-2 sm:space-y-2.5 text-xs text-slate-200 font-medium">
-                    <li><a class="hover-text-secondary transition hover:underline" href="#profil">&bull; Visi Misi &amp; Tujuan</a></li>
-                    <li><a class="hover-text-secondary transition hover:underline" href="#profil">&bull; Sejarah Singkat</a></li>
-                    <li><a class="hover-text-secondary transition hover:underline" href="#profil">&bull; Struktur Organisasi</a></li>
-                    <li><a class="hover-text-secondary transition hover:underline" href="#civitas">&bull; Data Pegawai</a></li>
-                    <li><a class="hover-text-secondary transition hover:underline" href="#siswa">&bull; Data Siswa</a></li>
-                    <li><a class="hover-text-secondary transition hover:underline" href="#profil">&bull; Sarana &amp; Prasarana</a></li>
-                </ul>
-            </div>
-
-            <!-- Link Lainnya -->
-            <div data-aos="fade-up" data-aos-delay="200">
-                <h4 class="font-bold mb-3 sm:mb-4 text-xs sm:text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Aplikasi Kami</h4>
-                
-               
-            </div>
-
-            <!-- Kontak Kami -->
-            <div data-aos="fade-up" data-aos-delay="400">
-                <h4 class="font-bold mb-3 sm:mb-4 text-xs sm:text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Kontak Kami</h4>
-                <p class="text-xs text-slate-200 mb-2 leading-relaxed">&bull; Jl. Anggrek No. 1 Patokan, Kab. Situbondo - Indonesia</p>
-                <p class="text-xs text-slate-200 mb-2 leading-relaxed">&bull; Telp. : (0338) 671618</p>
-                <p class="text-xs text-slate-200 leading-relaxed">&bull; Email : smadasit@yahoo.com</p>
-            </div>
-        </div>
-
-        <!-- Copyright & Socials (Twitter/X Removed) -->
-        <div class="container mx-auto px-4 mt-6 flex flex-col md:flex-row justify-between items-center text-xs text-slate-300 border-t border-white/10 pt-4 relative z-10">
-            <p>Copyright &copy; 2026 SMA NEGERI 2 SITUBONDO</p>
-            <div class="flex space-x-4 mt-4 md:mt-0 text-white text-lg">
-                <!-- Facebook -->
-                <a class="hover-text-secondary transition" href="https://www.facebook.com/Sma.Negeri.2.Situbondo/" target="_blank" rel="noopener" title="facebook"><i class="fab fa-facebook"></i></a>
-                <!-- YouTube -->
-                <a class="hover-text-secondary transition" href="https://www.youtube.com/c/SMADAPRIMA/videos" target="_blank" rel="noopener" title="youtube"><i class="fab fa-youtube"></i></a>
-                <!-- Instagram -->
-                <a class="hover-text-secondary transition" href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener" title="instagram"><i class="fab fa-instagram"></i></a>
-            </div>
-        </div>
-    </footer>
-
     <!-- ------------------------------------------------------------- -->
-    <!-- FLOATING ACTION BUTTONS (ACCESSIBILITY, WHATSAPP, TOP) -->
+    <!-- 6. SHARED FOOTER COMPONENT -->
     <!-- ------------------------------------------------------------- -->
-    <div class="fixed bottom-4 right-4 flex flex-col space-y-2 z-50 animate-float">
-        <a class="bg-theme-secondary text-slate-950 p-3 rounded-full shadow-lg hover:opacity-90 flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 transition spring-hover glow-pulse" href="#" title="Aksesibilitas">
-            <i class="fas fa-universal-access text-lg sm:text-xl"></i>
-        </a>
-        <a class="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 transition spring-hover" href="https://wa.me/628123456789" target="_blank" rel="noopener" title="WhatsApp">
-            <i class="fab fa-whatsapp text-xl sm:text-2xl"></i>
-        </a>
-    </div>
-    
-    <a class="fixed bottom-4 left-4 bg-black text-white p-2.5 sm:p-3 rounded-lg shadow-lg hover:bg-gray-800 flex items-center justify-center h-9 w-9 sm:h-10 sm:w-10 z-50 transition spring-hover" href="#" title="Ke Atas">
-        <i class="fas fa-chevron-up text-xs sm:text-sm"></i>
-    </a>
+    @include('user.partials.footer')
 
     <!-- ------------------------------------------------------------- -->
     <!-- POP-UP EVENT MODAL (WITH DYNAMIC REALTIME COUNTDOWN TO END_DATE) -->

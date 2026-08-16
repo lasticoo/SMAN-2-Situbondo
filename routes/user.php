@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\LandingPageController;
+use App\Http\Controllers\User\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,8 @@ use App\Http\Controllers\User\LandingPageController;
 // US-01 Landing Page Utama
 Route::get('/', [LandingPageController::class, 'index'])->name('home');
 Route::get('/instagram-proxy', [LandingPageController::class, 'proxyInstagramImage'])->name('instagram.proxy');
+
+// US-02 Profil Sekolah
+Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
+Route::get('/profile', [ProfileController::class, 'index']);
+

@@ -9,6 +9,7 @@ use App\Models\News;
 use App\Models\Announcement;
 use App\Models\Student;
 use App\Models\Employee;
+use App\Models\SchoolProfile;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
@@ -209,5 +210,18 @@ class LandingPageTestDataSeeder extends Seeder
                 ]);
             }
         }
+
+        // 6. Seed School Profile
+        if (SchoolProfile::count() === 0) {
+            SchoolProfile::create([
+                'about_us' => 'SMAN 2 Situbondo berdiri sebagai pilar keunggulan pendidikan, berdedikasi tinggi dalam membentuk karakter dan intelektual generasi muda. Kami memadukan nilai-nilai tradisional dengan inovasi pembelajaran modern untuk menciptakan lingkungan akademis yang tangguh dan berprestasi.',
+                'vision' => "Menjadi institusi pendidikan terdepan yang menghasilkan lulusan berakhlak mulia, berprestasi akademik, berwawasan lingkungan, dan siap bersaing di era global.",
+                'mission' => "1. Menyelenggarakan proses pembelajaran yang inovatif, efektif, dan berbasis teknologi informasi.\n2. Membentuk karakter peserta didik yang beriman, bertakwa, dan berakhlak mulia.\n3. Meningkatkan prestasi akademik dan non-akademik peserta didik di tingkat nasional maupun internasional.\n4. Mewujudkan lingkungan sekolah yang bersih, hijau, asri, dan berwawasan lingkungan (Adiwiyata).",
+                'goals' => "1. Terwujudnya mutu lulusan yang berdaya saing tinggi dan diterima di perguruan tinggi favorit.\n2. Terwujudnya budaya sekolah yang berkarakter, beretika, dan berakhlak mulia.\n3. Terwujudnya tata kelola sekolah yang transparan, akuntabel, dan profesional.\n4. Terwujudnya sarana prasarana sekolah berbasis digital dan ramah lingkungan.",
+                'history' => 'Sejak didirikan, SMAN 2 Situbondo telah mengukir sejarah panjang dalam dunia pendidikan lokal, terus berkembang dan beradaptasi dengan tantangan zaman. Berdiri sejak tahun 1980, SMAN 2 Situbondo terus meluluskan alumni-alumni terbaik yang berkontribusi aktif dalam berbagai bidang pembangunan bangsa.',
+                'structure_image_url' => '/images/static/semangat_prima_bg.jpg',
+            ]);
+        }
     }
 }
+
