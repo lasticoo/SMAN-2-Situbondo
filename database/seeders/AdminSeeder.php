@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
-use App\Models\SchoolProfile;
 use App\Models\ColorSetting;
+use App\Models\SchoolProfile;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 

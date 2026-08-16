@@ -1,7 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Admin\AuthController;
 /*
 |--------------------------------------------------------------------------
 | EPIC 2 - WEBSITE ADMIN (DEVELOPER 1: RIZAL WIBOWO / LASTICO RIDHO ALPARESZ)
@@ -27,15 +26,21 @@ use Illuminate\Support\Facades\Route;
 
 // Developer Admin dapat langsung mendaftarkan route untuk masing-masing fitur di bawah ini:
 
-use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\PopupController;
+use App\Http\Controllers\Admin\SchoolProfileController;
+use App\Http\Controllers\Admin\StudentController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Route::withoutMiddleware(['auth:admin', 'role:admin'])->group(function () {
     Route::get('/', function () {
         if (Auth::guard('admin')->check()) {
             return redirect()->route('admin.dashboard');
         }
+
         return redirect()->route('admin.login');
     });
     Route::get('/login', [AuthController::class, 'create'])->name('admin.login');
@@ -48,31 +53,71 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.das
 // =============================================================================
 // AD-01 — Manajemen Banner Web User
 // =============================================================================
-Route::resource('banners', App\Http\Controllers\Admin\BannerController::class)
+Route::resource('banners', BannerController::class)
     ->except(['show'])
     ->names([
-        'index'   => 'admin.banners.index',
-        'create'  => 'admin.banners.create',
-        'store'   => 'admin.banners.store',
-        'edit'    => 'admin.banners.edit',
-        'update'  => 'admin.banners.update',
+        'index' => 'admin.banners.index',
+        'create' => 'admin.banners.create',
+        'store' => 'admin.banners.store',
+        'edit' => 'admin.banners.edit',
+        'update' => 'admin.banners.update',
         'destroy' => 'admin.banners.destroy',
     ]);
-Route::patch('banners/{banner}/toggle-active', [App\Http\Controllers\Admin\BannerController::class, 'toggleActive'])
+Route::patch('banners/{banner}/toggle-active', [BannerController::class, 'toggleActive'])
     ->name('admin.banners.toggleActive');
 
 // =============================================================================
 // AD-02 — Manajemen Pop-up Event
 // =============================================================================
-Route::resource('popups', App\Http\Controllers\Admin\PopupController::class)
+Route::resource('popups', PopupController::class)
     ->except(['show'])
     ->names([
-        'index'   => 'admin.popups.index',
-        'create'  => 'admin.popups.create',
-        'store'   => 'admin.popups.store',
-        'edit'    => 'admin.popups.edit',
-        'update'  => 'admin.popups.update',
+        'index' => 'admin.popups.index',
+        'create' => 'admin.popups.create',
+        'store' => 'admin.popups.store',
+        'edit' => 'admin.popups.edit',
+        'update' => 'admin.popups.update',
         'destroy' => 'admin.popups.destroy',
     ]);
-Route::patch('popups/{popup}/toggle-active', [App\Http\Controllers\Admin\PopupController::class, 'toggleActive'])
+Route::patch('popups/{popup}/toggle-active', [PopupController::class, 'toggleActive'])
     ->name('admin.popups.toggleActive');
+
+// =============================================================================
+// AD-03 — Profil Sekolah (School Profile)
+// =============================================================================
+Route::get('school-profile', [SchoolProfileController::class, 'edit'])
+    ->name('admin.school_profile.edit');
+Route::put('school-profile', [SchoolProfileController::class, 'update'])
+    ->name('admin.school_profile.update');
+
+// =============================================================================
+// AD-04 — Manajemen Data Pegawai (Employees)
+// =============================================================================
+Route::resource('employees', EmployeeController::class)
+    ->except(['show', 'create', 'edit'])
+    ->names([
+        'index' => 'admin.employees.index',
+        'store' => 'admin.employees.store',
+        'update' => 'admin.employees.update',
+        'destroy' => 'admin.employees.destroy',
+    ]);
+Route::patch('employees/{employee}/toggle-active', [EmployeeController::class, 'toggleActive'])
+    ->name('admin.employees.toggleActive');
+
+// =============================================================================
+// AD-05 — Manajemen Data Siswa (Students & Import)
+// =============================================================================
+Route::get('students/template', [StudentController::class, 'downloadTemplate'])
+    ->name('admin.students.downloadTemplate');
+Route::post('students/import', [StudentController::class, 'import'])
+    ->name('admin.students.import');
+Route::resource('students', StudentController::class)
+    ->except(['show', 'create', 'edit'])
+    ->names([
+        'index' => 'admin.students.index',
+        'store' => 'admin.students.store',
+        'update' => 'admin.students.update',
+        'destroy' => 'admin.students.destroy',
+    ]);
+Route::patch('students/{student}/toggle-public', [StudentController::class, 'togglePublic'])
+    ->name('admin.students.togglePublic');

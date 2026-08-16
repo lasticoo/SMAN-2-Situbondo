@@ -3,18 +3,17 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use App\Models\Banner;
+use App\Models\ColorSetting;
+use App\Models\Employee;
+use App\Models\News;
 use App\Models\Popup;
 use App\Models\SchoolProfile;
-use App\Models\News;
-use App\Models\Announcement;
 use App\Models\Student;
-use App\Models\Employee;
-use App\Models\ColorSetting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class LandingPageController extends Controller
 {
@@ -33,15 +32,15 @@ class LandingPageController extends Controller
 
         // 2. Fetch Active Popup Events within current date range (Cached 5 minutes)
         $today = Carbon::today()->toDateString();
-        $activePopups = Cache::remember('landing_active_popups_' . $today, 300, function () use ($today) {
+        $activePopups = Cache::remember('landing_active_popups_'.$today, 300, function () use ($today) {
             return Popup::where('is_active', true)
                 ->where(function ($query) use ($today) {
                     $query->whereNull('start_date')
-                          ->orWhereDate('start_date', '<=', $today);
+                        ->orWhereDate('start_date', '<=', $today);
                 })
                 ->where(function ($query) use ($today) {
                     $query->whereNull('end_date')
-                          ->orWhereDate('end_date', '>=', $today);
+                        ->orWhereDate('end_date', '>=', $today);
                 })
                 ->orderBy('sort_order', 'asc')
                 ->orderBy('id', 'desc')
@@ -74,38 +73,38 @@ class LandingPageController extends Controller
                 'kelas_10' => Student::where('is_public', true)
                     ->where(function ($q) {
                         $q->where('class', 'like', 'X-%')
-                          ->orWhere('class', 'like', 'X %')
-                          ->orWhere('class', 'X')
-                          ->orWhere('class', 'like', '10%');
+                            ->orWhere('class', 'like', 'X %')
+                            ->orWhere('class', 'X')
+                            ->orWhere('class', 'like', '10%');
                     })->count(),
                 'kelas_11' => Student::where('is_public', true)
                     ->where(function ($q) {
                         $q->where('class', 'like', 'XI-%')
-                          ->orWhere('class', 'like', 'XI %')
-                          ->orWhere('class', 'XI')
-                          ->orWhere('class', 'like', '11%');
+                            ->orWhere('class', 'like', 'XI %')
+                            ->orWhere('class', 'XI')
+                            ->orWhere('class', 'like', '11%');
                     })->count(),
                 'kelas_12' => Student::where('is_public', true)
                     ->where(function ($q) {
                         $q->where('class', 'like', 'XII-%')
-                          ->orWhere('class', 'like', 'XII %')
-                          ->orWhere('class', 'XII')
-                          ->orWhere('class', 'like', '12%');
+                            ->orWhere('class', 'like', 'XII %')
+                            ->orWhere('class', 'XII')
+                            ->orWhere('class', 'like', '12%');
                     })->count(),
             ];
         });
 
         // 7. Fetch Employee Statistics (Guru & Staf) (Cached 10 minutes)
         $employeeStats = Cache::remember('landing_employee_stats', 600, function () {
-            $totalEmployees = Employee::where('is_active', true)->count();
-            $guruCount = Employee::where('is_active', true)
+            $totalEmployees = Employee::active()->count();
+            $guruCount = Employee::active()
                 ->where(function ($q) {
                     $q->where('position', 'like', '%Guru%')
-                      ->orWhere('position', 'like', '%Kepala Sekolah%')
-                      ->orWhere('position', 'like', '%Wakil Kepala Sekolah%')
-                      ->orWhere('position', 'like', '%Pengajar%');
+                        ->orWhere('position', 'like', '%Kepala Sekolah%')
+                        ->orWhere('position', 'like', '%Wakil Kepala Sekolah%')
+                        ->orWhere('position', 'like', '%Pengajar%');
                 })->count();
-            
+
             $stafCount = max(0, $totalEmployees - $guruCount);
 
             return [
@@ -146,7 +145,7 @@ class LandingPageController extends Controller
     private function fetchInstagramFeedPosts(): array
     {
         $cachedPosts = Cache::get('instagram_feed_sman2situbondo_fifo', []);
-        
+
         // If we already have 10 cached posts, return them instantly without blocking network execution
         if (is_array($cachedPosts) && count($cachedPosts) >= 10) {
             return $cachedPosts;
@@ -177,7 +176,7 @@ class LandingPageController extends Controller
             $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-            if ($status === 200 && !empty($response)) {
+            if ($status === 200 && ! empty($response)) {
                 $json = json_decode($response, true);
                 if (isset($json['data']['user']['edge_owner_to_timeline_media']['edges'])) {
                     $edges = $json['data']['user']['edge_owner_to_timeline_media']['edges'];
@@ -185,10 +184,12 @@ class LandingPageController extends Controller
                         $node = $edge['node'] ?? [];
                         // 7c. Take ONLY the first photo of the post (display_url / thumbnail_src)
                         $photoUrl = $node['display_url'] ?? $node['thumbnail_src'] ?? null;
-                        if ($photoUrl && !in_array($photoUrl, $newFetchedPhotos)) {
+                        if ($photoUrl && ! in_array($photoUrl, $newFetchedPhotos)) {
                             $newFetchedPhotos[] = $photoUrl;
                         }
-                        if (count($newFetchedPhotos) >= 10) break;
+                        if (count($newFetchedPhotos) >= 10) {
+                            break;
+                        }
                     }
                 }
             }
@@ -210,15 +211,17 @@ class LandingPageController extends Controller
                 $response = curl_exec($ch);
                 curl_close($ch);
 
-                if (!empty($response)) {
+                if (! empty($response)) {
                     preg_match_all('/"(?:display_url|thumbnail_src)":"([^"]+)"/', $response, $matches);
-                    if (!empty($matches[1])) {
+                    if (! empty($matches[1])) {
                         foreach ($matches[1] as $rawUrl) {
                             $cleanUrl = str_replace(['\\u0026', '\\/'], ['&', '/'], $rawUrl);
-                            if ($cleanUrl && !in_array($cleanUrl, $newFetchedPhotos)) {
+                            if ($cleanUrl && ! in_array($cleanUrl, $newFetchedPhotos)) {
                                 $newFetchedPhotos[] = $cleanUrl;
                             }
-                            if (count($newFetchedPhotos) >= 10) break;
+                            if (count($newFetchedPhotos) >= 10) {
+                                break;
+                            }
                         }
                     }
                 }
@@ -228,12 +231,12 @@ class LandingPageController extends Controller
         }
 
         // 7e. FIFO Rotation & Cache Logic (Newest post enters Slide 1, Slide 10 drops off)
-        if (!empty($newFetchedPhotos)) {
+        if (! empty($newFetchedPhotos)) {
             if (empty($cachedPosts)) {
                 $cachedPosts = array_slice($newFetchedPhotos, 0, 10);
             } else {
                 foreach (array_reverse($newFetchedPhotos) as $latestPhoto) {
-                    if (!in_array($latestPhoto, $cachedPosts)) {
+                    if (! in_array($latestPhoto, $cachedPosts)) {
                         array_unshift($cachedPosts, $latestPhoto);
                         if (count($cachedPosts) > 10) {
                             array_pop($cachedPosts); // Slide 10 drops off
@@ -242,10 +245,11 @@ class LandingPageController extends Controller
                 }
             }
             Cache::put('instagram_feed_sman2situbondo_fifo', $cachedPosts, 300);
+
             return $cachedPosts;
         }
 
-        return !empty($cachedPosts) ? array_slice($cachedPosts, 0, 10) : [];
+        return ! empty($cachedPosts) ? array_slice($cachedPosts, 0, 10) : [];
     }
 
     /**
@@ -268,12 +272,12 @@ class LandingPageController extends Controller
         }
 
         // Domain validation
-        if (!str_contains($url, 'fbcdn.net') && !str_contains($url, 'cdninstagram.com') && !str_contains($url, 'instagram.com')) {
+        if (! str_contains($url, 'fbcdn.net') && ! str_contains($url, 'cdninstagram.com') && ! str_contains($url, 'instagram.com')) {
             abort(403);
         }
 
         // Cache base64 encoded image string for 24 hours locally (avoids MySQL utf8mb4 binary 1366 SQL error)
-        $cacheKey = 'ig_proxy_b64_' . md5($url);
+        $cacheKey = 'ig_proxy_b64_'.md5($url);
         $base64Data = Cache::remember($cacheKey, 86400, function () use ($url) {
             try {
                 $ch = curl_init($url);
@@ -290,16 +294,17 @@ class LandingPageController extends Controller
                 $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
 
-                if ($status === 200 && !empty($data)) {
+                if ($status === 200 && ! empty($data)) {
                     return base64_encode($data);
                 }
             } catch (\Throwable $e) {
                 // Silently handle
             }
+
             return null;
         });
 
-        if (!$base64Data) {
+        if (! $base64Data) {
             abort(404);
         }
 

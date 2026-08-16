@@ -3,12 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
-use App\Models\Banner;
-use App\Models\Popup;
-use App\Models\News;
 use App\Models\Announcement;
-use App\Models\Student;
+use App\Models\Banner;
 use App\Models\Employee;
+use App\Models\News;
+use App\Models\Popup;
+use App\Models\SchoolProfile;
+use App\Models\Student;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
@@ -17,11 +18,22 @@ class LandingPageTestDataSeeder extends Seeder
     public function run(): void
     {
         $admin = Admin::first();
-        if (!$admin) {
+        if (! $admin) {
             $admin = Admin::create([
                 'name' => 'Admin Test',
                 'email' => 'admin@smada.sch.id',
                 'password' => bcrypt('password123'),
+            ]);
+        }
+
+        if (SchoolProfile::count() === 0) {
+            SchoolProfile::create([
+                'vision' => 'Menjadi lembaga pendidikan terdepan yang menghasilkan lulusan berkarakter, inovatif, dan berdaya saing global berlandaskan nilai-nilai luhur bangsa.',
+                'mission' => "1. Menyelenggarakan pendidikan berkualitas berorientasi pada kecerdasan spiritual, intelektual, dan emosional.\n2. Mengembangkan potensi peserta didik secara optimal melalui kegiatan intrakurikuler dan ekstrakurikuler.\n3. Menanamkan nilai budi pekerti, kedisiplinan, dan kepedulian lingkungan.",
+                'goals' => "1. Mewujudkan lulusan yang memiliki kompetensi akademik dan non-akademik unggul.\n2. Meningkatkan persentase kelulusan siswa ke Perguruan Tinggi Negeri (PTN) favorit.\n3. Membentuk karakter siswa yang beriman, bertakwa, serta berwawasan lingkungan.",
+                'history' => 'SMA Negeri 2 Situbondo didirikan pada tahun 1980 dengan tujuan mulia untuk mencerdaskan kehidupan bangsa di wilayah Kabupaten Situbondo. Seiring berjalannya waktu, SMAN 2 Situbondo tumbuh menjadi salah satu sekolah unggulan yang melahirkan banyak alumni berprestasi di berbagai bidang.',
+                'about_us' => 'SMA Negeri 2 Situbondo (Smada) merupakan salah satu Sekolah Menengah Atas Negeri unggulan di Kabupaten Situbondo yang berkomitmen untuk memberikan layanan pendidikan terbaik, berbasis teknologi informasi (ICT), dan membentuk karakter generasi muda Indonesia.',
+                'structure_image_url' => null,
             ]);
         }
 
@@ -99,7 +111,7 @@ class LandingPageTestDataSeeder extends Seeder
                     'title' => $item['title'],
                     'thumbnail_url' => '/build/assets/banner smada.png',
                     'summary' => $item['summary'],
-                    'content' => $item['summary'] . ' Isi lengkap berita dapat dibaca di halaman berita.',
+                    'content' => $item['summary'].' Isi lengkap berita dapat dibaca di halaman berita.',
                     'status' => 'published',
                     'published_at' => $item['published_at'],
                     'created_by' => $admin->id,
@@ -142,7 +154,7 @@ class LandingPageTestDataSeeder extends Seeder
                     'title' => $item['title'],
                     'thumbnail_url' => '/build/assets/banner smada.png',
                     'summary' => $item['summary'],
-                    'content' => $item['summary'] . ' Informasi selengkapnya dapat ditanyakan ke panitia.',
+                    'content' => $item['summary'].' Informasi selengkapnya dapat ditanyakan ke panitia.',
                     'status' => 'published',
                     'published_at' => $item['published_at'],
                     'created_by' => $admin->id,
@@ -155,27 +167,27 @@ class LandingPageTestDataSeeder extends Seeder
             // Seed sample students across Kelas X, XI, XII to total 1073
             for ($i = 1; $i <= 360; $i++) {
                 Student::create([
-                    'nisn' => '006' . str_pad($i, 7, '0', STR_PAD_LEFT),
-                    'name' => 'Siswa Kelas X - ' . $i,
-                    'class' => 'X-' . (($i % 10) + 1),
+                    'nisn' => '006'.str_pad($i, 7, '0', STR_PAD_LEFT),
+                    'name' => 'Siswa Kelas X - '.$i,
+                    'class' => 'X-'.(($i % 10) + 1),
                     'is_public' => true,
                 ]);
             }
 
             for ($i = 1; $i <= 356; $i++) {
                 Student::create([
-                    'nisn' => '005' . str_pad($i, 7, '0', STR_PAD_LEFT),
-                    'name' => 'Siswa Kelas XI - ' . $i,
-                    'class' => 'XI-' . (($i % 10) + 1),
+                    'nisn' => '005'.str_pad($i, 7, '0', STR_PAD_LEFT),
+                    'name' => 'Siswa Kelas XI - '.$i,
+                    'class' => 'XI-'.(($i % 10) + 1),
                     'is_public' => true,
                 ]);
             }
 
             for ($i = 1; $i <= 357; $i++) {
                 Student::create([
-                    'nisn' => '004' . str_pad($i, 7, '0', STR_PAD_LEFT),
-                    'name' => 'Siswa Kelas XII - ' . $i,
-                    'class' => 'XII-' . (($i % 10) + 1),
+                    'nisn' => '004'.str_pad($i, 7, '0', STR_PAD_LEFT),
+                    'name' => 'Siswa Kelas XII - '.$i,
+                    'class' => 'XII-'.(($i % 10) + 1),
                     'is_public' => true,
                 ]);
             }
@@ -187,13 +199,13 @@ class LandingPageTestDataSeeder extends Seeder
             $guruPositions = [
                 'Kepala Sekolah', 'Wakil Kepala Sekolah Kurikulum', 'Wakil Kepala Sekolah Kesiswaan',
                 'Guru Matematika', 'Guru Bahasa Indonesia', 'Guru Bahasa Inggris', 'Guru Fisika',
-                'Guru Kimia', 'Guru Biologi', 'Guru Sejarah', 'Guru Olahraga', 'Guru Seni Budaya'
+                'Guru Kimia', 'Guru Biologi', 'Guru Sejarah', 'Guru Olahraga', 'Guru Seni Budaya',
             ];
 
             foreach ($guruPositions as $idx => $pos) {
                 Employee::create([
-                    'nip' => '1980' . str_pad($idx + 1, 14, '0', STR_PAD_LEFT),
-                    'name' => 'Tenaga Pendidik ' . ($idx + 1),
+                    'nip' => '1980'.str_pad($idx + 1, 14, '0', STR_PAD_LEFT),
+                    'name' => 'Tenaga Pendidik '.($idx + 1),
                     'position' => $pos,
                     'is_active' => true,
                 ]);
@@ -202,8 +214,8 @@ class LandingPageTestDataSeeder extends Seeder
             // Seed 28 Staff Members
             for ($i = 1; $i <= 28; $i++) {
                 Employee::create([
-                    'nip' => '1985' . str_pad($i + 20, 14, '0', STR_PAD_LEFT),
-                    'name' => 'Tenaga Kependidikan ' . $i,
+                    'nip' => '1985'.str_pad($i + 20, 14, '0', STR_PAD_LEFT),
+                    'name' => 'Tenaga Kependidikan '.$i,
                     'position' => 'Staf Tata Usaha / Administrasi',
                     'is_active' => true,
                 ]);

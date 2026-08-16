@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Banner extends Model
 {
@@ -30,18 +31,18 @@ class Banner extends Model
 
         $path = str_replace('\\', '/', $this->image_url);
 
-        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+        if (Str::startsWith($path, ['http://', 'https://'])) {
             return $path;
         }
 
-        if (\Illuminate\Support\Str::startsWith($path, ['/build/', 'build/'])) {
+        if (Str::startsWith($path, ['/build/', 'build/'])) {
             return asset(ltrim($path, '/'));
         }
 
-        if (\Illuminate\Support\Str::startsWith($path, ['storage/', '/storage/'])) {
+        if (Str::startsWith($path, ['storage/', '/storage/'])) {
             return asset(ltrim($path, '/'));
         }
 
-        return asset('storage/' . ltrim($path, '/'));
+        return asset('storage/'.ltrim($path, '/'));
     }
 }

@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BannerRequest;
 use App\Models\Banner;
+use App\Models\Popup;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class BannerController extends Controller
 {
@@ -23,7 +25,7 @@ class BannerController extends Controller
     public function index(): View
     {
         $banners = Banner::orderBy('sort_order')->orderBy('id')->get();
-        $popups  = \App\Models\Popup::orderBy('sort_order')->orderBy('id')->get();
+        $popups = Popup::orderBy('sort_order')->orderBy('id')->get();
 
         return view('admin.banner.index', compact('banners', 'popups'));
     }
@@ -47,14 +49,14 @@ class BannerController extends Controller
         $imagePath = $this->processAndStoreImage($request);
 
         Banner::create([
-            'title'       => $request->title,
+            'title' => $request->title,
             'description' => $request->description,
-            'image_url'   => $imagePath,
-            'is_active'   => $request->boolean('is_active', true),
-            'sort_order'  => $request->sort_order,
+            'image_url' => $imagePath,
+            'is_active' => $request->boolean('is_active', true),
+            'sort_order' => $request->sort_order,
         ]);
 
-        \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+        Cache::forget('landing_active_banners');
 
         return redirect()
             ->route('admin.banners.index')
@@ -76,10 +78,10 @@ class BannerController extends Controller
     public function update(BannerRequest $request, Banner $banner): RedirectResponse
     {
         $data = [
-            'title'       => $request->title,
+            'title' => $request->title,
             'description' => $request->description,
-            'is_active'   => $request->boolean('is_active', true),
-            'sort_order'  => $request->sort_order,
+            'is_active' => $request->boolean('is_active', true),
+            'sort_order' => $request->sort_order,
         ];
 
         if ($request->hasFile('image')) {
@@ -93,7 +95,7 @@ class BannerController extends Controller
 
         $banner->update($data);
 
-        \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+        Cache::forget('landing_active_banners');
 
         return redirect()
             ->route('admin.banners.index')
@@ -112,7 +114,7 @@ class BannerController extends Controller
 
         $banner->delete();
 
-        \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+        Cache::forget('landing_active_banners');
 
         return redirect()
             ->route('admin.banners.index')
@@ -126,7 +128,7 @@ class BannerController extends Controller
     {
         $banner->update(['is_active' => ! $banner->is_active]);
 
-        \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+        Cache::forget('landing_active_banners');
 
         $status = $banner->is_active ? 'diaktifkan' : 'dinonaktifkan';
 
@@ -145,14 +147,14 @@ class BannerController extends Controller
         $file = $request->file('image');
 
         // Inisialisasi Intervention Image dengan driver GD
-        $manager = new ImageManager(new Driver());
-        $image   = $manager->read($file->getRealPath());
+        $manager = new ImageManager(new Driver);
+        $image = $manager->read($file->getRealPath());
 
         // Kompres dan konversi ke WebP (kualitas 85)
         $webpContent = $image->toWebp(85)->toString();
 
         // Generate nama file unik dengan ekstensi .webp
-        $filename = 'banners/' . uniqid('banner_', true) . '.webp';
+        $filename = 'banners/'.uniqid('banner_', true).'.webp';
 
         // Simpan ke disk public (storage/app/public/banners/)
         Storage::disk('public')->put($filename, $webpContent);
