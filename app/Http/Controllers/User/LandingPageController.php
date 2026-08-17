@@ -42,7 +42,7 @@ class LandingPageController extends Controller
             ->orderBy('sort_order', 'asc')
             ->orderBy('id', 'desc')
             ->get();
-
+            
         $activePopup = $activePopups->first();
 
         // 3. Fetch School Profile (Realtime)
