@@ -195,7 +195,6 @@ class LandingPageTestDataSeeder extends Seeder
 
         // 6. Seed Employees (Realistic Civitas Akademik matching SMAN 2 Situbondo)
         if (Employee::count() === 0) {
-<<<<<<< HEAD
             $employeeData = [
                 // Pimpinan
                 [
@@ -288,36 +287,14 @@ class LandingPageTestDataSeeder extends Seeder
 
             foreach ($employeeData as $data) {
                 Employee::create(array_merge($data, ['is_active' => true]));
-=======
-            // Seed 12 Teachers
-            $guruPositions = [
-                'Kepala Sekolah', 'Wakil Kepala Sekolah Kurikulum', 'Wakil Kepala Sekolah Kesiswaan',
-                'Guru Matematika', 'Guru Bahasa Indonesia', 'Guru Bahasa Inggris', 'Guru Fisika',
-                'Guru Kimia', 'Guru Biologi', 'Guru Sejarah', 'Guru Olahraga', 'Guru Seni Budaya',
-            ];
-
-            foreach ($guruPositions as $idx => $pos) {
-                Employee::create([
-                    'nip' => '1980'.str_pad($idx + 1, 14, '0', STR_PAD_LEFT),
-                    'name' => 'Tenaga Pendidik '.($idx + 1),
-                    'position' => $pos,
-                    'is_active' => true,
-                ]);
->>>>>>> origin/feature/admin-profile-civitas
             }
 
             // Seed additional 27 staff to maintain demographic fact total
             for ($i = 2; $i <= 28; $i++) {
                 Employee::create([
-<<<<<<< HEAD
-                    'nip' => '1985' . str_pad($i + 30, 14, '0', STR_PAD_LEFT),
-                    'name' => 'Staf Tata Usaha ' . $i,
+                    'nip' => '1985'.str_pad($i + 30, 14, '0', STR_PAD_LEFT),
+                    'name' => 'Staf Tata Usaha '.$i,
                     'position' => 'Staff Tata Usaha',
-=======
-                    'nip' => '1985'.str_pad($i + 20, 14, '0', STR_PAD_LEFT),
-                    'name' => 'Tenaga Kependidikan '.$i,
-                    'position' => 'Staf Tata Usaha / Administrasi',
->>>>>>> origin/feature/admin-profile-civitas
                     'is_active' => true,
                 ]);
             }
