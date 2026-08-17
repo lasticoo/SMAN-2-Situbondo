@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\LandingPageController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\EmployeeController;
+use App\Http\Controllers\User\StudentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +27,20 @@ use App\Http\Controllers\User\LandingPageController;
 // US-01 Landing Page Utama
 Route::get('/', [LandingPageController::class, 'index'])->name('home');
 Route::get('/instagram-proxy', [LandingPageController::class, 'proxyInstagramImage'])->name('instagram.proxy');
+
+// US-02 Profil Sekolah
+Route::get('/profil', [ProfileController::class, 'index'])->name('profile.index');
+Route::get('/profile', [ProfileController::class, 'index']);
+
+// US-03 Civitas Akademik (Data Pegawai & Guru)
+Route::get('/civitas-akademik', [EmployeeController::class, 'index'])->name('civitas.index');
+Route::get('/pegawai', [EmployeeController::class, 'index'])->name('employee.index');
+Route::get('/guru-dan-pegawai', [EmployeeController::class, 'index']);
+
+// US-04 Data Siswa Publik
+Route::get('/siswa', [StudentController::class, 'index'])->name('student.index');
+Route::get('/data-siswa', [StudentController::class, 'index']);
+Route::get('/peserta-didik', [StudentController::class, 'index']);
+
+
+

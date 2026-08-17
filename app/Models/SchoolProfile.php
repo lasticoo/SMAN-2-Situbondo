@@ -16,4 +16,20 @@ class SchoolProfile extends Model
         'structure_image_url',
         'about_us',
     ];
+
+    /**
+     * Auto-clear caches on update or delete
+     */
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('user_profile_school_data');
+            \Illuminate\Support\Facades\Cache::forget('landing_school_profile');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('user_profile_school_data');
+            \Illuminate\Support\Facades\Cache::forget('landing_school_profile');
+        });
+    }
 }

@@ -18,4 +18,22 @@ class ColorSetting extends Model
     {
         return $this->belongsTo(Admin::class, 'updated_by');
     }
+
+    /**
+     * Auto-clear caches on update or delete (Invalidate-on-Write)
+     */
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('user_profile_color_setting');
+            \Illuminate\Support\Facades\Cache::forget('landing_theme_colors');
+            \Illuminate\Support\Facades\Cache::forget('landing_color_setting');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('user_profile_color_setting');
+            \Illuminate\Support\Facades\Cache::forget('landing_theme_colors');
+            \Illuminate\Support\Facades\Cache::forget('landing_color_setting');
+        });
+    }
 }

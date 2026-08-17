@@ -181,33 +181,114 @@ class LandingPageTestDataSeeder extends Seeder
             }
         }
 
-        // 6. Seed Employees (Guru vs Staff for SMADA Fact)
+        // 6. Seed Employees (Realistic Civitas Akademik matching SMAN 2 Situbondo)
         if (Employee::count() === 0) {
-            // Seed 12 Teachers
-            $guruPositions = [
-                'Kepala Sekolah', 'Wakil Kepala Sekolah Kurikulum', 'Wakil Kepala Sekolah Kesiswaan',
-                'Guru Matematika', 'Guru Bahasa Indonesia', 'Guru Bahasa Inggris', 'Guru Fisika',
-                'Guru Kimia', 'Guru Biologi', 'Guru Sejarah', 'Guru Olahraga', 'Guru Seni Budaya'
+            $employeeData = [
+                // Pimpinan
+                [
+                    'name' => 'Nikmatil Hasanah, S.Pd, M.Pd',
+                    'nip' => '19840516 200604 2 012',
+                    'position' => 'Kepala Sekolah',
+                    'photo_url' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHM8T5wDv85gv3khaO0MdjxxsvdRtQUSfKR1ZgEcmERA&s=10',
+                    'extra_info' => 'Kepala SMA Negeri 2 Situbondo yang berdedikasi memajukan mutu pendidikan berbasis digital dan karakter prima.',
+                ],
+                [
+                    'name' => 'Alifa Wulandari, S.Pd',
+                    'nip' => '19860821 200903 2 009',
+                    'position' => 'Wakasek Humas',
+                    'photo_url' => null,
+                    'extra_info' => 'Wakil Kepala Sekolah Bidang Hubungan Masyarakat.',
+                ],
+                [
+                    'name' => 'Rofiqa Yuni Astuti, S.TP',
+                    'nip' => '19740801 200801 2 018',
+                    'position' => 'Wakasek Kurikulum',
+                    'photo_url' => null,
+                    'extra_info' => 'Wakil Kepala Sekolah Bidang Pengembangan Kurikulum dan Pembelajaran.',
+                ],
+                [
+                    'name' => 'Jiefri Gunawan, S.Pd, Gr',
+                    'nip' => '19811214 202221 1 013',
+                    'position' => 'Wakasek Kesiswaan',
+                    'photo_url' => null,
+                    'extra_info' => 'Wakil Kepala Sekolah Bidang Kesiswaan dan Pembinaan Karakter.',
+                ],
+                [
+                    'name' => 'Mas Rudy Hartono, S.Kom',
+                    'nip' => '19800519 202221 1 008',
+                    'position' => 'Wakasek Sarpras',
+                    'photo_url' => null,
+                    'extra_info' => 'Wakil Kepala Sekolah Bidang Sarana, Prasarana dan Teknologi Informasi.',
+                ],
+                // Dewan Guru
+                [
+                    'name' => 'Budi Santoso, S.Si',
+                    'nip' => '19850112 201001 1 004',
+                    'position' => 'Guru Biologi',
+                    'photo_url' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80',
+                    'extra_info' => 'Guru Pengampu Mata Pelajaran Biologi Kelas XI & XII.',
+                ],
+                [
+                    'name' => 'Siti Aminah, S.Pd',
+                    'nip' => '19900325 201504 2 001',
+                    'position' => 'Guru Matematika',
+                    'photo_url' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&auto=format&fit=crop&q=80',
+                    'extra_info' => 'Guru Pengampu Mata Pelajaran Matematika Peminatan.',
+                ],
+                // Tenaga Kependidikan / Staff
+                [
+                    'name' => 'Ahmad Riza',
+                    'nip' => '19881105 201212 1 002',
+                    'position' => 'Staff Tata Usaha',
+                    'photo_url' => 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500&auto=format&fit=crop&q=80',
+                    'extra_info' => 'Staff Administrasi dan Tata Usaha Sekolah.',
+                ],
+                [
+                    'name' => 'Dra. Endang Sulistyowati',
+                    'nip' => '19680315 199403 2 005',
+                    'position' => 'Guru Bahasa Indonesia',
+                    'photo_url' => null,
+                    'extra_info' => 'Guru Bahasa Indonesia Kelas X & XI.',
+                ],
+                [
+                    'name' => 'Mohammad Fajar, S.Pd',
+                    'nip' => '19870912 201101 1 007',
+                    'position' => 'Guru Bahasa Inggris',
+                    'photo_url' => null,
+                    'extra_info' => 'Guru Bahasa Inggris dan Pembina English Club.',
+                ],
+                [
+                    'name' => 'Ratna Dewi, S.Pd',
+                    'nip' => '19920108 201903 2 015',
+                    'position' => 'Guru Fisika',
+                    'photo_url' => null,
+                    'extra_info' => 'Guru Fisika dan Pembina Olimpiade Sains.',
+                ],
+                [
+                    'name' => 'Hendra Kusuma, S.Pd',
+                    'nip' => '19830422 200902 1 003',
+                    'position' => 'Guru Kimia',
+                    'photo_url' => null,
+                    'extra_info' => 'Guru Kimia Kelas XI & XII.',
+                ],
             ];
 
-            foreach ($guruPositions as $idx => $pos) {
-                Employee::create([
-                    'nip' => '1980' . str_pad($idx + 1, 14, '0', STR_PAD_LEFT),
-                    'name' => 'Tenaga Pendidik ' . ($idx + 1),
-                    'position' => $pos,
-                    'is_active' => true,
-                ]);
+            foreach ($employeeData as $data) {
+                Employee::create(array_merge($data, ['is_active' => true]));
             }
 
-            // Seed 28 Staff Members
-            for ($i = 1; $i <= 28; $i++) {
+            // Seed additional 27 staff to maintain demographic fact total
+            for ($i = 2; $i <= 28; $i++) {
                 Employee::create([
-                    'nip' => '1985' . str_pad($i + 20, 14, '0', STR_PAD_LEFT),
-                    'name' => 'Tenaga Kependidikan ' . $i,
-                    'position' => 'Staf Tata Usaha / Administrasi',
+                    'nip' => '1985' . str_pad($i + 30, 14, '0', STR_PAD_LEFT),
+                    'name' => 'Staf Tata Usaha ' . $i,
+                    'position' => 'Staff Tata Usaha',
                     'is_active' => true,
                 ]);
             }
         }
+
+       
     }
 }
+

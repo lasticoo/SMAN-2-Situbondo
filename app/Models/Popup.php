@@ -48,4 +48,20 @@ class Popup extends Model
 
         return asset('storage/' . ltrim($path, '/'));
     }
+
+    /**
+     * Auto-clear caches on update or delete (Invalidate-on-Write)
+     */
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('landing_active_popups');
+            \Illuminate\Support\Facades\Cache::forget('landing_active_popups_' . \Illuminate\Support\Carbon::today()->toDateString());
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('landing_active_popups');
+            \Illuminate\Support\Facades\Cache::forget('landing_active_popups_' . \Illuminate\Support\Carbon::today()->toDateString());
+        });
+    }
 }

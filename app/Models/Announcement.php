@@ -24,4 +24,18 @@ class Announcement extends Model
     {
         return $this->belongsTo(Admin::class, 'created_by');
     }
+
+    /**
+     * Auto-clear caches on update or delete (Invalidate-on-Write)
+     */
+    protected static function booted(): void
+    {
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget('landing_announcements_top5');
+        });
+
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget('landing_announcements_top5');
+        });
+    }
 }
