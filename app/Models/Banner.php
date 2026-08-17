@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class Banner extends Model
 {
@@ -30,15 +32,19 @@ class Banner extends Model
 
         $path = str_replace('\\', '/', $this->image_url);
 
-        if (\Illuminate\Support\Str::startsWith($path, ['http://', 'https://'])) {
+        if (Str::startsWith($path, ['http://', 'https://'])) {
             return $path;
         }
 
-        if (\Illuminate\Support\Str::startsWith($path, ['/build/', 'build/'])) {
+        if (Str::startsWith($path, ['/build/', 'build/'])) {
             return asset(ltrim($path, '/'));
         }
 
-        return asset('storage/' . ltrim($path, '/'));
+        if (Str::startsWith($path, ['storage/', '/storage/'])) {
+            return asset(ltrim($path, '/'));
+        }
+
+        return asset('storage/'.ltrim($path, '/'));
     }
 
     /**
@@ -47,11 +53,11 @@ class Banner extends Model
     protected static function booted(): void
     {
         static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+            Cache::forget('landing_active_banners');
         });
 
         static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget('landing_active_banners');
+            Cache::forget('landing_active_banners');
         });
     }
 }

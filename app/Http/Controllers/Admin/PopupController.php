@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PopupRequest;
 use App\Models\Popup;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
-use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class PopupController extends Controller
 {
@@ -20,11 +22,10 @@ class PopupController extends Controller
      * Redirect ke halaman utama Landing Page Management yang juga menampilkan pop-up.
      * Halaman utama dikelola oleh BannerController::index().
      */
-    public function index(): \Illuminate\Http\RedirectResponse
+    public function index(): RedirectResponse
     {
         return redirect()->route('admin.banners.index');
     }
-
 
     /**
      * Tampilkan form tambah pop-up baru.
@@ -45,17 +46,17 @@ class PopupController extends Controller
         $imagePath = $this->processAndStoreImage($request);
 
         Popup::create([
-            'title'       => $request->title,
+            'title' => $request->title,
             'description' => $request->description,
-            'image_url'   => $imagePath,
-            'start_date'  => $request->start_date,
-            'end_date'    => $request->end_date,
-            'is_active'   => $request->boolean('is_active', true),
-            'sort_order'  => $request->sort_order,
+            'image_url' => $imagePath,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'is_active' => $request->boolean('is_active', true),
+            'sort_order' => $request->sort_order,
         ]);
 
-        \Illuminate\Support\Facades\Cache::forget('landing_active_popups_' . \Illuminate\Support\Carbon::today()->toDateString());
-        \Illuminate\Support\Facades\Cache::forget('landing_active_popups');
+        Cache::forget('landing_active_popups_'.Carbon::today()->toDateString());
+        Cache::forget('landing_active_popups');
 
         return redirect()
             ->route('admin.banners.index')
@@ -77,12 +78,12 @@ class PopupController extends Controller
     public function update(PopupRequest $request, Popup $popup): RedirectResponse
     {
         $data = [
-            'title'       => $request->title,
+            'title' => $request->title,
             'description' => $request->description,
-            'start_date'  => $request->start_date,
-            'end_date'    => $request->end_date,
-            'is_active'   => $request->boolean('is_active', true),
-            'sort_order'  => $request->sort_order,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'is_active' => $request->boolean('is_active', true),
+            'sort_order' => $request->sort_order,
         ];
 
         if ($request->hasFile('image')) {
@@ -96,8 +97,8 @@ class PopupController extends Controller
 
         $popup->update($data);
 
-        \Illuminate\Support\Facades\Cache::forget('landing_active_popups_' . \Illuminate\Support\Carbon::today()->toDateString());
-        \Illuminate\Support\Facades\Cache::forget('landing_active_popups');
+        Cache::forget('landing_active_popups_'.Carbon::today()->toDateString());
+        Cache::forget('landing_active_popups');
 
         return redirect()
             ->route('admin.banners.index')
@@ -116,8 +117,8 @@ class PopupController extends Controller
 
         $popup->delete();
 
-        \Illuminate\Support\Facades\Cache::forget('landing_active_popups_' . \Illuminate\Support\Carbon::today()->toDateString());
-        \Illuminate\Support\Facades\Cache::forget('landing_active_popups');
+        Cache::forget('landing_active_popups_'.Carbon::today()->toDateString());
+        Cache::forget('landing_active_popups');
 
         return redirect()
             ->route('admin.banners.index')
@@ -131,8 +132,8 @@ class PopupController extends Controller
     {
         $popup->update(['is_active' => ! $popup->is_active]);
 
-        \Illuminate\Support\Facades\Cache::forget('landing_active_popups_' . \Illuminate\Support\Carbon::today()->toDateString());
-        \Illuminate\Support\Facades\Cache::forget('landing_active_popups');
+        Cache::forget('landing_active_popups_'.Carbon::today()->toDateString());
+        Cache::forget('landing_active_popups');
 
         $status = $popup->is_active ? 'diaktifkan' : 'dinonaktifkan';
 
@@ -151,14 +152,14 @@ class PopupController extends Controller
         $file = $request->file('image');
 
         // Inisialisasi Intervention Image dengan driver GD
-        $manager = new ImageManager(new Driver());
-        $image   = $manager->read($file->getRealPath());
+        $manager = new ImageManager(new Driver);
+        $image = $manager->read($file->getRealPath());
 
         // Kompres dan konversi ke WebP (kualitas 85)
         $webpContent = $image->toWebp(85)->toString();
 
         // Generate nama file unik dengan ekstensi .webp
-        $filename = 'popups/' . uniqid('popup_', true) . '.webp';
+        $filename = 'popups/'.uniqid('popup_', true).'.webp';
 
         // Simpan ke disk public (storage/app/public/popups/)
         Storage::disk('public')->put($filename, $webpContent);

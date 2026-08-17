@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\User\EmployeeController;
 use App\Http\Controllers\User\LandingPageController;
 use App\Http\Controllers\User\ProfileController;
-use App\Http\Controllers\User\EmployeeController;
 use App\Http\Controllers\User\StudentController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +41,3 @@ Route::get('/guru-dan-pegawai', [EmployeeController::class, 'index']);
 Route::get('/siswa', [StudentController::class, 'index'])->name('student.index');
 Route::get('/data-siswa', [StudentController::class, 'index']);
 Route::get('/peserta-didik', [StudentController::class, 'index']);
-
-
-
