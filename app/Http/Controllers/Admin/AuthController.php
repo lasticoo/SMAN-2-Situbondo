@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -50,7 +50,7 @@ class AuthController extends Controller
         }
 
         // Coba autentikasi dengan guard admin
-        if (!Auth::guard('admin')->attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        if (! Auth::guard('admin')->attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             // Hit failed attempt
             RateLimiter::hit($throttleKey);
 

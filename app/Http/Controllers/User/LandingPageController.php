@@ -3,18 +3,17 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use App\Models\Banner;
+use App\Models\ColorSetting;
+use App\Models\Employee;
+use App\Models\News;
 use App\Models\Popup;
 use App\Models\SchoolProfile;
-use App\Models\News;
-use App\Models\Announcement;
 use App\Models\Student;
-use App\Models\Employee;
-use App\Models\ColorSetting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 class LandingPageController extends Controller
 {
@@ -43,7 +42,7 @@ class LandingPageController extends Controller
             ->orderBy('sort_order', 'asc')
             ->orderBy('id', 'desc')
             ->get();
-
+            
         $activePopup = $activePopups->first();
 
         // 3. Fetch School Profile (Realtime)
@@ -68,38 +67,38 @@ class LandingPageController extends Controller
                 'kelas_10' => Student::where('is_public', true)
                     ->where(function ($q) {
                         $q->where('class', 'like', 'X-%')
-                          ->orWhere('class', 'like', 'X %')
-                          ->orWhere('class', 'X')
-                          ->orWhere('class', 'like', '10%');
+                            ->orWhere('class', 'like', 'X %')
+                            ->orWhere('class', 'X')
+                            ->orWhere('class', 'like', '10%');
                     })->count(),
                 'kelas_11' => Student::where('is_public', true)
                     ->where(function ($q) {
                         $q->where('class', 'like', 'XI-%')
-                          ->orWhere('class', 'like', 'XI %')
-                          ->orWhere('class', 'XI')
-                          ->orWhere('class', 'like', '11%');
+                            ->orWhere('class', 'like', 'XI %')
+                            ->orWhere('class', 'XI')
+                            ->orWhere('class', 'like', '11%');
                     })->count(),
                 'kelas_12' => Student::where('is_public', true)
                     ->where(function ($q) {
                         $q->where('class', 'like', 'XII-%')
-                          ->orWhere('class', 'like', 'XII %')
-                          ->orWhere('class', 'XII')
-                          ->orWhere('class', 'like', '12%');
+                            ->orWhere('class', 'like', 'XII %')
+                            ->orWhere('class', 'XII')
+                            ->orWhere('class', 'like', '12%');
                     })->count(),
             ];
         });
 
         // 7. Fetch Employee Statistics (Guru & Staf) (Cache-on-Read, Invalidate-on-Write)
         $employeeStats = Cache::remember('landing_employee_stats', 86400, function () {
-            $totalEmployees = Employee::where('is_active', true)->count();
-            $guruCount = Employee::where('is_active', true)
+            $totalEmployees = Employee::active()->count();
+            $guruCount = Employee::active()
                 ->where(function ($q) {
                     $q->where('position', 'like', '%Guru%')
-                      ->orWhere('position', 'like', '%Kepala Sekolah%')
-                      ->orWhere('position', 'like', '%Wakil Kepala Sekolah%')
-                      ->orWhere('position', 'like', '%Pengajar%');
+                        ->orWhere('position', 'like', '%Kepala Sekolah%')
+                        ->orWhere('position', 'like', '%Wakil Kepala Sekolah%')
+                        ->orWhere('position', 'like', '%Pengajar%');
                 })->count();
-            
+
             $stafCount = max(0, $totalEmployees - $guruCount);
 
             return [

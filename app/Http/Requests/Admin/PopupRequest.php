@@ -26,12 +26,12 @@ class PopupRequest extends FormRequest
             : 'nullable|file|mimes:jpg,jpeg,png,webp|max:2048';
 
         return [
-            'title'      => 'required|string|max:150',
-            'description'=> 'nullable|string',
-            'image'      => $imageRule,
+            'title' => 'required|string|max:150',
+            'description' => 'nullable|string',
+            'image' => $imageRule,
             'start_date' => 'nullable|date',
-            'end_date'   => 'nullable|date|after_or_equal:start_date',
-            'is_active'  => 'boolean',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'is_active' => 'boolean',
             'sort_order' => 'required|integer|min:0',
         ];
     }
@@ -42,18 +42,18 @@ class PopupRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required'             => 'Judul pop-up wajib diisi.',
-            'title.max'                  => 'Judul pop-up maksimal 150 karakter.',
-            'image.required'             => 'Gambar pop-up wajib diupload.',
-            'image.file'                 => 'Upload harus berupa file gambar.',
-            'image.mimes'                => 'Format gambar harus JPG, JPEG, PNG, atau WebP.',
-            'image.max'                  => 'Ukuran gambar maksimal 2MB.',
-            'start_date.date'            => 'Format tanggal mulai tidak valid.',
-            'end_date.date'              => 'Format tanggal selesai tidak valid.',
-            'end_date.after_or_equal'    => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
-            'sort_order.required'        => 'Urutan tampil wajib diisi.',
-            'sort_order.integer'         => 'Urutan tampil harus berupa angka.',
-            'sort_order.min'             => 'Urutan tampil minimal 0.',
+            'title.required' => 'Judul pop-up wajib diisi.',
+            'title.max' => 'Judul pop-up maksimal 150 karakter.',
+            'image.required' => 'Gambar pop-up wajib diupload.',
+            'image.file' => 'Upload harus berupa file gambar.',
+            'image.mimes' => 'Format gambar harus JPG, JPEG, PNG, atau WebP.',
+            'image.max' => 'Ukuran gambar maksimal 2MB.',
+            'start_date.date' => 'Format tanggal mulai tidak valid.',
+            'end_date.date' => 'Format tanggal selesai tidak valid.',
+            'end_date.after_or_equal' => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
+            'sort_order.required' => 'Urutan tampil wajib diisi.',
+            'sort_order.integer' => 'Urutan tampil harus berupa angka.',
+            'sort_order.min' => 'Urutan tampil minimal 0.',
         ];
     }
 }
