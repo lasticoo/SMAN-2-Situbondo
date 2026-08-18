@@ -25,6 +25,15 @@ class Announcement extends Model
         'published_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'display_thumbnail_url',
+        'day',
+        'month_short',
+        'formatted_date',
+        'formatted_time',
+        'category_accent',
+    ];
+
     public function author()
     {
         return $this->belongsTo(Admin::class, 'created_by');
@@ -67,9 +76,6 @@ class Announcement extends Model
     }
 
     /**
-     * Accessor untuk Thumbnail Image URL yang aman
-     */
-    /**
      * Accessor untuk Thumbnail Image URL yang membaca gambar dari manapun gambar itu berada
      */
     public function getDisplayThumbnailUrlAttribute(): string
@@ -102,67 +108,44 @@ class Announcement extends Model
 
         // 4. Dimulai dengan slash / (misal: /images/..., /storage/..., /build/..., /uploads/...)
         if (Str::startsWith($clean, '/')) {
-            $rel = ltrim($clean, '/');
-            if (file_exists(public_path($rel))) {
-                return asset($rel);
-            }
-            if (Str::startsWith($rel, 'storage/') && \Illuminate\Support\Facades\Storage::disk('public')->exists(substr($rel, 8))) {
-                return \Illuminate\Support\Facades\Storage::disk('public')->url(substr($rel, 8));
-            }
-            return asset($rel);
+            $clean = ltrim($clean, '/');
         }
 
-        // 5. Tersimpan dengan awalan public/... atau app/public/...
-        if (Str::startsWith($clean, 'public/')) {
-            $clean = substr($clean, 7);
-        }
-        if (Str::startsWith($clean, 'app/public/')) {
-            $clean = substr($clean, 11);
+        // 5. Membersihkan prefix berlebih seperti storage/public/, storage/app/public/, app/public/, public/
+        $cleanStoragePath = preg_replace('#^(storage/)?(app/)?public/#i', '', $clean);
+        $cleanStoragePath = preg_replace('#^storage/#i', '', $cleanStoragePath);
+
+        // 6. Cek langsung di Storage disk public Laravel
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($cleanStoragePath)) {
+            return asset('storage/' . $cleanStoragePath);
         }
 
-        // 6. Awalan storage/ eksplisit (misal: storage/announcements/xyz.png)
-        if (Str::startsWith($clean, 'storage/')) {
-            if (file_exists(public_path($clean))) {
-                return asset($clean);
-            }
-            $storageRel = substr($clean, 8);
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($storageRel)) {
-                return \Illuminate\Support\Facades\Storage::disk('public')->url($storageRel);
-            }
-            return asset($clean);
-        }
-
-        // 7. File langsung di dalam direktori public/
+        // 7. Cek file langsung di dalam direktori public/ (misal: build/assets/banner smada.png atau images/...)
         if (file_exists(public_path($clean))) {
             return asset($clean);
         }
 
-        // 8. Tersimpan di dalam disk 'public' Storage Laravel
-        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($clean)) {
-            return \Illuminate\Support\Facades\Storage::disk('public')->url($clean);
-        }
-
-        // 9. Cek subfolder umum jika hanya nama file tanpa nama folder
+        // 8. Cek subfolder umum jika hanya nama file tanpa nama folder
         $subfolders = [
-            'announcements/', 'announcement/', 'pengumuman/', 'banners/', 'popups/',
+            'announcement/', 'announcements/', 'pengumuman/', 'banners/', 'popups/',
             'news/', 'berita/', 'employees/', 'employee/', 'guru/', 'pegawai/',
             'school_profile/', 'images/static/', 'images/', 'uploads/', 'build/assets/'
         ];
 
         foreach ($subfolders as $folder) {
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($folder . $clean)) {
-                return \Illuminate\Support\Facades\Storage::disk('public')->url($folder . $clean);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($folder . $cleanStoragePath)) {
+                return asset('storage/' . $folder . $cleanStoragePath);
             }
             if (file_exists(public_path($folder . $clean))) {
                 return asset($folder . $clean);
             }
-            if (file_exists(public_path('storage/' . $folder . $clean))) {
-                return asset('storage/' . $folder . $clean);
+            if (file_exists(public_path('storage/' . $folder . $cleanStoragePath))) {
+                return asset('storage/' . $folder . $cleanStoragePath);
             }
         }
 
-        // 10. Fallback: Storage URL jika ada, atau defaultFallback
-        return $defaultFallback;
+        // 9. Fallback: URL Storage publik Laravel via asset()
+        return asset('storage/' . $cleanStoragePath);
     }
 
     /**

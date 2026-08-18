@@ -3,6 +3,7 @@
 use App\Http\Controllers\User\AnnouncementController;
 use App\Http\Controllers\User\EmployeeController;
 use App\Http\Controllers\User\LandingPageController;
+use App\Http\Controllers\User\MediaController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\StudentController;
 use Illuminate\Support\Facades\Route;
@@ -50,3 +51,6 @@ Route::get('/agenda', [AnnouncementController::class, 'index'])->name('agenda.in
 Route::get('/agenda/{id}', [AnnouncementController::class, 'show'])->name('agenda.show');
 Route::get('/informasi', [AnnouncementController::class, 'index'])->name('information.index');
 Route::get('/informasi/{id}', [AnnouncementController::class, 'show'])->name('information.show');
+
+// US-06 Media Galeri Foto Kegiatan Sekolah (1 Single Route)
+Route::get('/media', [MediaController::class, 'index'])->name('gallery.index');

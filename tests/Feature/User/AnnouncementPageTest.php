@@ -218,4 +218,49 @@ class AnnouncementPageTest extends TestCase
         $response->assertSee('--primary-main: #0A4D68;', false);
         $response->assertSee('--secondary-gold: #088395;', false);
     }
+
+    public function test_announcement_resolves_all_absolute_filesystem_paths(): void
+    {
+        // 1. C:\laragon\www\smada\storage\app\public\...
+        $ann1 = Announcement::create([
+            'title' => 'Pengumuman Path Storage App Public',
+            'category' => 'Akademik',
+            'thumbnail_url' => 'C:\\laragon\\www\\smada\\storage\\app\\public\\announcements\\agenda1.jpg',
+            'summary' => 'Ringkasan agenda 1.',
+            'content' => 'Konten lengkap agenda 1.',
+            'status' => 'published',
+            'published_at' => Carbon::now()->subDay(),
+            'created_by' => $this->admin->id,
+        ]);
+
+        // 2. C:\laragon\www\smada\public\...
+        $ann2 = Announcement::create([
+            'title' => 'Pengumuman Path Public Static',
+            'category' => 'Kesiswaan',
+            'thumbnail_url' => 'C:\\laragon\\www\\smada\\public\\images\\static\\gambar_profile_statis.jpg',
+            'summary' => 'Ringkasan agenda 2.',
+            'content' => 'Konten lengkap agenda 2.',
+            'status' => 'published',
+            'published_at' => Carbon::now()->subDay(),
+            'created_by' => $this->admin->id,
+        ]);
+
+        // 3. C:\laragon\www\smada\public\storage\...
+        $ann3 = Announcement::create([
+            'title' => 'Pengumuman Path Public Storage',
+            'category' => 'Informasi Umum',
+            'thumbnail_url' => 'C:\\laragon\\www\\smada\\public\\storage\\announcements\\agenda3.jpg',
+            'summary' => 'Ringkasan agenda 3.',
+            'content' => 'Konten lengkap agenda 3.',
+            'status' => 'published',
+            'published_at' => Carbon::now()->subDay(),
+            'created_by' => $this->admin->id,
+        ]);
+
+        $response = $this->get(route('announcement.index'));
+        $response->assertStatus(200);
+        $response->assertSee('Pengumuman Path Storage App Public');
+        $response->assertSee('Pengumuman Path Public Static');
+        $response->assertSee('Pengumuman Path Public Storage');
+    }
 }

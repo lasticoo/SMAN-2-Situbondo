@@ -159,12 +159,12 @@
                  @mouseleave="closeDropdownWithDelay()">
                 <button type="button" 
                         @click="toggleDropdown('media')"
-                        class="relative py-1 flex items-center gap-1.5 uppercase hover-text-primary transition-colors duration-200 cursor-pointer"
+                        class="relative py-1 flex items-center gap-1.5 uppercase transition-colors duration-200 cursor-pointer {{ request()->routeIs('gallery.*') || request()->routeIs('media.*') ? 'text-theme-primary font-bold' : 'hover-text-primary' }}"
                         aria-haspopup="true"
                         :aria-expanded="activeDropdown === 'media'">
                     <span>MEDIA</span>
                     <i class="fas fa-chevron-down text-[9px] transition-transform duration-250" :class="activeDropdown === 'media' ? 'rotate-180 text-theme-primary' : ''"></i>
-                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300" :class="activeDropdown === 'media' ? 'w-full' : ''"></span>
+                    <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('gallery.*') || request()->routeIs('media.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'media' ? 'w-full' : ''"></span>
                 </button>
                 <div x-show="activeDropdown === 'media'" 
                      x-cloak
@@ -179,7 +179,7 @@
                      style="z-index: 1000;"
                      class="absolute left-0 top-full pt-2 w-48 before:content-[''] before:absolute before:-top-3 before:left-0 before:w-full before:h-3">
                     <div class="bg-white shadow-[0_20px_50px_rgba(0,0,0,0.25)] rounded-2xl p-2 border border-gray-200 ring-1 ring-black/10" style="background-color: #ffffff !important;">
-                        <a class="flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-slate-900 hover:text-theme-primary hover:bg-slate-100 rounded-xl transition-all duration-150 group/item" href="{{ route('home') }}#media">
+                        <a class="flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-slate-900 hover:text-theme-primary hover:bg-slate-100 rounded-xl transition-all duration-150 group/item {{ request()->routeIs('gallery.*') || request()->routeIs('media.*') ? 'text-theme-primary bg-slate-50' : '' }}" href="{{ route('gallery.index') }}">
                             <span>Galeri</span>
                             <i class="fas fa-chevron-right text-[9px] opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 transition-all text-theme-secondary"></i>
                         </a>
@@ -263,7 +263,7 @@
                 <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="mobileMediaOpen ? 'rotate-180 text-theme-secondary' : ''"></i>
             </button>
             <div x-show="mobileMediaOpen" x-collapse class="space-y-1 pl-3 border-l-2 border-theme-secondary my-1">
-                <a class="block py-1.5 text-gray-600 hover-text-primary text-xs" href="{{ route('home') }}#media">Galeri</a>
+                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('gallery.*') || request()->routeIs('media.*') ? 'text-theme-primary font-bold' : 'text-gray-600' }}" href="{{ route('gallery.index') }}">Galeri</a>
                 <a class="block py-1.5 text-gray-600 hover-text-primary text-xs" href="{{ route('home') }}#media">Video</a>
             </div>
         </div>
