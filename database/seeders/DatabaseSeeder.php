@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             SchoolProfileSeeder::class,
             LandingPageTestDataSeeder::class,
             SchoolProfileSeeder::class,
+            AnnouncementTestDataSeederUser::class,
         ]);
     }
 }

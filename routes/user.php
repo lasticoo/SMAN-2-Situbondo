@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\User\AnnouncementController;
 use App\Http\Controllers\User\EmployeeController;
 use App\Http\Controllers\User\LandingPageController;
 use App\Http\Controllers\User\ProfileController;
@@ -8,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| EPIC 1 - WEBSITE USER / PUBLIK (DEVELOPER 2: RIZAL WIBOWO / LASTICO RIDHO ALPARESZ)
+| EPIC 1 & EPIC 2 - WEBSITE USER / PUBLIK (DEVELOPER 2: RIZAL WIBOWO / LASTICO RIDHO ALPARESZ)
 |--------------------------------------------------------------------------
 | Daftar Rute Fitur User Publik SMAN 2 Situbondo:
 | US - 01 : Landing Page          -> App\Http\Controllers\User\LandingPageController
@@ -41,3 +42,11 @@ Route::get('/guru-dan-pegawai', [EmployeeController::class, 'index']);
 Route::get('/siswa', [StudentController::class, 'index'])->name('student.index');
 Route::get('/data-siswa', [StudentController::class, 'index']);
 Route::get('/peserta-didik', [StudentController::class, 'index']);
+
+// US-05 Pengumuman & Agenda Publik
+Route::get('/pengumuman', [AnnouncementController::class, 'index'])->name('announcement.index');
+Route::get('/pengumuman/{id}', [AnnouncementController::class, 'show'])->name('announcement.show');
+Route::get('/agenda', [AnnouncementController::class, 'index'])->name('agenda.index');
+Route::get('/agenda/{id}', [AnnouncementController::class, 'show'])->name('agenda.show');
+Route::get('/informasi', [AnnouncementController::class, 'index'])->name('information.index');
+Route::get('/informasi/{id}', [AnnouncementController::class, 'show'])->name('information.show');

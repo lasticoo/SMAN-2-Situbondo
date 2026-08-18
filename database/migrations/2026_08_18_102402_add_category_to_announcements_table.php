@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('galleries', function (Blueprint $table) {
-            $table->string('activity_name', 150)->nullable()->after('photo_url');
-            $table->date('activity_date')->nullable()->after('activity_name');
+        Schema::table('announcements', function (Blueprint $table) {
+            $table->string('category', 100)->nullable()->default('Umum')->after('title');
         });
     }
 
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('galleries', function (Blueprint $table) {
-            $table->dropColumn(['activity_name', 'activity_date']);
+        Schema::table('announcements', function (Blueprint $table) {
+            $table->dropColumn('category');
         });
     }
 };

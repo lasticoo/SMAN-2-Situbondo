@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class Announcement extends Model
 {
     protected $fillable = [
         'title',
+        'category',
         'thumbnail_url',
         'summary',
         'content',
@@ -26,16 +31,234 @@ class Announcement extends Model
     }
 
     /**
+     * Scope untuk pengumuman yang sudah dipublikasikan
+     */
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', 'published');
+    }
+
+    /**
+     * Scope untuk filter kategori
+     */
+    public function scopeFilterCategory(Builder $query, ?string $category): Builder
+    {
+        if (empty($category) || in_array(strtolower($category), ['all', 'semua', 'semua pengumuman'])) {
+            return $query;
+        }
+
+        return $query->where('category', $category);
+    }
+
+    /**
+     * Scope untuk pencarian judul, ringkasan, atau konten
+     */
+    public function scopeSearch(Builder $query, ?string $search): Builder
+    {
+        if (empty($search)) {
+            return $query;
+        }
+
+        return $query->where(function (Builder $q) use ($search) {
+            $q->where('title', 'like', "%{$search}%")
+              ->orWhere('summary', 'like', "%{$search}%")
+              ->orWhere('content', 'like', "%{$search}%");
+        });
+    }
+
+    /**
+     * Accessor untuk Thumbnail Image URL yang aman
+     */
+    /**
+     * Accessor untuk Thumbnail Image URL yang membaca gambar dari manapun gambar itu berada
+     */
+    public function getDisplayThumbnailUrlAttribute(): string
+    {
+        $defaultFallback = file_exists(public_path('images/static/gambar_profile_statis.jpg'))
+            ? asset('images/static/gambar_profile_statis.jpg')
+            : (file_exists(public_path('build/assets/banner smada.png')) ? asset('build/assets/banner smada.png') : asset('images/static/gambar_profile_statis.jpg'));
+
+        if (empty($this->thumbnail_url)) {
+            return $defaultFallback;
+        }
+
+        // 1. Normalisasi Windows backslashes, leading/trailing whitespace
+        $clean = trim(str_replace('\\', '/', $this->thumbnail_url));
+        if (empty($clean)) {
+            return $defaultFallback;
+        }
+
+        // 2. Data URI atau URL Web Eksternal Penuh (http, https, protocol-relative)
+        if (Str::startsWith($clean, ['http://', 'https://', '//', 'data:image/'])) {
+            return $clean;
+        }
+
+        // 3. Absolute local filesystem path on server (misal: C:/laragon/www/smada/public/...)
+        $publicBasePath = str_replace('\\', '/', public_path());
+        if (Str::startsWith($clean, $publicBasePath)) {
+            $rel = ltrim(substr($clean, strlen($publicBasePath)), '/');
+            return asset($rel);
+        }
+
+        // 4. Dimulai dengan slash / (misal: /images/..., /storage/..., /build/..., /uploads/...)
+        if (Str::startsWith($clean, '/')) {
+            $rel = ltrim($clean, '/');
+            if (file_exists(public_path($rel))) {
+                return asset($rel);
+            }
+            if (Str::startsWith($rel, 'storage/') && \Illuminate\Support\Facades\Storage::disk('public')->exists(substr($rel, 8))) {
+                return \Illuminate\Support\Facades\Storage::disk('public')->url(substr($rel, 8));
+            }
+            return asset($rel);
+        }
+
+        // 5. Tersimpan dengan awalan public/... atau app/public/...
+        if (Str::startsWith($clean, 'public/')) {
+            $clean = substr($clean, 7);
+        }
+        if (Str::startsWith($clean, 'app/public/')) {
+            $clean = substr($clean, 11);
+        }
+
+        // 6. Awalan storage/ eksplisit (misal: storage/announcements/xyz.png)
+        if (Str::startsWith($clean, 'storage/')) {
+            if (file_exists(public_path($clean))) {
+                return asset($clean);
+            }
+            $storageRel = substr($clean, 8);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($storageRel)) {
+                return \Illuminate\Support\Facades\Storage::disk('public')->url($storageRel);
+            }
+            return asset($clean);
+        }
+
+        // 7. File langsung di dalam direktori public/
+        if (file_exists(public_path($clean))) {
+            return asset($clean);
+        }
+
+        // 8. Tersimpan di dalam disk 'public' Storage Laravel
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($clean)) {
+            return \Illuminate\Support\Facades\Storage::disk('public')->url($clean);
+        }
+
+        // 9. Cek subfolder umum jika hanya nama file tanpa nama folder
+        $subfolders = [
+            'announcements/', 'announcement/', 'pengumuman/', 'banners/', 'popups/',
+            'news/', 'berita/', 'employees/', 'employee/', 'guru/', 'pegawai/',
+            'school_profile/', 'images/static/', 'images/', 'uploads/', 'build/assets/'
+        ];
+
+        foreach ($subfolders as $folder) {
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($folder . $clean)) {
+                return \Illuminate\Support\Facades\Storage::disk('public')->url($folder . $clean);
+            }
+            if (file_exists(public_path($folder . $clean))) {
+                return asset($folder . $clean);
+            }
+            if (file_exists(public_path('storage/' . $folder . $clean))) {
+                return asset('storage/' . $folder . $clean);
+            }
+        }
+
+        // 10. Fallback: Storage URL jika ada, atau defaultFallback
+        return $defaultFallback;
+    }
+
+    /**
+     * Accessor untuk Hari publikasi (misal: "16", "28", "08")
+     */
+    public function getDayAttribute(): string
+    {
+        $date = $this->published_at ?? $this->created_at ?? Carbon::now();
+        return $date->format('d');
+    }
+
+    /**
+     * Accessor untuk Singkatan Bulan publikasi dalam Bahasa Indonesia (misal: "JUL", "AGT", "SEP")
+     */
+    public function getMonthShortAttribute(): string
+    {
+        $date = $this->published_at ?? $this->created_at ?? Carbon::now();
+        $months = [
+            1 => 'JAN', 2 => 'FEB', 3 => 'MAR', 4 => 'APR', 5 => 'MEI', 6 => 'JUN',
+            7 => 'JUL', 8 => 'AGT', 9 => 'SEP', 10 => 'OKT', 11 => 'NOV', 12 => 'DES'
+        ];
+
+        return $months[$date->month] ?? $date->format('M');
+    }
+
+    /**
+     * Accessor untuk Format Tanggal Lengkap (misal: "16 Juli 2025")
+     */
+    public function getFormattedDateAttribute(): string
+    {
+        $date = $this->published_at ?? $this->created_at ?? Carbon::now();
+        $months = [
+            1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April', 5 => 'Mei', 6 => 'Juni',
+            7 => 'Juli', 8 => 'Agustus', 9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
+        ];
+
+        return $date->format('d') . ' ' . ($months[$date->month] ?? $date->format('F')) . ' ' . $date->format('Y');
+    }
+
+    /**
+     * Accessor untuk Jam Pelaksanaan / Publikasi (misal: "08:00 WIB")
+     */
+    public function getFormattedTimeAttribute(): string
+    {
+        $date = $this->published_at ?? $this->created_at ?? Carbon::now();
+        return $date->format('H:i') . ' WIB';
+    }
+
+    /**
+     * Accessor untuk Style Aksen Warna Kategori
+     */
+    public function getCategoryAccentAttribute(): array
+    {
+        $cat = strtolower(trim($this->category ?? 'informasi umum'));
+
+        if (str_contains($cat, 'akademik') || str_contains($cat, 'kurikulum') || str_contains($cat, 'ujian')) {
+            return [
+                'name' => $this->category ?: 'Akademik',
+                'badge_bg' => 'bg-blue-50 text-blue-700 border border-blue-200/80',
+                'date_badge_text' => 'text-blue-700',
+                'dot_color' => 'bg-blue-500',
+                'icon' => 'fa-graduation-cap',
+            ];
+        }
+
+        if (str_contains($cat, 'kesiswaan') || str_contains($cat, 'osis') || str_contains($cat, 'ekstra') || str_contains($cat, 'lomba')) {
+            return [
+                'name' => $this->category ?: 'Kesiswaan',
+                'badge_bg' => 'bg-amber-50 text-amber-800 border border-amber-200/80',
+                'date_badge_text' => 'text-amber-800',
+                'dot_color' => 'bg-amber-500',
+                'icon' => 'fa-users',
+            ];
+        }
+
+        // Default: Informasi Umum / Umum
+        return [
+            'name' => $this->category ?: 'Informasi Umum',
+            'badge_bg' => 'bg-emerald-50 text-emerald-800 border border-emerald-200/80',
+            'date_badge_text' => 'text-emerald-800',
+            'dot_color' => 'bg-emerald-500',
+            'icon' => 'fa-info-circle',
+        ];
+    }
+
+    /**
      * Auto-clear caches on update or delete (Invalidate-on-Write)
      */
     protected static function booted(): void
     {
         static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget('landing_announcements_top5');
+            Cache::forget('landing_announcements_top5');
         });
 
         static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget('landing_announcements_top5');
+            Cache::forget('landing_announcements_top5');
         });
     }
 }
