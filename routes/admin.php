@@ -27,11 +27,14 @@ use App\Http\Controllers\Admin\AuthController;
 // Developer Admin dapat langsung mendaftarkan route untuk masing-masing fitur di bawah ini:
 
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\ColorSettingController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\PopupController;
 use App\Http\Controllers\Admin\SchoolProfileController;
 use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\VideoController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -121,3 +124,49 @@ Route::resource('students', StudentController::class)
     ]);
 Route::patch('students/{student}/toggle-public', [StudentController::class, 'togglePublic'])
     ->name('admin.students.togglePublic');
+
+// =============================================================================
+// AD-06 — Manajemen Galeri Foto (Galleries)
+// =============================================================================
+Route::resource('galleries', GalleryController::class)
+    ->except(['show', 'create', 'edit'])
+    ->names([
+        'index' => 'admin.galleries.index',
+        'store' => 'admin.galleries.store',
+        'update' => 'admin.galleries.update',
+        'destroy' => 'admin.galleries.destroy',
+    ]);
+
+// =============================================================================
+// AD-07 — Manajemen Video YouTube (Videos)
+// =============================================================================
+Route::resource('videos', VideoController::class)
+    ->except(['show', 'create', 'edit'])
+    ->names([
+        'index' => 'admin.videos.index',
+        'store' => 'admin.videos.store',
+        'update' => 'admin.videos.update',
+        'destroy' => 'admin.videos.destroy',
+    ]);
+
+// =============================================================================
+// AD-08 — Kustomisasi Warna Tema (Color Settings)
+// =============================================================================
+Route::get('color-settings', [ColorSettingController::class, 'edit'])
+    ->name('admin.color_settings.edit');
+Route::put('color-settings', [ColorSettingController::class, 'update'])
+    ->name('admin.color_settings.update');
+
+// =============================================================================
+// AD-09 — Manajemen Pengumuman (Announcements)
+// =============================================================================
+use App\Http\Controllers\Admin\AnnouncementController;
+
+Route::resource('announcements', AnnouncementController::class)
+    ->except(['show', 'create', 'edit'])
+    ->names([
+        'index' => 'admin.announcements.index',
+        'store' => 'admin.announcements.store',
+        'update' => 'admin.announcements.update',
+        'destroy' => 'admin.announcements.destroy',
+    ]);

@@ -28,48 +28,37 @@
         
         // 4. Starts with / (e.g. /images/..., /storage/..., /build/..., /uploads/...)
         if (\Illuminate\Support\Str::startsWith($clean, '/')) {
-            return $resolvedCache[$clean] = asset(ltrim($clean, '/'));
+            $clean = ltrim($clean, '/');
         }
         
-        // 5. Stored as public/... or app/public/...
-        if (\Illuminate\Support\Str::startsWith($clean, 'public/')) {
-            $clean = substr($clean, 7);
-        }
-        if (\Illuminate\Support\Str::startsWith($clean, 'app/public/')) {
-            $clean = substr($clean, 11);
-        }
-        
-        // 6. Stored with storage/ prefix (e.g. storage/news/xyz.jpg)
-        if (\Illuminate\Support\Str::startsWith($clean, 'storage/')) {
-            return $resolvedCache[$clean] = asset($clean);
+        // 5. Clean invalid storage/public/ or storage/app/public/ or public/ prefixes
+        $cleanStoragePath = preg_replace('#^(storage/)?(app/)?public/#i', '', $clean);
+        $cleanStoragePath = preg_replace('#^storage/#i', '', $cleanStoragePath);
+
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($cleanStoragePath)) {
+            return $resolvedCache[$clean] = asset('storage/' . $cleanStoragePath);
         }
         
-        // 7. Direct file in public/ directory
         if (file_exists(public_path($clean))) {
             return $resolvedCache[$clean] = asset($clean);
         }
         
-        // 8. Stored on Laravel public disk (e.g. news/xyz.jpg, announcements/xyz.jpg)
-        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($clean)) {
-            return $resolvedCache[$clean] = \Illuminate\Support\Facades\Storage::disk('public')->url($clean);
-        }
-        
-        // 9. Stored in subfolder without folder prefix (check common folders for filename only)
-        $subfolders = ['news/', 'berita/', 'announcements/', 'announcement/', 'pengumuman/', 'banners/', 'banner/', 'popups/', 'popup/', 'employees/', 'employee/', 'guru/', 'pegawai/', 'school_profile/', 'structure/', 'images/static/', 'images/', 'uploads/'];
+        // 6. Stored in subfolder without folder prefix (check common folders for filename only)
+        $subfolders = ['announcement/', 'announcements/', 'news/', 'berita/', 'pengumuman/', 'banners/', 'banner/', 'popups/', 'popup/', 'employees/', 'employee/', 'guru/', 'pegawai/', 'school_profile/', 'structure/', 'images/static/', 'images/', 'uploads/'];
         foreach ($subfolders as $folder) {
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($folder . $clean)) {
-                return $resolvedCache[$clean] = \Illuminate\Support\Facades\Storage::disk('public')->url($folder . $clean);
+            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($folder . $cleanStoragePath)) {
+                return $resolvedCache[$clean] = asset('storage/' . $folder . $cleanStoragePath);
             }
             if (file_exists(public_path($folder . $clean))) {
                 return $resolvedCache[$clean] = asset($folder . $clean);
             }
-            if (file_exists(public_path('storage/' . $folder . $clean))) {
-                return $resolvedCache[$clean] = asset('storage/' . $folder . $clean);
+            if (file_exists(public_path('storage/' . $folder . $cleanStoragePath))) {
+                return $resolvedCache[$clean] = asset('storage/' . $folder . $cleanStoragePath);
             }
         }
         
-        // 10. Fallback: Storage disk URL or Asset URL
-        return $resolvedCache[$clean] = \Illuminate\Support\Facades\Storage::disk('public')->url($clean);
+        // 7. Fallback: Storage disk URL via asset()
+        return $resolvedCache[$clean] = asset('storage/' . $cleanStoragePath);
     };
 @endphp
 
@@ -515,7 +504,7 @@
                         @php $firstAnn = $announcementsList->first(); @endphp
                         <div class="bg-gray-50 rounded-lg p-4 sm:p-5 shadow flex flex-col justify-between border border-gray-100 h-full spring-hover" data-aos="fade-right" data-aos-duration="900">
                             <div>
-                                <img alt="{{ $firstAnn->title }}" class="w-full h-40 sm:h-44 object-cover mb-4 rounded-lg" src="{{ $getImageUrl($firstAnn->thumbnail_url) }}" loading="lazy" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
+                                <img alt="{{ $firstAnn->title }}" class="w-full h-40 sm:h-44 object-cover mb-4 rounded-lg" src="{{ $firstAnn->display_thumbnail_url }}" loading="lazy" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
                                 <h3 class="font-bold mb-2 text-slate-900 text-xs sm:text-sm uppercase leading-snug font-headline">{{ $firstAnn->title }}</h3>
                                 <p class="text-[11px] sm:text-xs text-gray-500 mb-3 flex items-center gap-1 font-medium">
                                     <i class="far fa-calendar-alt text-theme-secondary"></i> {{ $firstAnn->published_at ? $firstAnn->published_at->format('F d, Y') : 'July 16, 2022' }}
@@ -534,7 +523,7 @@
                             @foreach($announcementsList->slice(1, 2) as $idx => $annItem)
                                 <div class="bg-gray-50 rounded-lg shadow border border-gray-100 flex items-stretch overflow-hidden hover:shadow-md transition min-h-[160px] sm:h-[180px] img-zoom-box spring-hover" data-aos="fade-up" data-aos-duration="800" data-aos-delay="{{ ($idx + 1) * 200 }}">
                                     <div class="w-28 sm:w-32 md:w-36 min-h-[160px] sm:h-[180px] bg-white flex items-center justify-center flex-shrink-0 border-r border-gray-100">
-                                        <img alt="{{ $annItem->title }}" class="w-full h-full object-contain p-1.5" src="{{ $getImageUrl($annItem->thumbnail_url) }}" loading="lazy" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
+                                        <img alt="{{ $annItem->title }}" class="w-full h-full object-contain p-1.5" src="{{ $annItem->display_thumbnail_url }}" loading="lazy" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
                                     </div>
                                     <div class="p-3.5 sm:p-4 flex flex-col justify-between flex-1 min-h-[160px] sm:h-[180px]">
                                         <div>
