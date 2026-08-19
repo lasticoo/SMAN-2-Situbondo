@@ -15,7 +15,9 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             SchoolProfileSeeder::class,
             LandingPageTestDataSeeder::class,
-            SchoolProfileSeeder::class,
+            AnnouncementTestDataSeederUser::class,
+            GalleryTestDataSeederUser::class,
+            VideoTestDataSeederUser::class,
         ]);
     }
 }
