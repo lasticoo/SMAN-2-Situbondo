@@ -6,6 +6,7 @@ use App\Http\Controllers\User\LandingPageController;
 use App\Http\Controllers\User\MediaController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\StudentController;
+use App\Http\Controllers\User\VideoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 | US - 03 : Civitas Akademik      -> App\Http\Controllers\User\EmployeeController
 | US - 04 : Data Siswa            -> App\Http\Controllers\User\StudentController
 | US - 05 : Pengumuman            -> App\Http\Controllers\User\AnnouncementController
-| US - 06 : Media                 -> App\Http\Controllers\User\MediaController
+| US - 06 : Media (Foto & Video)  -> MediaController & VideoController
 | US - 07 : Berita                -> App\Http\Controllers\User\NewsController
 | US - 08 : Contact               -> App\Http\Controllers\User\ContactController
 | US - 09 : SPMB                  -> App\Http\Controllers\User\SpmbController
@@ -52,5 +53,8 @@ Route::get('/agenda/{id}', [AnnouncementController::class, 'show'])->name('agend
 Route::get('/informasi', [AnnouncementController::class, 'index'])->name('information.index');
 Route::get('/informasi/{id}', [AnnouncementController::class, 'show'])->name('information.show');
 
-// US-06 Media Galeri Foto Kegiatan Sekolah (1 Single Route)
+// US-06 Media Galeri Foto & Video Kegiatan Sekolah
 Route::get('/media', [MediaController::class, 'index'])->name('gallery.index');
+Route::get('/video', [VideoController::class, 'index'])->name('video.index');
+Route::get('/videos', [VideoController::class, 'index']);
+Route::get('/media/video', [VideoController::class, 'index']);

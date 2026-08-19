@@ -159,12 +159,12 @@
                  @mouseleave="closeDropdownWithDelay()">
                 <button type="button" 
                         @click="toggleDropdown('media')"
-                        class="relative py-1 flex items-center gap-1.5 uppercase transition-colors duration-200 cursor-pointer {{ request()->routeIs('gallery.*') || request()->routeIs('media.*') ? 'text-theme-primary font-bold' : 'hover-text-primary' }}"
+                        class="relative py-1 flex items-center gap-1.5 uppercase transition-colors duration-200 cursor-pointer {{ request()->routeIs('gallery.*') || request()->routeIs('video.*') || request()->routeIs('media.*') ? 'text-theme-primary font-bold' : 'hover-text-primary' }}"
                         aria-haspopup="true"
                         :aria-expanded="activeDropdown === 'media'">
                     <span>MEDIA</span>
                     <i class="fas fa-chevron-down text-[9px] transition-transform duration-250" :class="activeDropdown === 'media' ? 'rotate-180 text-theme-primary' : ''"></i>
-                    <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('gallery.*') || request()->routeIs('media.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'media' ? 'w-full' : ''"></span>
+                    <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('gallery.*') || request()->routeIs('video.*') || request()->routeIs('media.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'media' ? 'w-full' : ''"></span>
                 </button>
                 <div x-show="activeDropdown === 'media'" 
                      x-cloak
@@ -179,11 +179,11 @@
                      style="z-index: 1000;"
                      class="absolute left-0 top-full pt-2 w-48 before:content-[''] before:absolute before:-top-3 before:left-0 before:w-full before:h-3">
                     <div class="bg-white shadow-[0_20px_50px_rgba(0,0,0,0.25)] rounded-2xl p-2 border border-gray-200 ring-1 ring-black/10" style="background-color: #ffffff !important;">
-                        <a class="flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-slate-900 hover:text-theme-primary hover:bg-slate-100 rounded-xl transition-all duration-150 group/item {{ request()->routeIs('gallery.*') || request()->routeIs('media.*') ? 'text-theme-primary bg-slate-50' : '' }}" href="{{ route('gallery.index') }}">
+                        <a class="flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-slate-900 hover:text-theme-primary hover:bg-slate-100 rounded-xl transition-all duration-150 group/item {{ request()->routeIs('gallery.*') ? 'text-theme-primary bg-slate-50' : '' }}" href="{{ route('gallery.index') }}">
                             <span>Galeri</span>
                             <i class="fas fa-chevron-right text-[9px] opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 transition-all text-theme-secondary"></i>
                         </a>
-                        <a class="flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-slate-900 hover:text-theme-primary hover:bg-slate-100 rounded-xl transition-all duration-150 group/item" href="{{ route('home') }}#media">
+                        <a class="flex items-center justify-between px-3.5 py-2.5 text-xs font-bold text-slate-900 hover:text-theme-primary hover:bg-slate-100 rounded-xl transition-all duration-150 group/item {{ request()->routeIs('video.*') ? 'text-theme-primary bg-slate-50' : '' }}" href="{{ route('video.index') }}">
                             <span>Video</span>
                             <i class="fas fa-chevron-right text-[9px] opacity-0 group-hover/item:opacity-100 group-hover/item:translate-x-0.5 transition-all text-theme-secondary"></i>
                         </a>
@@ -204,29 +204,29 @@
             </a>
 
             <!-- SPMB Action Button (Dynamic Secondary Accent) -->
-            <a class="bg-theme-secondary text-slate-950 px-4 py-1.5 rounded-full font-extrabold text-xs shadow-xs hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 uppercase spring-hover inline-flex items-center gap-1.5" href="{{ route('home') }}#spmb">
+            <a class="bg-theme-secondary text-slate-950 px-5 py-2 rounded-full font-extrabold shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 spring-hover flex items-center gap-1.5 uppercase text-xs" href="{{ route('home') }}#spmb">
                 <span>SPMB</span>
                 <i class="fas fa-arrow-right text-[10px]"></i>
             </a>
         </nav>
 
         <!-- Mobile Hamburger Toggle Button -->
-        <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gray-700 p-2 focus:outline-none rounded-xl border border-gray-200 hover:bg-gray-50 active:scale-95 transition-all duration-200" aria-label="Toggle Mobile Menu">
-            <i class="fas text-xl transition-transform duration-300" :class="mobileMenuOpen ? 'fa-times rotate-90 text-theme-primary' : 'fa-bars'"></i>
-        </button>
+        <div class="flex items-center md:hidden">
+            <button @click="mobileMenuOpen = !mobileMenuOpen" 
+                    type="button" 
+                    class="text-gray-700 hover:text-theme-primary focus:outline-hidden p-2 rounded-xl border border-gray-200 active:bg-slate-100 transition-colors"
+                    aria-label="Toggle Mobile Navigation Menu">
+                <i class="fas" :class="mobileMenuOpen ? 'fa-times' : 'fa-bars'"></i>
+            </button>
+        </div>
     </div>
 
     <!-- Mobile Drawer Menu (Interactive Accordions with Large Touch Targets) -->
     <div x-show="mobileMenuOpen" 
          x-cloak 
-         x-transition:enter="transition ease-out duration-250 transform-gpu"
-         x-transition:enter-start="opacity-0 -translate-y-4"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-200 transform-gpu"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 -translate-y-4"
-         class="md:hidden bg-white/98 backdrop-blur-xl border-b border-gray-200 px-5 py-5 space-y-3 font-semibold text-sm shadow-xl max-h-[85vh] overflow-y-auto">
-        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100" href="{{ route('home') }}">BERANDA</a>
+         x-collapse
+         class="md:hidden bg-white border-t border-gray-100 px-4 pt-3 pb-6 space-y-2 shadow-2xl">
+        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('home') ? 'text-theme-primary font-bold' : '' }}" href="{{ route('home') }}">BERANDA</a>
         
         <!-- PROFIL Mobile Accordion -->
         <div class="border-b border-gray-100 pb-2">
@@ -263,8 +263,8 @@
                 <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="mobileMediaOpen ? 'rotate-180 text-theme-secondary' : ''"></i>
             </button>
             <div x-show="mobileMediaOpen" x-collapse class="space-y-1 pl-3 border-l-2 border-theme-secondary my-1">
-                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('gallery.*') || request()->routeIs('media.*') ? 'text-theme-primary font-bold' : 'text-gray-600' }}" href="{{ route('gallery.index') }}">Galeri</a>
-                <a class="block py-1.5 text-gray-600 hover-text-primary text-xs" href="{{ route('home') }}#media">Video</a>
+                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('gallery.*') ? 'text-theme-primary font-bold' : 'text-gray-600' }}" href="{{ route('gallery.index') }}">Galeri</a>
+                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('video.*') ? 'text-theme-primary font-bold' : 'text-gray-600' }}" href="{{ route('video.index') }}">Video</a>
             </div>
         </div>
 
