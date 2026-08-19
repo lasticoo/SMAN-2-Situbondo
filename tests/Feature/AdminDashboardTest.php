@@ -84,6 +84,8 @@ class AdminDashboardTest extends TestCase
         ]);
 
         Gallery::create([
+            'activity_name' => 'Kegiatan Test',
+            'activity_date' => '2026-08-18',
             'photo_url' => 'galleries/test.jpg',
             'created_by' => $admin->id,
         ]);

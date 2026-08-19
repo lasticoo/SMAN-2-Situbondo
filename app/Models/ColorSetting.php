@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 
 class ColorSetting extends Model
 {
@@ -14,9 +16,32 @@ class ColorSetting extends Model
         'updated_by',
     ];
 
-    public function updater()
+    /**
+     * Relasi ke Admin yang terakhir memperbarui konfigurasi warna.
+     */
+    public function updater(): BelongsTo
     {
         return $this->belongsTo(Admin::class, 'updated_by');
+    }
+
+    /**
+     * Mengambil konfigurasi warna aktif (singleton).
+     * Jika belum ada data tersimpan di database, menggunakan fallback dari config('theme').
+     */
+    public static function current(): self
+    {
+        return Cache::remember('active_theme_color_setting', 86400, function () {
+            $setting = static::first();
+
+            if (! $setting) {
+                $setting = new static([
+                    'primary_color' => config('theme.primary', '#001C4D'),
+                    'secondary_color' => config('theme.secondary', '#5C5F60'),
+                ]);
+            }
+
+            return $setting;
+        });
     }
 
     /**
@@ -25,15 +50,17 @@ class ColorSetting extends Model
     protected static function booted(): void
     {
         static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget('user_profile_color_setting');
-            \Illuminate\Support\Facades\Cache::forget('landing_theme_colors');
-            \Illuminate\Support\Facades\Cache::forget('landing_color_setting');
+            Cache::forget('active_theme_color_setting');
+            Cache::forget('user_profile_color_setting');
+            Cache::forget('landing_theme_colors');
+            Cache::forget('landing_color_setting');
         });
 
         static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget('user_profile_color_setting');
-            \Illuminate\Support\Facades\Cache::forget('landing_theme_colors');
-            \Illuminate\Support\Facades\Cache::forget('landing_color_setting');
+            Cache::forget('active_theme_color_setting');
+            Cache::forget('user_profile_color_setting');
+            Cache::forget('landing_theme_colors');
+            Cache::forget('landing_color_setting');
         });
     }
 }
