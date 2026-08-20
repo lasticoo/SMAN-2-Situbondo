@@ -335,15 +335,16 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-4xl" data-aos="fade-up" data-aos-duration="600">
                 
                 <!-- Ambient Hero Badge -->
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold mb-4 shadow-xs" data-aos="fade-down" data-aos-duration="600">
-                    <span class="w-2 h-2 rounded-full bg-theme-secondary animate-pulse"></span>
-                    <span class="text-white/90">Dokumentasi &amp; Video Resmi</span>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-theme-secondary text-slate-950 text-xs font-black uppercase tracking-wider mb-4 shadow-sm" data-aos="fade-down" data-aos-duration="600">
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-950 animate-pulse"></span>
+                    <span>Dokumentasi &amp; Video Resmi</span>
                 </div>
 
-                <!-- Main Title "Galeri Video SMADA" in Accent Secondary Color -->
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-theme-secondary font-headline tracking-tight mb-3 sm:mb-4">
+                <!-- Main Title "Galeri Video SMADA" in Clean Bold White -->
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white font-headline tracking-tight mb-2 sm:mb-3">
                     Galeri Video SMADA
                 </h1>
+                <div class="w-20 h-1.5 bg-theme-secondary mx-auto rounded-full mb-4 shadow-xs"></div>
                 
                 <!-- Subtitle Description -->
                 <p class="text-xs sm:text-sm md:text-base text-slate-200 leading-relaxed max-w-2xl mx-auto font-normal" data-aos="fade-up" data-aos-delay="150">

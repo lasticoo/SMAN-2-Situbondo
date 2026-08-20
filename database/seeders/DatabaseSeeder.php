@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             AnnouncementTestDataSeederUser::class,
             GalleryTestDataSeederUser::class,
             VideoTestDataSeederUser::class,
+            NewsTestDataSeederUser::class,
         ]);
     }
 }

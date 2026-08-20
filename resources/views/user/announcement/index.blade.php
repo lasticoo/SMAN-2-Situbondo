@@ -176,15 +176,16 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-4xl" data-aos="fade-up" data-aos-duration="600">
                 
                 <!-- Pill Badge "Pusat Informasi" -->
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-theme-secondary text-xs font-extrabold uppercase tracking-wider mb-4 shadow-xs" data-aos="zoom-in" data-aos-delay="100">
-                    <i class="fas fa-bullhorn text-[11px] animate-pulse"></i>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-theme-secondary text-slate-950 text-xs font-black uppercase tracking-wider mb-4 shadow-sm" data-aos="zoom-in" data-aos-delay="100">
+                    <i class="fas fa-bullhorn text-slate-950 text-[11px] animate-pulse"></i>
                     <span>Pusat Informasi</span>
                 </div>
                 
                 <!-- Main Title "Pengumuman Resmi" -->
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white font-headline tracking-tight mb-4">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white font-headline tracking-tight mb-2 sm:mb-3">
                     Pengumuman Resmi
                 </h1>
+                <div class="w-20 h-1.5 bg-theme-secondary mx-auto rounded-full mb-4 shadow-xs"></div>
                 
                 <!-- Subtitle Description -->
                 <p class="text-xs sm:text-sm md:text-base text-slate-200 leading-relaxed max-w-2xl mx-auto font-normal" data-aos="fade-up" data-aos-delay="200">
