@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\MediaFile;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -37,12 +37,13 @@ class ImageOptimizerService
         Storage::disk('public')->put($filename, $webpContent);
         $optimizedSizeKb = (int) ceil(strlen($webpContent) / 1024);
 
-        MediaFile::create([
+        DB::table('media_files')->insert([
             'module' => $module,
             'reference_id' => $referenceId,
             'file_url' => $filename,
             'original_size_kb' => $originalSizeKb,
             'optimized_size_kb' => $optimizedSizeKb,
+            'created_at' => now(),
         ]);
 
         return $filename;
@@ -55,7 +56,8 @@ class ImageOptimizerService
     {
         if ($filePath) {
             Storage::disk('public')->delete($filePath);
-            MediaFile::where('module', $module)
+            DB::table('media_files')
+                ->where('module', $module)
                 ->where('reference_id', $referenceId)
                 ->delete();
         }

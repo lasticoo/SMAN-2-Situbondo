@@ -170,3 +170,17 @@ Route::resource('announcements', AnnouncementController::class)
         'update' => 'admin.announcements.update',
         'destroy' => 'admin.announcements.destroy',
     ]);
+
+// =============================================================================
+// AD-10 — Manajemen Berita (News)
+// =============================================================================
+use App\Http\Controllers\Admin\NewsController;
+
+Route::resource('news', NewsController::class)
+    ->except(['show', 'create', 'edit'])
+    ->names([
+        'index' => 'admin.news.index',
+        'store' => 'admin.news.store',
+        'update' => 'admin.news.update',
+        'destroy' => 'admin.news.destroy',
+    ]);
