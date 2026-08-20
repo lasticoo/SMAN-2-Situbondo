@@ -16,6 +16,9 @@ class Admin extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'avatar_url',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -27,7 +30,20 @@ class Admin extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * Get full URL or fallback placeholder for admin avatar.
+     */
+    public function getDisplayAvatarUrlAttribute(): string
+    {
+        if ($this->avatar_url) {
+            return asset('storage/'.$this->avatar_url);
+        }
+
+        return 'https://placehold.co/150x150/1e293b/ffffff?text='.urlencode(substr($this->name ?? 'A', 0, 2));
     }
 
     public function news()
