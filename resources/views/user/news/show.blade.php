@@ -327,8 +327,8 @@
         color: #0f172a;
     }
     .article-prose blockquote {
-        border-left: 4px solid var(--primary-main);
-        background: #f8fafc;
+        border-left: 4px solid var(--secondary-gold);
+        background: #fdfbf7;
         padding: 1rem 1.25rem;
         border-radius: 0 0.75rem 0.75rem 0;
         margin: 1.5rem 0;
@@ -384,15 +384,16 @@
             
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-4xl" data-aos="fade-up" data-aos-duration="600">
                 <!-- Pill Badge "Pusat Informasi" -->
-                <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-theme-secondary text-xs font-extrabold uppercase tracking-wider mb-3 shadow-xs" data-aos="zoom-in">
-                    <i class="fas fa-newspaper text-[11px] animate-pulse"></i>
-                    <span>Pusat Informasi</span>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-theme-secondary text-slate-950 text-xs font-black uppercase tracking-wider mb-3 shadow-sm" data-aos="zoom-in">
+                    <i class="fas fa-newspaper text-slate-950 text-[11px] animate-pulse"></i>
+                    <span>Pusat Informasi &amp; Berita</span>
                 </div>
                 
                 <!-- Section Eyebrow Title -->
                 <div class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white font-headline tracking-tight mb-2 sm:mb-3">
                     Detail Berita Resmi
                 </div>
+                <div class="w-20 h-1.5 bg-theme-secondary mx-auto rounded-full mb-3 shadow-xs"></div>
                 
                 <!-- Subtitle Description -->
                 <p class="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-xl mx-auto font-normal">
@@ -442,12 +443,12 @@
                                 </span>
                                 <span class="text-slate-300 text-xs">•</span>
                                 <span class="text-xs text-slate-500 font-semibold inline-flex items-center gap-1.5">
-                                    <i class="far fa-calendar-alt text-xs"></i>
+                                    <i class="far fa-calendar-alt text-theme-secondary text-xs"></i>
                                     <time datetime="{{ $pCarbon->toIso8601String() }}" itemprop="datePublished">{{ $formattedDate }}</time>
                                 </span>
                                 <span class="text-slate-300 text-xs">•</span>
                                 <span class="text-xs text-slate-500 font-semibold inline-flex items-center gap-1.5">
-                                    <i class="far fa-clock text-xs"></i>
+                                    <i class="far fa-clock text-theme-secondary text-xs"></i>
                                     <span>{{ $formattedTime }}</span>
                                 </span>
                             </div>

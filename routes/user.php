@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\User\AnnouncementController;
+use App\Http\Controllers\User\ContactController;
 use App\Http\Controllers\User\EmployeeController;
 use App\Http\Controllers\User\LandingPageController;
 use App\Http\Controllers\User\MediaController;
@@ -65,3 +66,11 @@ Route::get('/berita', [NewsController::class, 'index'])->name('news.index');
 Route::get('/berita/{id}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/news', [NewsController::class, 'index']);
 Route::get('/news/{id}', [NewsController::class, 'show']);
+
+// US-08 Hubungi Kami / Contact Publik
+Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
+Route::get('/contact', [ContactController::class, 'index']);
+Route::get('/hubungi-kami', [ContactController::class, 'index']);
+Route::post('/kontak', [ContactController::class, 'store'])->name('contact.store');
+Route::post('/contact', [ContactController::class, 'store']);
+Route::post('/hubungi-kami', [ContactController::class, 'store']);

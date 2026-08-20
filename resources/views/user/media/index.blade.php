@@ -373,15 +373,16 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-4xl" data-aos="fade-up" data-aos-duration="600">
                 
                 <!-- Ambient Hero Badge -->
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold mb-4 shadow-xs" data-aos="fade-down" data-aos-duration="600">
-                    <span class="w-2 h-2 rounded-full bg-theme-secondary animate-pulse"></span>
-                    <span class="text-white/90">Dokumentasi & Galeri Visual</span>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-theme-secondary text-slate-950 text-xs font-black uppercase tracking-wider mb-4 shadow-sm" data-aos="fade-down" data-aos-duration="600">
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-950 animate-pulse"></span>
+                    <span>Dokumentasi &amp; Galeri Visual</span>
                 </div>
 
-                <!-- Main Title "Galeri Kegiatan" in Secondary Color -->
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-theme-secondary font-headline tracking-tight mb-3 sm:mb-4">
+                <!-- Main Title "Galeri Kegiatan" in Clean Bold White -->
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white font-headline tracking-tight mb-2 sm:mb-3">
                     Galeri Kegiatan
                 </h1>
+                <div class="w-20 h-1.5 bg-theme-secondary mx-auto rounded-full mb-4 shadow-xs"></div>
                 
                 <!-- Subtitle Description -->
                 <p class="text-xs sm:text-sm md:text-base text-slate-200 leading-relaxed max-w-2xl mx-auto font-normal" data-aos="fade-up" data-aos-delay="150">
@@ -404,10 +405,10 @@
                         <!-- Filter Trigger Button Box -->
                         <button type="button" 
                                 @click="filterOpen = !filterOpen"
-                                class="w-full flex items-center justify-between gap-3 px-5 py-3 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md hover:border-theme-primary/40 transition-all duration-200 text-left cursor-pointer group">
+                                class="w-full flex items-center justify-between gap-3 px-5 py-3 rounded-2xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md hover:border-theme-secondary transition-all duration-200 text-left cursor-pointer group">
                             
                             <div class="flex items-center gap-3 min-w-0">
-                                <div class="w-9 h-9 rounded-xl bg-theme-primary/10 text-theme-primary group-hover:bg-theme-primary group-hover:text-white flex items-center justify-center shrink-0 text-sm group-hover:scale-105 transition-all duration-200">
+                                <div class="w-10 h-10 rounded-xl bg-theme-secondary text-slate-950 flex items-center justify-center shrink-0 text-sm font-black shadow-xs group-hover:scale-105 transition-all duration-200">
                                     <i class="fas fa-sliders-h"></i>
                                 </div>
                                 <div class="min-w-0">
@@ -427,7 +428,7 @@
                                         <i class="fas fa-times-circle"></i>
                                     </a>
                                 @endif
-                                <div class="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-theme-primary/10 group-hover:text-theme-primary transition">
+                                <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-theme-secondary group-hover:bg-theme-secondary/15 transition">
                                     <i class="fas fa-chevron-down text-xs transition-transform duration-200" :class="filterOpen ? 'rotate-180' : ''"></i>
                                 </div>
                             </div>
@@ -560,7 +561,7 @@
 
                                     <!-- HOVER OVERLAY CAPTION -->
                                     <figcaption class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                                        <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1">
+                                        <span class="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-theme-secondary text-slate-950 inline-block mb-1.5 shadow-2xs w-fit">
                                             {{ $date0 ?: 'Dokumentasi' }}
                                         </span>
                                         <h3 class="text-base sm:text-lg font-bold font-headline leading-tight line-clamp-2" itemprop="caption">
@@ -586,7 +587,7 @@
                                             $title2 = $img2->activity_name ?: 'Dokumentasi Kegiatan SMA Negeri 2 Situbondo';
                                             $date2 = $img2->activity_date ? \Illuminate\Support\Carbon::parse($img2->activity_date)->translatedFormat('d F Y') : '';
                                         @endphp
-                                        <figure class="gallery-card group relative w-full h-52 sm:h-60 rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 bg-slate-100 cursor-pointer"
+                                        <figure class="gallery-card group relative w-full h-52 sm:h-60 rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 bg-slate-100 cursor-pointer hover:border-theme-secondary/70 transition-all"
                                                 data-aos="fade-up" data-aos-delay="100" data-aos-duration="600"
                                                 itemscope itemtype="https://schema.org/ImageObject"
                                                 @click="openLightbox('{{ $imgUrl2 }}', '{{ addslashes($title2) }}', '{{ $date2 }}')">
@@ -603,7 +604,7 @@
                                                      class="w-full h-full object-cover">
                                             </div>
                                             <figcaption class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-white">
-                                                <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider mb-0.5">
+                                                <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-theme-secondary text-slate-950 inline-block mb-1 shadow-2xs w-fit">
                                                     {{ $date2 ?: 'Dokumentasi' }}
                                                 </span>
                                                 <h3 class="text-sm font-bold font-headline leading-tight line-clamp-2" itemprop="caption">
@@ -621,7 +622,7 @@
                                             $title3 = $img3->activity_name ?: 'Dokumentasi Kegiatan SMA Negeri 2 Situbondo';
                                             $date3 = $img3->activity_date ? \Illuminate\Support\Carbon::parse($img3->activity_date)->translatedFormat('d F Y') : '';
                                         @endphp
-                                        <figure class="gallery-card group relative w-full h-52 sm:h-60 rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 bg-slate-100 cursor-pointer"
+                                        <figure class="gallery-card group relative w-full h-52 sm:h-60 rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 bg-slate-100 cursor-pointer hover:border-theme-secondary/70 transition-all"
                                                 data-aos="fade-up" data-aos-delay="150" data-aos-duration="600"
                                                 itemscope itemtype="https://schema.org/ImageObject"
                                                 @click="openLightbox('{{ $imgUrl3 }}', '{{ addslashes($title3) }}', '{{ $date3 }}')">
@@ -638,7 +639,7 @@
                                                      class="w-full h-full object-cover">
                                             </div>
                                             <figcaption class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-white">
-                                                <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider mb-0.5">
+                                                <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-theme-secondary text-slate-950 inline-block mb-1 shadow-2xs w-fit">
                                                     {{ $date3 ?: 'Dokumentasi' }}
                                                 </span>
                                                 <h3 class="text-sm font-bold font-headline leading-tight line-clamp-2" itemprop="caption">
@@ -666,7 +667,7 @@
                                     $title1 = $img1->activity_name ?: 'Dokumentasi Kegiatan SMA Negeri 2 Situbondo';
                                     $date1 = $img1->activity_date ? \Illuminate\Support\Carbon::parse($img1->activity_date)->translatedFormat('d F Y') : '';
                                 @endphp
-                                <figure class="gallery-card group relative w-full h-52 sm:h-60 rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 bg-slate-100 cursor-pointer"
+                                <figure class="gallery-card group relative w-full h-52 sm:h-60 rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 bg-slate-100 cursor-pointer hover:border-theme-secondary/70 transition-all"
                                         data-aos="fade-up" data-aos-delay="50" data-aos-duration="600"
                                         itemscope itemtype="https://schema.org/ImageObject"
                                         @click="openLightbox('{{ $imgUrl1 }}', '{{ addslashes($title1) }}', '{{ $date1 }}')">
@@ -683,7 +684,7 @@
                                              class="w-full h-full object-cover">
                                     </div>
                                     <figcaption class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 text-white">
-                                        <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider mb-0.5">
+                                        <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-theme-secondary text-slate-950 inline-block mb-1 shadow-2xs w-fit">
                                             {{ $date1 ?: 'Dokumentasi' }}
                                         </span>
                                         <h3 class="text-sm font-bold font-headline leading-tight line-clamp-2" itemprop="caption">
@@ -701,7 +702,7 @@
                                     $title4 = $img4->activity_name ?: 'Dokumentasi Kegiatan SMA Negeri 2 Situbondo';
                                     $date4 = $img4->activity_date ? \Illuminate\Support\Carbon::parse($img4->activity_date)->translatedFormat('d F Y') : '';
                                 @endphp
-                                <figure class="gallery-card group relative w-full h-80 sm:h-96 lg:h-[396px] rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 bg-slate-100 cursor-pointer"
+                                <figure class="gallery-card group relative w-full h-80 sm:h-96 lg:h-[396px] rounded-2xl overflow-hidden shadow-xs border border-slate-200/80 bg-slate-100 cursor-pointer hover:border-theme-secondary/70 transition-all"
                                         data-aos="fade-up" data-aos-delay="200" data-aos-duration="600"
                                         itemscope itemtype="https://schema.org/ImageObject"
                                         @click="openLightbox('{{ $imgUrl4 }}', '{{ addslashes($title4) }}', '{{ $date4 }}')">
@@ -718,7 +719,7 @@
                                              class="w-full h-full object-cover">
                                     </div>
                                     <figcaption class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 text-white">
-                                        <span class="text-[10px] font-bold text-amber-400 uppercase tracking-wider mb-1">
+                                        <span class="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md bg-theme-secondary text-slate-950 inline-block mb-1 shadow-2xs w-fit">
                                             {{ $date4 ?: 'Dokumentasi' }}
                                         </span>
                                         <h3 class="text-base font-bold font-headline leading-tight line-clamp-2" itemprop="caption">

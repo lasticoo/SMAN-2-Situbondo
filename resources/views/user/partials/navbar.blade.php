@@ -58,7 +58,7 @@
             <!-- BERANDA -->
             <a class="relative py-1 flex items-center uppercase transition-colors duration-200 {{ request()->routeIs('home') ? 'text-theme-primary font-bold' : 'hover-text-primary' }} group" href="{{ route('home') }}">
                 <span>BERANDA</span>
-                <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('home') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
+                <span class="absolute bottom-0 left-0 h-1 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('home') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
             </a>
             
             <!-- PROFIL Dropdown (Hover Bridge + 350ms Grace Delay + Click Support) -->
@@ -71,8 +71,8 @@
                         aria-haspopup="true" 
                         :aria-expanded="activeDropdown === 'profile'">
                     <span>PROFIL</span>
-                    <i class="fas fa-chevron-down text-[9px] transition-transform duration-250" :class="activeDropdown === 'profile' ? 'rotate-180 text-theme-primary' : ''"></i>
-                    <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('profile.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'profile' ? 'w-full' : ''"></span>
+                    <i class="fas fa-chevron-down text-[9px] transition-transform duration-250" :class="activeDropdown === 'profile' ? 'rotate-180 text-theme-secondary' : ''"></i>
+                    <span class="absolute bottom-0 left-0 h-1 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('profile.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'profile' ? 'w-full' : ''"></span>
                 </button>
                 
                 <!-- Dropdown Menu Box (Solid Background & High Z-Index 1000) -->
@@ -119,8 +119,8 @@
                         aria-haspopup="true" 
                         :aria-expanded="activeDropdown === 'civitas'">
                     <span>CIVITAS AKADEMIK</span>
-                    <i class="fas fa-chevron-down text-[9px] transition-transform duration-250" :class="activeDropdown === 'civitas' ? 'rotate-180 text-theme-primary' : ''"></i>
-                    <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('civitas.*') || request()->routeIs('employee.*') || request()->routeIs('student.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'civitas' ? 'w-full' : ''"></span>
+                    <i class="fas fa-chevron-down text-[9px] transition-transform duration-250" :class="activeDropdown === 'civitas' ? 'rotate-180 text-theme-secondary' : ''"></i>
+                    <span class="absolute bottom-0 left-0 h-1 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('civitas.*') || request()->routeIs('employee.*') || request()->routeIs('student.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'civitas' ? 'w-full' : ''"></span>
                 </button>
                 <div x-show="activeDropdown === 'civitas'" 
                      x-cloak
@@ -150,7 +150,7 @@
             <!-- PENGUMUMAN -->
             <a class="relative py-1 flex items-center uppercase transition-colors duration-200 {{ request()->routeIs('announcement.*') || request()->routeIs('agenda.*') ? 'text-theme-primary font-bold' : 'hover-text-primary' }} group" href="{{ route('announcement.index') }}">
                 <span>PENGUMUMAN</span>
-                <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('announcement.*') || request()->routeIs('agenda.*') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
+                <span class="absolute bottom-0 left-0 h-1 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('announcement.*') || request()->routeIs('agenda.*') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
             </a>
 
             <!-- MEDIA Dropdown -->
@@ -163,8 +163,8 @@
                         aria-haspopup="true"
                         :aria-expanded="activeDropdown === 'media'">
                     <span>MEDIA</span>
-                    <i class="fas fa-chevron-down text-[9px] transition-transform duration-250" :class="activeDropdown === 'media' ? 'rotate-180 text-theme-primary' : ''"></i>
-                    <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('gallery.*') || request()->routeIs('video.*') || request()->routeIs('media.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'media' ? 'w-full' : ''"></span>
+                    <i class="fas fa-chevron-down text-[9px] transition-transform duration-250" :class="activeDropdown === 'media' ? 'rotate-180 text-theme-secondary' : ''"></i>
+                    <span class="absolute bottom-0 left-0 h-1 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('gallery.*') || request()->routeIs('video.*') || request()->routeIs('media.*') ? 'w-full' : 'w-0' }}" :class="activeDropdown === 'media' ? 'w-full' : ''"></span>
                 </button>
                 <div x-show="activeDropdown === 'media'" 
                      x-cloak
@@ -194,13 +194,13 @@
             <!-- BERITA -->
             <a class="relative py-1 flex items-center uppercase transition-colors duration-200 {{ request()->routeIs('news.*') ? 'text-theme-primary font-bold' : 'hover-text-primary' }} group" href="{{ route('news.index') }}">
                 <span>BERITA</span>
-                <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('news.*') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
+                <span class="absolute bottom-0 left-0 h-1 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('news.*') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
             </a>
 
             <!-- CONTACT -->
-            <a class="relative py-1 flex items-center uppercase hover-text-primary transition-colors duration-200 group" href="{{ route('home') }}#contact">
+            <a class="relative py-1 flex items-center uppercase transition-colors duration-200 {{ request()->routeIs('contact.*') ? 'text-theme-primary font-bold' : 'hover-text-primary' }} group" href="{{ route('contact.index') }}">
                 <span>CONTACT</span>
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 group-hover:w-full"></span>
+                <span class="absolute bottom-0 left-0 h-1 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('contact.*') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
             </a>
 
             <!-- SPMB Action Button (Dynamic Secondary Accent) -->
@@ -221,12 +221,19 @@
         </div>
     </div>
 
-    <!-- Mobile Drawer Menu (Interactive Accordions with Large Touch Targets) -->
+    <!-- Mobile Navigation Drawer -->
     <div x-show="mobileMenuOpen" 
-         x-cloak 
-         x-collapse
-         class="md:hidden bg-white border-t border-gray-100 px-4 pt-3 pb-6 space-y-2 shadow-2xl">
-        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('home') ? 'text-theme-primary font-bold' : '' }}" href="{{ route('home') }}">BERANDA</a>
+         x-cloak
+         x-transition:enter="transition ease-out duration-250 transform-gpu"
+         x-transition:enter-start="opacity-0 -translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200 transform-gpu"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 -translate-y-4"
+         class="md:hidden bg-white border-b border-gray-200 px-4 pt-2 pb-6 space-y-2 shadow-2xl relative z-50 text-sm font-semibold">
+        
+        <!-- BERANDA -->
+        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('home') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50 rounded-r-lg' : '' }}" href="{{ route('home') }}">BERANDA</a>
         
         <!-- PROFIL Mobile Accordion -->
         <div class="border-b border-gray-100 pb-2">
@@ -255,7 +262,7 @@
         </div>
 
         <!-- PENGUMUMAN -->
-        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('announcement.*') ? 'text-theme-primary font-bold' : '' }}" href="{{ route('announcement.index') }}">PENGUMUMAN</a>
+        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('announcement.*') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50 rounded-r-lg' : '' }}" href="{{ route('announcement.index') }}">PENGUMUMAN</a>
 
         <!-- MEDIA Mobile Accordion -->
         <div class="border-b border-gray-100 pb-2">
@@ -264,13 +271,13 @@
                 <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="mobileMediaOpen ? 'rotate-180 text-theme-secondary' : ''"></i>
             </button>
             <div x-show="mobileMediaOpen" x-collapse class="space-y-1 pl-3 border-l-2 border-theme-secondary my-1">
-                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('gallery.*') ? 'text-theme-primary font-bold' : 'text-gray-600' }}" href="{{ route('gallery.index') }}">Galeri</a>
-                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('video.*') ? 'text-theme-primary font-bold' : 'text-gray-600' }}" href="{{ route('video.index') }}">Video</a>
+                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('gallery.*') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50' : 'text-gray-600' }}" href="{{ route('gallery.index') }}">Galeri</a>
+                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('video.*') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50' : 'text-gray-600' }}" href="{{ route('video.index') }}">Video</a>
             </div>
         </div>
 
-        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('news.*') ? 'text-theme-primary font-bold' : '' }}" href="{{ route('news.index') }}">BERITA</a>
-        <a class="block py-2 hover-text-primary transition-colors" href="{{ route('home') }}#contact">CONTACT</a>
+        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('news.*') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50 rounded-r-lg' : '' }}" href="{{ route('news.index') }}">BERITA</a>
+        <a class="block py-2 hover-text-primary transition-colors {{ request()->routeIs('contact.*') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50 rounded-r-lg' : '' }}" href="{{ route('contact.index') }}">CONTACT</a>
         
         <div class="pt-3">
             <a class="inline-flex items-center justify-center w-full bg-theme-secondary text-slate-950 px-4 py-2.5 rounded-full font-extrabold shadow-sm active:scale-95 transition-all text-xs uppercase" href="{{ route('home') }}#spmb">

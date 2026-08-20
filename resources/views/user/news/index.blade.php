@@ -349,15 +349,16 @@
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-4xl" data-aos="fade-up" data-aos-duration="600">
                 
                 <!-- Ambient Hero Badge "Pusat Informasi" -->
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold mb-4 shadow-xs" data-aos="fade-down" data-aos-duration="600">
-                    <span class="w-2 h-2 rounded-full bg-theme-secondary animate-pulse"></span>
-                    <span class="text-white/95 font-medium tracking-wide">Pusat Informasi</span>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-theme-secondary text-slate-950 text-xs font-black uppercase tracking-wider mb-4 shadow-sm" data-aos="fade-down" data-aos-duration="600">
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-950 animate-pulse"></span>
+                    <span>Pusat Informasi &amp; Berita</span>
                 </div>
 
                 <!-- Main Title "Berita SMADA" in Clean Bold White (Single H1 on Page) -->
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white font-headline tracking-tight mb-3 sm:mb-4">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white font-headline tracking-tight mb-2 sm:mb-3">
                     Berita SMADA
                 </h1>
+                <div class="w-20 h-1.5 bg-theme-secondary mx-auto rounded-full mb-4 shadow-xs"></div>
                 
                 <!-- Subtitle Description -->
                 <p class="text-xs sm:text-sm md:text-base text-slate-200 leading-relaxed max-w-2xl mx-auto font-normal" data-aos="fade-up" data-aos-delay="150">
@@ -402,25 +403,25 @@
                                         
                                         $catLower = strtolower($categoryName);
                                         if ($isAll) {
-                                            $catIcon = 'fa-infinity';
+                                             $catIcon = 'fa-infinity';
                                         } elseif (str_contains($catLower, 'akademik') || str_contains($catLower, 'kurikulum')) {
-                                            $catIcon = 'fa-graduation-cap';
+                                             $catIcon = 'fa-graduation-cap';
                                         } elseif (str_contains($catLower, 'prestasi') || str_contains($catLower, 'juara')) {
-                                            $catIcon = 'fa-trophy';
+                                             $catIcon = 'fa-trophy';
                                         } elseif (str_contains($catLower, 'event') || str_contains($catLower, 'kegiatan')) {
-                                            $catIcon = 'fa-calendar-alt';
+                                             $catIcon = 'fa-calendar-alt';
                                         } elseif (str_contains($catLower, 'kesiswaan') || str_contains($catLower, 'osis')) {
-                                            $catIcon = 'fa-users';
+                                             $catIcon = 'fa-users';
                                         } else {
-                                            $catIcon = 'fa-newspaper';
+                                             $catIcon = 'fa-newspaper';
                                         }
                                     @endphp
 
                                     <a href="{{ $isAll ? route('news.index', request()->except('category', 'kategori', 'page')) : route('news.index', array_merge(request()->except('page'), ['category' => $categoryName])) }}" 
-                                       class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 shrink-0 {{ $isActive ? 'bg-theme-primary text-white shadow-xs ring-2 ring-theme-primary/20' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200/80' }}">
-                                        <i class="fas {{ $catIcon }} text-[11px] {{ $isActive ? 'text-theme-secondary' : 'text-slate-400' }}"></i>
+                                       class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all duration-200 shrink-0 {{ $isActive ? 'bg-theme-primary text-white shadow-xs border-2 border-theme-secondary ring-2 ring-theme-primary/20' : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200/80 hover:border-theme-secondary/40' }}">
+                                        <i class="fas {{ $catIcon }} text-[11px] {{ $isActive ? 'text-theme-secondary' : 'text-theme-secondary' }}"></i>
                                         <span>{{ $categoryName }}</span>
-                                        <span class="text-[10px] px-1.5 py-0.5 rounded-full font-black {{ $isActive ? 'bg-white text-theme-primary' : 'bg-white/90 text-slate-700 border border-slate-200/60' }}">
+                                        <span class="text-[10px] px-1.5 py-0.5 rounded-full font-black {{ $isActive ? 'bg-theme-secondary text-slate-950 shadow-2xs' : 'bg-white text-slate-700 border border-slate-200/60' }}">
                                             {{ $count }}
                                         </span>
                                     </a>
@@ -573,7 +574,7 @@
                                     @endphp
 
                                     <!-- News Article Card Component (Semantic Article + Itemscope) -->
-                                    <article class="news-card group relative flex flex-col justify-between bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:border-theme-primary/40 overflow-hidden"
+                                    <article class="news-card group relative flex flex-col justify-between bg-white rounded-2xl border border-slate-200/90 shadow-xs hover:border-theme-secondary/60 hover:shadow-md overflow-hidden transition-all duration-300"
                                              data-aos="fade-up"
                                              data-aos-delay="{{ ($index % 2) * 100 }}"
                                              data-aos-duration="600"
@@ -593,9 +594,9 @@
                                                          class="w-full h-full object-cover">
                                                 </a>
 
-                                                <!-- Floating Date Badge (Top-Left of Image) -->
-                                                <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-md rounded-xl shadow-md px-2.5 py-1.5 text-center border border-white/60 pointer-events-none flex flex-col items-center justify-center min-w-[44px]">
-                                                    <span class="text-base sm:text-lg font-black text-slate-900 leading-none">{{ $dayNum }}</span>
+                                                <!-- Floating Date Badge (Top-Left of Image with Secondary Accent Border) -->
+                                                <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-md rounded-xl shadow-md px-2.5 py-1.5 text-center border-l-4 border-theme-secondary pointer-events-none flex flex-col items-center justify-center min-w-[46px]">
+                                                    <span class="text-base sm:text-lg font-black text-theme-primary leading-none">{{ $dayNum }}</span>
                                                     <span class="text-[9px] font-black tracking-wider text-theme-secondary uppercase mt-0.5">{{ $monthShort }}</span>
                                                 </div>
                                             </div>
@@ -623,12 +624,12 @@
                                             </div>
                                         </div>
 
-                                        <!-- Card Footer: "Baca Selengkapnya →" Action Link -->
+                                        <!-- Card Footer: "Baca Selengkapnya →" Action Link with Secondary Accent -->
                                         <div class="px-5 pb-5 sm:px-6 sm:pb-6 pt-0 mt-auto">
                                             <a href="{{ route('news.show', $item->id) }}" 
-                                               class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-theme-secondary hover:text-theme-primary group-hover:translate-x-1 transition-all duration-200">
+                                               class="inline-flex items-center gap-2 text-xs sm:text-sm font-black text-theme-secondary hover:text-amber-500 group-hover:translate-x-1 transition-all duration-200">
                                                 <span>Baca Selengkapnya</span>
-                                                <i class="fas fa-arrow-right text-[11px]"></i>
+                                                <i class="fas fa-arrow-right text-[11px] text-theme-secondary"></i>
                                             </a>
                                         </div>
 
@@ -652,9 +653,9 @@
                         <!-- Sidebar Category Card Container (Exact Match Mockup) -->
                         <div class="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs" data-aos="fade-left" data-aos-duration="600">
                             
-                            <!-- Header: Icon + "Kategori" Title (Semantic H2) -->
+                            <!-- Header: Icon + "Kategori" Title (Semantic H2) with Secondary Icon -->
                             <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100 mb-4">
-                                <div class="w-8 h-8 rounded-lg bg-theme-secondary/15 text-theme-secondary flex items-center justify-center text-sm shadow-2xs">
+                                <div class="w-9 h-9 rounded-xl bg-theme-secondary text-slate-950 flex items-center justify-center text-sm font-black shadow-xs">
                                     <i class="fas fa-th-large"></i>
                                 </div>
                                 <h2 class="text-base font-extrabold font-headline text-slate-900">
@@ -687,14 +688,14 @@
                                     @endphp
 
                                     <a href="{{ $isAll ? route('news.index', request()->except('category', 'kategori', 'page')) : route('news.index', array_merge(request()->except('page'), ['category' => $categoryName])) }}" 
-                                       class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition-all duration-200 {{ $isActive ? 'bg-theme-primary-light text-theme-primary border border-theme-primary/30 shadow-2xs font-extrabold' : 'text-slate-700 hover:bg-slate-50 hover:text-theme-primary font-bold border border-transparent' }}">
+                                       class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm transition-all duration-200 {{ $isActive ? 'bg-theme-primary text-white border-l-4 border-theme-secondary shadow-xs font-extrabold' : 'text-slate-700 hover:bg-slate-50 hover:text-theme-primary font-bold border border-transparent' }}">
                                         
                                         <div class="flex items-center gap-2.5 min-w-0">
-                                            <i class="fas {{ $catIcon }} text-xs {{ $isActive ? 'text-theme-secondary' : 'text-slate-400 group-hover:text-theme-primary' }} shrink-0"></i>
-                                            <span class="truncate {{ $isActive ? 'text-theme-primary font-extrabold' : 'text-slate-700 group-hover:text-theme-primary' }}">{{ $categoryName }}</span>
+                                            <i class="fas {{ $catIcon }} text-xs {{ $isActive ? 'text-theme-secondary' : 'text-theme-secondary' }} shrink-0"></i>
+                                            <span class="truncate {{ $isActive ? 'text-white font-extrabold' : 'text-slate-700 group-hover:text-theme-primary' }}">{{ $categoryName }}</span>
                                         </div>
 
-                                        <span class="text-[11px] px-2.5 py-0.5 rounded-full font-black transition-colors shrink-0 ml-2 {{ $isActive ? 'bg-white text-theme-primary border border-theme-primary/20 shadow-2xs' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200/80 group-hover:text-slate-800' }}">
+                                        <span class="text-[11px] px-2.5 py-0.5 rounded-full font-black transition-colors shrink-0 ml-2 {{ $isActive ? 'bg-theme-secondary text-slate-950 shadow-2xs' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200/80 group-hover:text-slate-800' }}">
                                             {{ $count }}
                                         </span>
                                     </a>
