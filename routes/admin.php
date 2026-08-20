@@ -184,3 +184,14 @@ Route::resource('news', NewsController::class)
         'update' => 'admin.news.update',
         'destroy' => 'admin.news.destroy',
     ]);
+
+// =============================================================================
+// AD-11 — Manajemen Pesan Contact (Contact Messages)
+// =============================================================================
+use App\Http\Controllers\Admin\ContactController;
+
+Route::get('contact', [ContactController::class, 'index'])->name('admin.contact.index');
+Route::get('contact/export-csv', [ContactController::class, 'exportCsv'])->name('admin.contact.exportCsv');
+Route::get('contact/{id}', [ContactController::class, 'show'])->name('admin.contact.show');
+Route::patch('contact/{id}/toggle-status', [ContactController::class, 'toggleStatus'])->name('admin.contact.toggleStatus');
+Route::delete('contact/{id}', [ContactController::class, 'destroy'])->name('admin.contact.destroy');

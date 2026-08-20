@@ -105,12 +105,16 @@
         </a>
 
         <!-- Pesan Masuk -->
-        <a href="{{ url('/admin/contact') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-all {{ request()->is('admin/contact*') ? 'font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-xs' : 'font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ request()->is('admin/contact*') ? 'text-indigo-600' : 'text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        <a href="{{ Route::has('admin.contact.index') ? route('admin.contact.index') : url('/admin/contact') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-all {{ request()->routeIs('admin.contact.*') || request()->is('admin/contact*') ? 'font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-xs' : 'font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ request()->routeIs('admin.contact.*') || request()->is('admin/contact*') ? 'text-indigo-600' : 'text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 012-2V7a2 2 0 01-2-2H5a2 2 0 01-2 2v10a2 2 0 012 2z"/>
             </svg>
             <span>Pesan Masuk</span>
-            @if(isset($stats['contact_messages']['unread']) && $stats['contact_messages']['unread'] > 0)
+            @if(isset($stats['unread']) && $stats['unread'] > 0)
+                <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {{ $stats['unread'] }}
+                </span>
+            @elseif(isset($stats['contact_messages']['unread']) && $stats['contact_messages']['unread'] > 0)
                 <span class="ml-auto bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                     {{ $stats['contact_messages']['unread'] }}
                 </span>
