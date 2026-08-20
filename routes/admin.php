@@ -195,3 +195,18 @@ Route::get('contact/export-csv', [ContactController::class, 'exportCsv'])->name(
 Route::get('contact/{id}', [ContactController::class, 'show'])->name('admin.contact.show');
 Route::patch('contact/{id}/toggle-status', [ContactController::class, 'toggleStatus'])->name('admin.contact.toggleStatus');
 Route::delete('contact/{id}', [ContactController::class, 'destroy'])->name('admin.contact.destroy');
+
+// =============================================================================
+// AD-12 — Manajemen Akun Admin (Admin Accounts)
+// =============================================================================
+use App\Http\Controllers\Admin\AdminAccountController;
+
+Route::patch('admin-accounts/{id}/toggle-active', [AdminAccountController::class, 'toggleActive'])->name('admin.admin_accounts.toggleActive');
+Route::resource('admin-accounts', AdminAccountController::class)
+    ->except(['show', 'create', 'edit'])
+    ->names([
+        'index' => 'admin.admin_accounts.index',
+        'store' => 'admin.admin_accounts.store',
+        'update' => 'admin.admin_accounts.update',
+        'destroy' => 'admin.admin_accounts.destroy',
+    ]);

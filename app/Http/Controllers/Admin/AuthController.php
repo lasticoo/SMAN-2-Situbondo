@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -49,8 +50,17 @@ class AuthController extends Controller
             ]);
         }
 
-        // Coba autentikasi dengan guard admin
-        if (! Auth::guard('admin')->attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        // Coba autentikasi dengan guard admin (pastikan is_active = true)
+        if (! Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password, 'is_active' => true], $request->boolean('remember'))) {
+            // Check if account exists but is inactive
+            $inactiveAdmin = Admin::where('email', $request->email)->where('is_active', false)->first();
+            if ($inactiveAdmin) {
+                RateLimiter::hit($throttleKey);
+                throw ValidationException::withMessages([
+                    'email' => __('Akun Anda telah dinonaktifkan. Silakan hubungi Super Admin.'),
+                ]);
+            }
+
             // Hit failed attempt
             RateLimiter::hit($throttleKey);
 
