@@ -4,6 +4,7 @@ use App\Http\Controllers\User\AnnouncementController;
 use App\Http\Controllers\User\EmployeeController;
 use App\Http\Controllers\User\LandingPageController;
 use App\Http\Controllers\User\MediaController;
+use App\Http\Controllers\User\NewsController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\StudentController;
 use App\Http\Controllers\User\VideoController;
@@ -58,3 +59,9 @@ Route::get('/media', [MediaController::class, 'index'])->name('gallery.index');
 Route::get('/video', [VideoController::class, 'index'])->name('video.index');
 Route::get('/videos', [VideoController::class, 'index']);
 Route::get('/media/video', [VideoController::class, 'index']);
+
+// US-07 Berita Sekolah Publik
+Route::get('/berita', [NewsController::class, 'index'])->name('news.index');
+Route::get('/berita/{id}', [NewsController::class, 'show'])->name('news.show');
+Route::get('/news', [NewsController::class, 'index']);
+Route::get('/news/{id}', [NewsController::class, 'show']);

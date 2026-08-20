@@ -192,9 +192,9 @@
             </div>
 
             <!-- BERITA -->
-            <a class="relative py-1 flex items-center uppercase hover-text-primary transition-colors duration-200 group" href="{{ route('home') }}#berita">
+            <a class="relative py-1 flex items-center uppercase transition-colors duration-200 {{ request()->routeIs('news.*') ? 'text-theme-primary font-bold' : 'hover-text-primary' }} group" href="{{ route('news.index') }}">
                 <span>BERITA</span>
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 group-hover:w-full"></span>
+                <span class="absolute bottom-0 left-0 h-0.5 bg-theme-secondary rounded-full transition-all duration-300 {{ request()->routeIs('news.*') ? 'w-full' : 'w-0 group-hover:w-full' }}"></span>
             </a>
 
             <!-- CONTACT -->
@@ -254,7 +254,8 @@
             </div>
         </div>
 
-        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('announcement.*') || request()->routeIs('agenda.*') ? 'text-theme-primary font-bold' : '' }}" href="{{ route('announcement.index') }}">PENGUMUMAN</a>
+        <!-- PENGUMUMAN -->
+        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('announcement.*') ? 'text-theme-primary font-bold' : '' }}" href="{{ route('announcement.index') }}">PENGUMUMAN</a>
 
         <!-- MEDIA Mobile Accordion -->
         <div class="border-b border-gray-100 pb-2">
@@ -268,7 +269,7 @@
             </div>
         </div>
 
-        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100" href="{{ route('home') }}#berita">BERITA</a>
+        <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('news.*') ? 'text-theme-primary font-bold' : '' }}" href="{{ route('news.index') }}">BERITA</a>
         <a class="block py-2 hover-text-primary transition-colors" href="{{ route('home') }}#contact">CONTACT</a>
         
         <div class="pt-3">
