@@ -298,35 +298,107 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
                 </div>
 
                 <!-- ------------------------------------------------------------- -->
-                <!-- 4. SEMANGAT PRIMA BANNER SECTION -->
+                <!-- 4. SEKRETARIAT & LAYANAN (INFORMASI KONTAK & GOOGLE MAPS)     -->
                 <!-- ------------------------------------------------------------- -->
                 <div class="max-w-6xl mx-auto px-4 sm:px-6 mb-20 sm:mb-28" data-aos="zoom-in-up" data-aos-duration="900">
-                    <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden flex items-center justify-center shadow-xl border border-gray-200/80 group img-zoom-box" style="min-height: 400px;">
-                        <!-- Static Background Image (User File) -->
-                        <img src="{{ asset('images/static/gambar_profile_statis.jpg') }}" alt="Gedung SMAN 2 Situbondo" class="absolute inset-0 w-full h-full object-cover">
-                        
-                        <!-- Dark Scenic Lighting Overlay -->
-                        <div class="absolute inset-0 bg-slate-950/40 pointer-events-none"></div>
+                    <div class="bg-white rounded-3xl border border-gray-200/90 p-6 sm:p-8 md:p-10 shadow-lg hover:shadow-xl transition-all duration-300">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+                            
+                            <!-- Left: Contact Details (5 cols) -->
+                            <div class="lg:col-span-5 space-y-5">
+                                
+                                <!-- Eyebrow Tag -->
+                                <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-theme-secondary text-slate-950 shadow-2xs">
+                                    <i class="fas fa-building text-[11px]"></i>
+                                    <span>Sekretariat &amp; Layanan</span>
+                                </div>
 
-                        <!-- Clean Solid Card (100% Crisp Font Readability in ALL Conditions) -->
-                        <div class="relative z-10 bg-white rounded-2xl p-8 sm:p-12 max-w-xl mx-4 text-center border-t-4 border-theme-secondary shadow-2xl animate-float border-x border-b border-gray-100" style="background-color: #ffffff;">
-                            <!-- Gold Pill Badge -->
-                            <span class="inline-block px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider text-slate-950 bg-theme-secondary shadow-xs mb-3.5">
-                                SMADA PRIMA
-                            </span>
-                            
-                            <!-- Main Headline -->
-                            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black font-headline text-slate-950 mb-3.5 tracking-tight">
-                                Semangat PRIMA
-                            </h2>
-                            
-                            <!-- Gold Divider Line -->
-                            <div class="w-14 h-1 bg-theme-secondary mx-auto rounded-full mb-4"></div>
-                            
-                            <!-- High Contrast Description Paragraph -->
-                            <p class="text-slate-900 text-sm sm:text-base font-semibold leading-relaxed max-w-lg mx-auto">
-                                Dedikasi kami adalah untuk terus menjadi yang pertama dan utama dalam memberikan pelayanan pendidikan yang berkualitas bagi masyarakat.
-                            </p>
+                                <!-- Section Title -->
+                                <h2 class="text-2xl sm:text-3xl font-extrabold text-theme-primary font-headline tracking-tight">
+                                    Informasi Kontak
+                                </h2>
+
+                                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                                    Untuk informasi lebih lanjut dan pelayanan langsung, silakan kunjungi kantor sekretariat SMAN 2 Situbondo atau hubungi kami melalui kanal resmi berikut.
+                                </p>
+
+                                <!-- Contact Badges List -->
+                                <div class="space-y-3.5 text-xs sm:text-sm pt-1">
+                                    
+                                    <!-- 1. Alamat -->
+                                    <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-theme-secondary/50 transition-all group">
+                                        <div class="w-10 h-10 rounded-xl bg-blue-50 text-theme-primary flex items-center justify-center shrink-0 mt-0.5 border border-blue-100 shadow-2xs group-hover:scale-105 transition-transform">
+                                            <i class="fas fa-map-marker-alt text-sm"></i>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <span class="block text-[11px] font-extrabold text-slate-900 uppercase tracking-wider mb-0.5">Alamat</span>
+                                            <p class="text-slate-600 leading-relaxed font-normal text-xs sm:text-sm">
+                                                Jl. Argopuro No.17, Mimbaan, Kec. Panji, Kabupaten Situbondo, Jawa Timur 68322
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- 2. Telepon -->
+                                    <div class="flex items-center gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-theme-secondary/50 transition-all group">
+                                        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100 shadow-2xs group-hover:scale-105 transition-transform">
+                                            <i class="fas fa-phone-alt text-sm"></i>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <span class="block text-[11px] font-extrabold text-slate-900 uppercase tracking-wider mb-0.5">Telepon</span>
+                                            <a href="tel:0338671234" class="text-slate-700 font-semibold hover-text-primary transition-colors text-xs sm:text-sm">
+                                                (0338) 671234
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- 3. Email -->
+                                    <div class="flex items-center gap-3.5 p-3.5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-theme-secondary/50 transition-all group">
+                                        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100 shadow-2xs group-hover:scale-105 transition-transform">
+                                            <i class="fas fa-envelope text-sm"></i>
+                                        </div>
+                                        <div class="min-w-0">
+                                            <span class="block text-[11px] font-extrabold text-slate-900 uppercase tracking-wider mb-0.5">Email</span>
+                                            <a href="mailto:info@sman2situbondo.sch.id" class="text-slate-700 font-semibold hover-text-primary transition-colors text-xs sm:text-sm">
+                                                info@sman2situbondo.sch.id
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="pt-2">
+                                    <a href="https://maps.app.goo.gl/ftYMjJRxN9KV7v6D6" 
+                                       target="_blank" 
+                                       rel="noopener noreferrer" 
+                                       class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-theme-primary hover:text-theme-secondary transition-colors group">
+                                        <span>Buka di Google Maps</span>
+                                        <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <!-- Right: Responsive Interactive Google Maps Embed (7 cols) -->
+                            <div class="lg:col-span-7">
+                                <div class="rounded-2xl overflow-hidden border border-slate-200/90 shadow-sm h-72 sm:h-80 md:h-96 w-full relative">
+                                    <iframe 
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.766324391696!2d114.01258907499708!3d-7.708204676352932!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd72750e3860bb7%3A0x6b1076b1f28b7468!2sSMAN%202%20Situbondo!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid" 
+                                        class="w-full h-full border-0" 
+                                        allowfullscreen="" 
+                                        loading="lazy" 
+                                        referrerpolicy="no-referrer-when-downgrade"
+                                        title="Lokasi SMAN 2 Situbondo di Google Maps">
+                                    </iframe>
+                                    <a href="https://maps.app.goo.gl/ftYMjJRxN9KV7v6D6" 
+                                       target="_blank" 
+                                       rel="noopener noreferrer" 
+                                       class="absolute bottom-3 right-3 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[11px] font-extrabold text-slate-900 border border-gray-200 shadow-md hover:bg-theme-secondary hover:text-slate-950 transition-all flex items-center gap-1.5 spring-hover">
+                                        <i class="fas fa-external-link-alt text-[10px]"></i>
+                                        <span>Buka Peta Penuh</span>
+                                    </a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

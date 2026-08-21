@@ -36,6 +36,7 @@ class ProfilePageTest extends TestCase
         $response->assertSee('Visi, Misi &amp; Tujuan', false);
         $response->assertSee('Sejarah Singkat');
         $response->assertSee('Struktur Organisasi');
-        $response->assertSee('Semangat PRIMA');
+        $response->assertSee('Sekretariat &amp; Layanan', false);
+        $response->assertSee('Informasi Kontak');
     }
 }
