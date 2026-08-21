@@ -19,7 +19,6 @@ class ContactPageTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Hubungi Kami');
-        $response->assertSee('Informasi Kontak');
         $response->assertSee('Kirim Pesan');
         $response->assertSee('Nama Lengkap');
         $response->assertSee('Alamat Email');

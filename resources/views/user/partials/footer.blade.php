@@ -59,10 +59,10 @@
     </div>
 </footer>
 
-<!-- FLOATING ACTION BUTTONS (ACCESSIBILITY, WHATSAPP, TOP) -->
+<!-- FLOATING ACTION BUTTONS (INSTAGRAM, WHATSAPP, TOP) -->
 <div class="fixed bottom-4 right-4 flex flex-col space-y-2 z-50 animate-float">
-    <a class="bg-theme-secondary text-slate-950 p-3 rounded-full shadow-lg hover:opacity-90 flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 transition spring-hover glow-pulse" href="#" title="Aksesibilitas">
-        <i class="fas fa-universal-access text-lg sm:text-xl"></i>
+    <a class="bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 text-white p-3 rounded-full shadow-lg hover:opacity-90 flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 transition spring-hover" href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" title="Instagram Resmi @sman2situbondoofficial">
+        <i class="fab fa-instagram text-xl sm:text-2xl"></i>
     </a>
     <a class="bg-green-500 text-white p-3 rounded-full shadow-lg hover:bg-green-600 flex items-center justify-center h-11 w-11 sm:h-12 sm:w-12 transition spring-hover" href="https://wa.me/628123456789" target="_blank" rel="noopener" title="WhatsApp">
         <i class="fab fa-whatsapp text-xl sm:text-2xl"></i>
