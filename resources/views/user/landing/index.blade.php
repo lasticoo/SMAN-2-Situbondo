@@ -127,7 +127,15 @@
   .hover-border-primary:hover { border-color: var(--primary-main) !important; }
 
   .hover-text-secondary:hover { color: var(--secondary-gold) !important; }
-  .hover-bg-secondary:hover { background-color: var(--secondary-gold) !important; }
+  .hover-bg-secondary:hover { background-color: var(--secondary-gold) !important; color: #020617 !important; }
+
+  /* HD Hero Banner Rendering Engine (Zero Blur, Optimal Contrast) */
+  .hero-banner-img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: auto;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
 
   /* ========================================================================== */
   /* HIGH-END SPRING PHYSICS & ULTRA-SMOOTH GPU ANIMATIONS                     */
@@ -202,67 +210,202 @@
     showPopup: {{ (isset($activePopups) && count($activePopups) > 0) || $activePopup ? 'true' : 'false' }}, 
     popupIndex: 0,
     activeSlide: 0, 
-    totalSlides: {{ count($banners) > 0 ? count($banners) : 1 }} 
-}" class="min-h-screen font-sans antialiased text-gray-800 bg-gray-50 overflow-x-hidden">
+    totalSlides: {{ count($banners) > 0 ? count($banners) : 1 }},
+    intervalId: null,
+    next() { this.activeSlide = (this.activeSlide + 1) % this.totalSlides; },
+    prev() { this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides; },
+    startAutoSlide() {
+        if (this.totalSlides > 1 && !this.intervalId) {
+            this.intervalId = setInterval(() => { this.next(); }, 6000);
+        }
+    },
+    stopAutoSlide() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }
+    }
+}" 
+x-init="startAutoSlide()"
+class="min-h-screen font-sans antialiased text-gray-800 bg-gray-50 overflow-x-hidden">
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 1 & 2. SHARED NAVBAR & TOPBAR COMPONENT -->
+    <!-- 1 & 2. SHARED NAVBAR & TOPBAR COMPONENT                       -->
     <!-- ------------------------------------------------------------- -->
     @include('user.partials.navbar')
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 3. HERO SECTION (DYNAMIC BANNERS LOOP FROM DATABASE) -->
+    <!-- 3. HERO SECTION (UNIFIED 2-COLUMN STAGE MATCHING SPMB DESIGN) -->
     <!-- ------------------------------------------------------------- -->
-    <section class="relative h-[480px] sm:h-[550px] md:h-[600px] flex items-center overflow-hidden bg-theme-primary" x-init="if (totalSlides > 1) { setInterval(() => { activeSlide = (activeSlide + 1) % totalSlides }, 6000) }">
-        @if(count($banners) > 0)
-            @foreach($banners as $index => $banner)
-                <div x-show="activeSlide === {{ $index }}" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0 scale-105" x-transition:enter-end="opacity-100 scale-100" class="absolute inset-0 w-full h-full flex items-center">
-                    <img src="{{ $getImageUrl($banner->image_url) }}" alt="{{ $banner->title }}" class="absolute inset-0 w-full h-full object-cover opacity-40" loading="{{ $index === 0 ? 'eager' : 'lazy' }}" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
-                    <div class="container mx-auto px-4 relative z-10 text-white">
-                        <div class="max-w-2xl space-y-3 sm:space-y-4">
-                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight font-headline text-white drop-shadow-md" data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">
-                                {{ $banner->title }}
-                            </h1>
-                            <p class="text-shadow text-xs sm:text-sm md:text-base leading-relaxed text-slate-200" data-aos="fade-up" data-aos-duration="900" data-aos-delay="200">
-                                <strong class="text-theme-secondary font-bold">Smada Prima</strong><br>
-                                {{ $banner->description ?? 'Assalamu\'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini, kami telah dapat mengembangkan website sekolah yang mengacu pada ICT-based learning.' }}
-                            </p>
-                            <div class="flex flex-col sm:flex-row space-y-2.5 sm:space-y-0 sm:space-x-4 pt-2" data-aos="zoom-in-up" data-aos-duration="900" data-aos-delay="300">
-                                <a class="bg-theme-primary-deep hover:opacity-90 text-white font-bold py-2.5 px-7 rounded-full transition duration-300 shadow-lg text-xs sm:text-sm uppercase tracking-wider spring-hover text-center" href="#spmb">SPMB</a>
-                                <a class="border-2 border-theme-secondary text-theme-secondary hover:bg-theme-secondary hover:text-slate-950 font-bold py-2.5 px-7 rounded-full transition duration-300 text-xs sm:text-sm uppercase tracking-wider spring-hover text-center" href="#siklus">SIKLUS</a>
+    <section class="relative w-full overflow-hidden text-white py-12 sm:py-16 md:py-20"
+             style="background: radial-gradient(circle at 80% 40%, var(--primary-main, #001c4d) 0%, var(--primary-deep, #000e26) 55%, #050d1a 100%);"
+             @mouseenter="stopAutoSlide()"
+             @mouseleave="startAutoSlide()">
+        
+        <!-- Dynamic Subtle Grid Matrix Pattern (Harmonizes Across Entire Hero Canvas) -->
+        <div class="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-40 z-1"></div>
+        
+        <!-- Ambient Glowing Lighting Accent Orbs -->
+        <div class="absolute top-0 right-1/4 w-96 h-96 bg-theme-secondary/15 rounded-full blur-3xl pointer-events-none z-1"></div>
+        <div class="absolute bottom-0 left-1/4 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none z-1"></div>
+
+        <!-- Unified Content Grid (Left: Clear Dynamic Typography & CTAs | Right: Framed HD Banner Showcase) -->
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                
+                <!-- ========================================================= -->
+                <!-- LEFT: DYNAMIC BANNER INFORMATION & ACTION BUTTONS         -->
+                <!-- ========================================================= -->
+                <div class="lg:col-span-6 space-y-4 sm:space-y-5 text-left" data-aos="fade-right" data-aos-duration="650">
+                    
+                    @if(count($banners) > 0)
+                        <!-- Dynamic Banner Loop for Titles & Descriptions on Left -->
+                        <div class="relative min-h-[160px] sm:min-h-[180px]">
+                            @foreach($banners as $index => $banner)
+                                <div x-show="activeSlide === {{ $index }}" 
+                                     x-transition:enter="transition-all ease-out duration-500" 
+                                     x-transition:enter-start="opacity-0 translate-y-2" 
+                                     x-transition:enter-end="opacity-100 translate-y-0" 
+                                     x-transition:leave="transition-all ease-in duration-300 absolute inset-0 pointer-events-none" 
+                                     x-transition:leave-start="opacity-100 translate-y-0" 
+                                     x-transition:leave-end="opacity-0 -translate-y-2" 
+                                     class="space-y-3 sm:space-y-4">
+                                    
+                                    <!-- Eyebrow Pill -->
+                                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-theme-secondary text-slate-950 text-xs font-black uppercase tracking-wider shadow-md">
+                                        <span class="w-2 h-2 rounded-full bg-slate-950 animate-ping"></span>
+                                        <span class="w-2 h-2 rounded-full bg-slate-950 -ml-4"></span>
+                                        <span>SMAN 2 SITUBONDO • SMADA PRIMA</span>
+                                    </div>
+
+                                    <!-- Headline -->
+                                    <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black font-headline tracking-tight text-white leading-tight drop-shadow-md">
+                                        {{ $banner->title }}
+                                    </h1>
+
+                                    <!-- Description -->
+                                    <p class="text-xs sm:text-sm md:text-base text-slate-100/95 leading-relaxed font-normal max-w-xl drop-shadow-xs">
+                                        {{ $banner->description ?? 'Assalamu\'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini, kami telah dapat mengembangkan website sekolah yang mengacu pada ICT-based learning.' }}
+                                    </p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <!-- Fallback Headline Frame -->
+                        <div class="space-y-3 sm:space-y-4">
+                            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-theme-secondary text-slate-950 text-xs font-black uppercase tracking-wider shadow-md">
+                                <span class="w-2 h-2 rounded-full bg-slate-950 animate-ping"></span>
+                                <span class="w-2 h-2 rounded-full bg-slate-950 -ml-4"></span>
+                                <span>SMAN 2 SITUBONDO • SMADA PRIMA</span>
                             </div>
+
+                            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black font-headline tracking-tight text-white leading-tight drop-shadow-md">
+                                SMA Negeri 2 Situbondo
+                            </h1>
+
+                            <p class="text-xs sm:text-sm md:text-base text-slate-100/95 leading-relaxed font-normal max-w-xl drop-shadow-xs">
+                                Selamat datang di website resmi SMA Negeri 2 Situbondo. Mengembangkan insan berkarakter mulia, berprestasi unggul, dan siap menyongsong masa depan global.
+                            </p>
                         </div>
+                    @endif
+
+                    <!-- Primary CTA Buttons Group (SPMB & SIKLUS) -->
+                    <div class="pt-2 flex flex-wrap items-center gap-3" data-aos="fade-up" data-aos-delay="200">
+                        <a href="{{ route('spmb.index') }}" 
+                           class="spring-hover px-6 py-2.5 sm:px-7 sm:py-3 rounded-full bg-theme-secondary text-slate-950 font-black text-xs sm:text-sm uppercase tracking-wider shadow-lg hover:opacity-95 text-center min-h-[42px] flex items-center justify-center gap-2">
+                            <span>SPMB</span>
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+
+                        <a href="{{ route('home') }}#siklus" 
+                           class="spring-hover px-6 py-2.5 sm:px-7 sm:py-3 rounded-full bg-theme-primary hover:bg-theme-primary-deep text-white font-black text-xs sm:text-sm uppercase tracking-wider border-2 border-theme-secondary text-center min-h-[42px] flex items-center justify-center gap-2 shadow-md">
+                            <span>SIKLUS</span>
+                            <i class="fas fa-graduation-cap text-xs text-theme-secondary"></i>
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- ========================================================= -->
+                <!-- RIGHT: FRAMED HD BANNER SHOWCASE SLIDER                   -->
+                <!-- ========================================================= -->
+                <div class="lg:col-span-6" data-aos="fade-left" data-aos-duration="650">
+                    <div class="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/20 border-2 border-white/15 bg-slate-950/80 aspect-[16/10] sm:aspect-[16/9] flex items-center justify-center group">
+                        
+                        @if(count($banners) > 0)
+                            <!-- Dynamic Background Slides Loop (HD Unobstructed Banner Display) -->
+                            @foreach($banners as $index => $banner)
+                                <div x-show="activeSlide === {{ $index }}" 
+                                     x-transition:enter="transition-opacity ease-out duration-500" 
+                                     x-transition:enter-start="opacity-0" 
+                                     x-transition:enter-end="opacity-100" 
+                                     x-transition:leave="transition-opacity ease-in duration-400" 
+                                     x-transition:leave-start="opacity-100" 
+                                     x-transition:leave-end="opacity-0" 
+                                     class="absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
+                                    
+                                    <!-- Ambient Soft Blurred Backdrop (Fills Frame Canvas Seamlessly) -->
+                                    <img src="{{ $getImageUrl($banner->image_url) }}" 
+                                         alt="" 
+                                         class="absolute inset-0 w-full h-full object-cover filter blur-2xl opacity-40 scale-110 pointer-events-none"
+                                         aria-hidden="true">
+
+                                    <!-- Foreground Sharp HD Banner Image (Natural Aspect Ratio, Zero Text Obscurity) -->
+                                    <img src="{{ $getImageUrl($banner->image_url) }}" 
+                                         alt="{{ $banner->title }}" 
+                                         class="w-full h-full object-contain object-center relative z-0 filter brightness-[0.98] contrast-[1.03] hero-banner-img"
+                                         loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
+                                         decoding="{{ $index === 0 ? 'sync' : 'async' }}"
+                                         @if($index === 0) fetchpriority="high" @endif
+                                         onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
+                                </div>
+                            @endforeach
+
+                            <!-- Slide Navigation Controls (Arrows) -->
+                            @if(count($banners) > 1)
+                                <!-- Left Arrow -->
+                                <button @click="prev()" 
+                                        aria-label="Slide sebelumnya"
+                                        class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-950/70 hover:bg-theme-secondary text-white hover:text-slate-950 border border-white/20 hover:border-theme-secondary flex items-center justify-center transition-all shadow-lg active:scale-90 cursor-pointer">
+                                    <i class="fas fa-chevron-left text-xs"></i>
+                                </button>
+
+                                <!-- Right Arrow -->
+                                <button @click="next()" 
+                                        aria-label="Slide berikutnya"
+                                        class="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-950/70 hover:bg-theme-secondary text-white hover:text-slate-950 border border-white/20 hover:border-theme-secondary flex items-center justify-center transition-all shadow-lg active:scale-90 cursor-pointer">
+                                    <i class="fas fa-chevron-right text-xs"></i>
+                                </button>
+
+                                <!-- Slide Indicators (Dots) -->
+                                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-slate-950/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/15">
+                                    @foreach($banners as $dotIndex => $banner)
+                                        <button @click="activeSlide = {{ $dotIndex }}" 
+                                                aria-label="Beralih ke slide {{ $dotIndex + 1 }}"
+                                                class="h-2 rounded-full transition-all duration-300 cursor-pointer"
+                                                :class="activeSlide === {{ $dotIndex }} ? 'w-6 bg-theme-secondary shadow-xs' : 'w-2 bg-white/50 hover:bg-white'">
+                                        </button>
+                                    @endforeach
+                                </div>
+                            @endif
+                        @else
+                            <img src="{{ asset('build/assets/banner smada.png') }}" alt="Banner SMAN 2 Situbondo" class="w-full h-full object-contain object-center">
+                        @endif
+
                     </div>
                 </div>
-            @endforeach
-        @else
-            <!-- Fallback Hero Frame -->
-            <div class="absolute inset-0 w-full h-full flex items-center bg-gradient-to-r from-black/90 via-black/70 to-transparent bg-theme-primary">
-                <div class="container mx-auto px-4 relative z-10 text-white">
-                    <div class="max-w-2xl space-y-3 sm:space-y-4">
-                        <span class="inline-block px-3.5 py-1 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-theme-secondary bg-white/10 border border-theme-secondary animate-float">
-                            Selamat Hari Jadi SMA Negeri 2 Situbondo
-                        </span>
-                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight font-headline text-white" data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">SMA Negeri 2<br>Situbondo</h1>
-                        <p class="text-shadow text-xs sm:text-sm md:text-base leading-relaxed text-slate-200" data-aos="fade-up" data-aos-duration="900" data-aos-delay="200">
-                            <strong class="text-theme-secondary font-bold">Smada Prima</strong><br>
-                            Assalamu'alaikum Wr. Wb. Puji syukur dipanjatkan kehadirat Tuhan Yang Maha Esa, atas diperkenankannya pembuatan website ini, kami telah dapat mengembangkan website sekolah yang mengacu pada ICT-based learning. Berbagai informasi tentang pendidikan dapat diakses dalam website sekolah ini, Khususnya Informasi tentang SMAN 2 SITUBONDO.
-                        </p>
-                        <div class="flex flex-col sm:flex-row space-y-2.5 sm:space-y-0 sm:space-x-4 pt-2" data-aos="zoom-in-up" data-aos-duration="900" data-aos-delay="300">
-                            <a class="bg-theme-primary-deep hover:opacity-90 text-white font-bold py-2.5 px-7 rounded-full transition duration-300 shadow-lg text-xs sm:text-sm uppercase tracking-wider spring-hover text-center" href="#spmb">SPMB</a>
-                            <a class="border-2 border-theme-secondary text-theme-secondary hover:bg-theme-secondary hover:text-slate-950 font-bold py-2.5 px-7 rounded-full transition duration-300 text-xs sm:text-sm uppercase tracking-wider spring-hover text-center" href="#siklus">SIKLUS</a>
-                        </div>
-                    </div>
-                </div>
+
             </div>
-        @endif
+        </div>
+
+        <!-- Wave divider transition to content -->
+        <div class="absolute bottom-0 inset-x-0 h-6 sm:h-10 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 4. QUICK LINKS GRID (DYNAMIC SECONDARY ACCENTS FOR ICONS) -->
+    <!-- 4. QUICK LINKS GRID: PROFIL SEKOLAH (ACTIVE DIRECT ROUTES)    -->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-8 sm:py-10 mb-10 md:mb-16 bg-white relative -mt-14 sm:-mt-16 z-20 mx-4 md:mx-auto md:max-w-4xl rounded-xl shadow-xl border-t-4 border-theme-secondary" data-aos="zoom-in-up" data-aos-duration="900" id="profil">
+    <section class="py-8 sm:py-10 mb-10 md:mb-16 bg-white relative -mt-10 sm:-mt-12 z-20 mx-4 md:mx-auto md:max-w-4xl rounded-2xl shadow-xl border-t-4 border-theme-secondary" data-aos="zoom-in-up" data-aos-duration="900" id="profil">
         <div class="text-center mb-6 sm:mb-8">
             <h2 class="text-lg sm:text-xl font-bold text-gray-800 font-headline uppercase tracking-wider">PROFIL <span class="text-theme-primary">SEKOLAH</span></h2>
             <div class="w-16 h-1 bg-theme-secondary mx-auto mt-2 rounded-full"></div>
@@ -270,15 +413,15 @@
 
         <!-- Row 1: 3 Buttons -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4 px-4 sm:px-8 pb-4">
-            <a class="bg-theme-primary-deep text-white rounded-lg p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="100" href="#profil">
+            <a class="bg-theme-primary-deep text-white rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="100" href="{{ route('profile.index', ['open' => 'vision']) }}">
                 <i class="fas fa-eye text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
                 <span class="font-semibold text-xs sm:text-sm">Visi Misi</span>
             </a>
-            <a class="bg-theme-primary-deep text-white rounded-lg p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="200" href="#profil">
+            <a class="bg-theme-primary-deep text-white rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="200" href="{{ route('profile.index', ['open' => 'structure']) }}">
                 <i class="fas fa-sitemap text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
                 <span class="font-semibold text-xs sm:text-sm">Struktur Organisasi</span>
             </a>
-            <a class="bg-theme-primary-deep text-white rounded-lg p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="300" href="#siswa">
+            <a class="bg-theme-primary-deep text-white rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="300" href="{{ route('student.index') }}">
                 <i class="fas fa-users text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
                 <span class="font-semibold text-xs sm:text-sm">Data Siswa</span>
             </a>
@@ -286,11 +429,11 @@
 
         <!-- Row 2: 2 Buttons Centered -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4 px-4 sm:px-8 pb-4 max-w-xl mx-auto">
-            <a class="bg-theme-primary-deep text-white rounded-lg p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="400" href="#spmb">
+            <a class="bg-theme-primary-deep text-white rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="400" href="{{ route('spmb.index') }}">
                 <i class="fas fa-user-plus text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
                 <span class="font-semibold text-xs sm:text-sm">SPMB</span>
             </a>
-            <a class="bg-theme-primary-deep text-white rounded-lg p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="500" href="#siklus">
+            <a class="bg-theme-primary-deep text-white rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="500" href="{{ route('home') }}#siklus">
                 <i class="fas fa-user-graduate text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
                 <span class="font-semibold text-xs sm:text-sm">SIKLUS</span>
             </a>
@@ -298,13 +441,13 @@
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 5. SAPA KEPALA SEKOLAH (DYNAMIC THEME BACKGROUND & ACCENTS) -->
+    <!-- 5. SAPA KEPALA SEKOLAH (DYNAMIC THEME BACKGROUND & ACCENTS)   -->
     <!-- ------------------------------------------------------------- -->
     <section class="py-10 sm:py-12 text-white bg-theme-primary-deep">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center mb-6 sm:mb-8 border-b-2 border-theme-secondary pb-2" data-aos="fade-up">
                 <h2 class="text-xl sm:text-2xl font-bold font-headline">Sapa <span class="text-theme-secondary">Kepala Sekolah</span></h2>
-                <a class="bg-theme-secondary text-slate-950 font-bold py-1.5 px-4 sm:px-5 rounded-full text-xs sm:text-sm hover:opacity-90 transition shadow spring-hover" href="#profil">
+                <a class="bg-theme-secondary text-slate-950 font-bold py-1.5 px-4 sm:px-5 rounded-full text-xs sm:text-sm hover:opacity-90 transition shadow spring-hover" href="{{ route('profile.index') }}">
                     Lainnya <i class="fas fa-arrow-right ml-1"></i>
                 </a>
             </div>
@@ -327,13 +470,13 @@
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 6. NEWS SECTION (BERITA SMADA WITH PURE WHITE MATCHING CARD BACKDROPS) -->
+    <!-- 6. NEWS SECTION (BERITA SMADA WITH DIRECT DETAIL & LIST LINKS) -->
     <!-- ------------------------------------------------------------- -->
     <section class="py-10 sm:py-12 bg-slate-100" id="berita">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-end mb-6 sm:mb-8 border-b-2 border-theme-secondary pb-2" data-aos="fade-up">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-800 font-headline">Berita <span class="text-theme-secondary">Smada</span></h2>
-                <a class="text-xs sm:text-sm text-gray-500 hover-text-primary transition flex items-center gap-1 font-semibold" href="#berita">
+                <a class="text-xs sm:text-sm text-gray-500 hover-text-primary transition flex items-center gap-1 font-semibold" href="{{ route('news.index') }}">
                     Selengkapnya <i class="fas fa-arrow-right text-xs text-theme-secondary"></i>
                 </a>
             </div>
@@ -349,7 +492,7 @@
                             </div>
                             <div class="p-4 sm:p-5 space-y-2">
                                 <h3 class="font-bold text-base sm:text-lg leading-snug hover-text-primary font-headline text-gray-900 uppercase">
-                                    <a href="#berita">{{ $firstNews->title }}</a>
+                                    <a href="{{ route('news.show', $firstNews->id) }}">{{ $firstNews->title }}</a>
                                 </h3>
                                 <p class="text-[11px] sm:text-xs text-gray-500 flex items-center gap-1 font-medium">
                                     <i class="far fa-calendar-alt text-theme-secondary"></i> {{ $firstNews->published_at ? $firstNews->published_at->format('F d, Y') : 'September 10, 2025' }}
@@ -360,11 +503,11 @@
                             </div>
                         </div>
                         <div class="p-4 sm:p-5 pt-0">
-                            <a class="inline-block border border-theme-primary text-theme-primary hover-bg-secondary hover:text-slate-950 px-4 py-1.5 rounded-full text-xs font-bold transition shadow-sm" href="#berita">Selengkapnya</a>
+                            <a class="inline-block border border-theme-primary text-theme-primary hover-bg-secondary hover:text-slate-950 px-4 py-1.5 rounded-full text-xs font-bold transition shadow-sm" href="{{ route('news.show', $firstNews->id) }}">Selengkapnya</a>
                         </div>
                     </div>
 
-                    <!-- News List Grid (Right 4 Side Cards in 2x2 with Zoomed-Out Image & Pure White Card Background) -->
+                    <!-- News List Grid (Right 4 Side Cards in 2x2) -->
                     <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 content-start">
                         @foreach($newsList->slice(1, 4) as $idx => $item)
                             <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden flex items-stretch hover:shadow-md transition min-h-[160px] sm:h-[176px] img-zoom-box spring-hover" data-aos="fade-left" data-aos-duration="800" data-aos-delay="{{ ($idx + 1) * 100 }}">
@@ -374,7 +517,7 @@
                                 <div class="p-3.5 sm:p-4 flex flex-col justify-between flex-1 min-h-[160px] sm:h-[176px]">
                                     <div>
                                         <h4 class="font-bold text-xs leading-tight hover-text-primary line-clamp-2 text-gray-900 uppercase font-headline">
-                                            <a href="#berita">{{ $item->title }}</a>
+                                            <a href="{{ route('news.show', $item->id) }}">{{ $item->title }}</a>
                                         </h4>
                                         <p class="text-[10px] sm:text-[11px] text-gray-400 flex items-center gap-1 font-medium mt-1">
                                             <i class="far fa-calendar-alt text-theme-secondary text-[10px]"></i> {{ $item->published_at ? $item->published_at->format('F d, Y') : 'August 28, 2025' }}
@@ -384,7 +527,7 @@
                                         </p>
                                     </div>
                                     <div class="pt-1">
-                                        <a href="#berita" class="text-xs text-theme-primary font-bold hover:text-theme-secondary inline-flex items-center gap-1">
+                                        <a href="{{ route('news.show', $item->id) }}" class="text-xs text-theme-primary font-bold hover:text-theme-secondary inline-flex items-center gap-1">
                                             Selengkapnya <i class="fas fa-arrow-right text-[10px] text-theme-secondary"></i>
                                         </a>
                                     </div>
@@ -402,9 +545,35 @@
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 7. SMADA FACT SECTION (DYNAMIC THEME ACCENTS) -->
+    <!-- 7. SMADA FACT SECTION (ANIMATED COUNTING & DIRECT CIVITAS LINK)-->
     <!-- ------------------------------------------------------------- -->
-    <section class="py-10 sm:py-12 text-white relative bg-theme-primary overflow-hidden">
+    <section class="py-10 sm:py-12 text-white relative bg-theme-primary overflow-hidden"
+             x-data="{
+                 activeTab: 'siswa',
+                 siswaSubTab: 'total',
+                 count: 0,
+                 target: {{ $studentStats['total'] }},
+                 duration: 900,
+                 animateNumber(newVal) {
+                     this.target = newVal;
+                     let start = null;
+                     const dur = this.duration;
+                     const step = (ts) => {
+                         if (!start) start = ts;
+                         const progress = Math.min((ts - start) / dur, 1);
+                         const ease = 1 - Math.pow(1 - progress, 3);
+                         this.count = Math.floor(ease * this.target);
+                         if (progress < 1) {
+                             requestAnimationFrame(step);
+                         } else {
+                             this.count = this.target;
+                         }
+                     };
+                     requestAnimationFrame(step);
+                 }
+             }"
+             x-init="animateNumber({{ $studentStats['total'] }})">
+        
         <div class="absolute inset-0 bg-theme-primary-deep bg-opacity-70"></div>
         <div class="container mx-auto px-4 relative z-10 text-center">
             
@@ -412,80 +581,128 @@
                 SMADA <span class="text-theme-secondary">FACT</span>
             </div>
 
-            <!-- Primary Tabs -->
+            <!-- Primary Tabs (Peserta Didik, Guru, Staff) -->
             <div class="flex flex-wrap justify-center gap-2.5 sm:gap-3 mb-4" data-aos="fade-up" data-aos-delay="100">
-                <button @click="activeTab = 'siswa'" :class="activeTab === 'siswa' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" class="px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border transition spring-hover">
+                <button @click="activeTab = 'siswa'; siswaSubTab = 'total'; animateNumber({{ $studentStats['total'] }})" 
+                        :class="activeTab === 'siswa' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" 
+                        class="px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border transition spring-hover cursor-pointer">
                     PESERTA DIDIK
                 </button>
-                <button @click="activeTab = 'guru'" :class="activeTab === 'guru' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" class="px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border transition spring-hover">
+                <button @click="activeTab = 'guru'; animateNumber({{ $employeeStats['guru'] }})" 
+                        :class="activeTab === 'guru' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" 
+                        class="px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border transition spring-hover cursor-pointer">
                     GURU
                 </button>
-                <button @click="activeTab = 'staf'" :class="activeTab === 'staf' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" class="px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border transition spring-hover">
+                <button @click="activeTab = 'staf'; animateNumber({{ $employeeStats['staf'] }})" 
+                        :class="activeTab === 'staf' ? 'bg-theme-secondary text-slate-950 border-theme-secondary font-bold' : 'bg-transparent text-white border-white'" 
+                        class="px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border transition spring-hover cursor-pointer">
                     STAFF
                 </button>
             </div>
 
             <!-- Sub-Filter Siswa (Filter Pills) -->
             <div x-show="activeTab === 'siswa'" class="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-8" data-aos="fade-up" data-aos-delay="200">
-                <button @click="siswaSubTab = 'total'" :class="siswaSubTab === 'total' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition">
+                <button @click="siswaSubTab = 'total'; animateNumber({{ $studentStats['total'] }})" 
+                        :class="siswaSubTab === 'total' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" 
+                        class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition cursor-pointer">
                     Total Seluruh Siswa
                 </button>
-                <button @click="siswaSubTab = 'x'" :class="siswaSubTab === 'x' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition">
+                <button @click="siswaSubTab = 'x'; animateNumber({{ $studentStats['kelas_10'] }})" 
+                        :class="siswaSubTab === 'x' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" 
+                        class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition cursor-pointer">
                     Siswa Kelas X
                 </button>
-                <button @click="siswaSubTab = 'xi'" :class="siswaSubTab === 'xi' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition">
+                <button @click="siswaSubTab = 'xi'; animateNumber({{ $studentStats['kelas_11'] }})" 
+                        :class="siswaSubTab === 'xi' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" 
+                        class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition cursor-pointer">
                     Siswa Kelas XI
                 </button>
-                <button @click="siswaSubTab = 'xii'" :class="siswaSubTab === 'xii' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition">
+                <button @click="siswaSubTab = 'xii'; animateNumber({{ $studentStats['kelas_12'] }})" 
+                        :class="siswaSubTab === 'xii' ? 'bg-white text-slate-900 font-bold border-2 border-theme-secondary' : 'bg-white/20 text-white'" 
+                        class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs transition cursor-pointer">
                     Siswa Kelas XII
                 </button>
             </div>
 
-            <!-- Tab Content: PESERTA DIDIK (1 Single Information Card Dynamic Filter) -->
-            <div x-show="activeTab === 'siswa'" class="max-w-md mx-auto bg-black/50 border-2 border-theme-secondary rounded-lg p-6 sm:p-8 shadow-xl transition-all duration-300" data-aos="flip-up" data-aos-duration="800" data-aos-delay="300">
+            <!-- Tab Content: PESERTA DIDIK (Click to view Data Siswa) -->
+            <div x-show="activeTab === 'siswa'" class="max-w-md mx-auto" data-aos="flip-up" data-aos-duration="800">
                 <template x-if="siswaSubTab === 'total'">
-                    <div>
-                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['total'] }}</div>
-                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Total Seluruh Siswa</div>
-                    </div>
+                    <a href="{{ route('student.index') }}" 
+                       title="Klik untuk melihat seluruh data siswa" 
+                       class="block bg-black/50 hover:bg-black/70 border-2 border-theme-secondary rounded-2xl p-6 sm:p-8 shadow-xl transition-all duration-300 spring-hover group cursor-pointer">
+                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline group-hover:scale-105 transition-transform" x-text="count"></div>
+                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200 group-hover:text-white flex items-center justify-center gap-1.5">
+                            <span>Total Seluruh Siswa</span>
+                            <i class="fas fa-external-link-alt text-[10px] text-theme-secondary"></i>
+                        </div>
+                    </a>
                 </template>
                 <template x-if="siswaSubTab === 'x'">
-                    <div>
-                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['kelas_10'] }}</div>
-                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas X</div>
-                    </div>
+                    <a href="{{ route('student.index', ['class' => 'X']) }}" 
+                       title="Klik untuk melihat data siswa kelas X" 
+                       class="block bg-black/50 hover:bg-black/70 border-2 border-theme-secondary rounded-2xl p-6 sm:p-8 shadow-xl transition-all duration-300 spring-hover group cursor-pointer">
+                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline group-hover:scale-105 transition-transform" x-text="count"></div>
+                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200 group-hover:text-white flex items-center justify-center gap-1.5">
+                            <span>Siswa Kelas X</span>
+                            <i class="fas fa-external-link-alt text-[10px] text-theme-secondary"></i>
+                        </div>
+                    </a>
                 </template>
                 <template x-if="siswaSubTab === 'xi'">
-                    <div>
-                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['kelas_11'] }}</div>
-                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas XI</div>
-                    </div>
+                    <a href="{{ route('student.index', ['class' => 'XI']) }}" 
+                       title="Klik untuk melihat data siswa kelas XI" 
+                       class="block bg-black/50 hover:bg-black/70 border-2 border-theme-secondary rounded-2xl p-6 sm:p-8 shadow-xl transition-all duration-300 spring-hover group cursor-pointer">
+                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline group-hover:scale-105 transition-transform" x-text="count"></div>
+                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200 group-hover:text-white flex items-center justify-center gap-1.5">
+                            <span>Siswa Kelas XI</span>
+                            <i class="fas fa-external-link-alt text-[10px] text-theme-secondary"></i>
+                        </div>
+                    </a>
                 </template>
                 <template x-if="siswaSubTab === 'xii'">
-                    <div>
-                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $studentStats['kelas_12'] }}</div>
-                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Siswa Kelas XII</div>
-                    </div>
+                    <a href="{{ route('student.index', ['class' => 'XII']) }}" 
+                       title="Klik untuk melihat data siswa kelas XII" 
+                       class="block bg-black/50 hover:bg-black/70 border-2 border-theme-secondary rounded-2xl p-6 sm:p-8 shadow-xl transition-all duration-300 spring-hover group cursor-pointer">
+                        <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline group-hover:scale-105 transition-transform" x-text="count"></div>
+                        <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200 group-hover:text-white flex items-center justify-center gap-1.5">
+                            <span>Siswa Kelas XII</span>
+                            <i class="fas fa-external-link-alt text-[10px] text-theme-secondary"></i>
+                        </div>
+                    </a>
                 </template>
             </div>
 
-            <!-- Tab Content: GURU -->
-            <div x-show="activeTab === 'guru'" class="max-w-md mx-auto bg-black/50 border-2 border-theme-secondary rounded-lg p-6 sm:p-8 shadow-xl" data-aos="flip-up" data-aos-duration="800" data-aos-delay="300">
-                <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $employeeStats['guru'] }}</div>
-                <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Guru (Tenaga Pendidik)</div>
+            <!-- Tab Content: GURU (Click to view Civitas Akademik Guru) -->
+            <div x-show="activeTab === 'guru'" class="max-w-md mx-auto" data-aos="flip-up" data-aos-duration="800">
+                <a href="{{ route('civitas.index', ['position' => 'guru']) }}" 
+                   title="Klik untuk melihat data tenaga pendidik / guru" 
+                   class="block bg-black/50 hover:bg-black/70 border-2 border-theme-secondary rounded-2xl p-6 sm:p-8 shadow-xl transition-all duration-300 spring-hover group cursor-pointer">
+                    <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline group-hover:scale-105 transition-transform" x-text="count"></div>
+                    <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200 group-hover:text-white flex items-center justify-center gap-1.5">
+                        <span>Guru (Tenaga Pendidik)</span>
+                        <i class="fas fa-external-link-alt text-[10px] text-theme-secondary"></i>
+                    </div>
+                </a>
             </div>
 
-            <!-- Tab Content: STAFF -->
-            <div x-show="activeTab === 'staf'" class="max-w-md mx-auto bg-black/50 border-2 border-theme-secondary rounded-lg p-6 sm:p-8 shadow-xl" data-aos="flip-up" data-aos-duration="800" data-aos-delay="300">
-                <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline">{{ $employeeStats['staf'] }}</div>
-                <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200">Staff (Tenaga Kependidikan)</div>
+            <!-- Tab Content: STAFF (Click to view Civitas Akademik Staff) -->
+            <div x-show="activeTab === 'staf'" class="max-w-md mx-auto" data-aos="flip-up" data-aos-duration="800">
+                <a href="{{ route('civitas.index', ['position' => 'staff']) }}" 
+                   title="Klik untuk melihat data tenaga kependidikan / staff" 
+                   class="block bg-black/50 hover:bg-black/70 border-2 border-theme-secondary rounded-2xl p-6 sm:p-8 shadow-xl transition-all duration-300 spring-hover group cursor-pointer">
+                    <div class="text-4xl sm:text-5xl font-bold text-theme-secondary mb-2 font-headline group-hover:scale-105 transition-transform" x-text="count"></div>
+                    <div class="text-xs sm:text-sm font-medium uppercase tracking-wider text-slate-200 group-hover:text-white flex items-center justify-center gap-1.5">
+                        <span>Staff (Tenaga Kependidikan)</span>
+                        <i class="fas fa-external-link-alt text-[10px] text-theme-secondary"></i>
+                    </div>
+                </a>
             </div>
 
         </div>
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 8. AGENDA & PENGUMUMAN + EKSTRAKURIKULER (IMAGE FULL HEIGHT & DYNAMIC THEME) -->
+    <!-- 8. AGENDA & PENGUMUMAN (DIRECT DETAIL & LIST LINKS)           -->
     <!-- ------------------------------------------------------------- -->
     <section class="py-10 sm:py-12 bg-white" id="pengumuman">
         <div class="container mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -493,7 +710,7 @@
             <div class="lg:col-span-2 space-y-6">
                 <div class="flex justify-between items-end border-b-2 border-theme-secondary pb-2" data-aos="fade-up">
                     <h2 class="text-xl sm:text-2xl font-bold text-gray-800 font-headline">Agenda &amp; <span class="text-theme-secondary">Pengumuman</span></h2>
-                    <a class="text-xs sm:text-sm text-gray-500 hover-text-primary transition flex items-center gap-1 font-semibold" href="#pengumuman">
+                    <a class="text-xs sm:text-sm text-gray-500 hover-text-primary transition flex items-center gap-1 font-semibold" href="{{ route('announcement.index') }}">
                         Selengkapnya <i class="fas fa-arrow-right text-xs text-theme-secondary"></i>
                     </a>
                 </div>
@@ -505,7 +722,9 @@
                         <div class="bg-gray-50 rounded-lg p-4 sm:p-5 shadow flex flex-col justify-between border border-gray-100 h-full spring-hover" data-aos="fade-right" data-aos-duration="900">
                             <div>
                                 <img alt="{{ $firstAnn->title }}" class="w-full h-40 sm:h-44 object-cover mb-4 rounded-lg" src="{{ $firstAnn->display_thumbnail_url }}" loading="lazy" onerror="this.onerror=null; this.src='/build/assets/banner smada.png';">
-                                <h3 class="font-bold mb-2 text-slate-900 text-xs sm:text-sm uppercase leading-snug font-headline">{{ $firstAnn->title }}</h3>
+                                <h3 class="font-bold mb-2 text-slate-900 text-xs sm:text-sm uppercase leading-snug font-headline">
+                                    <a href="{{ route('announcement.show', $firstAnn->id) }}" class="hover-text-primary">{{ $firstAnn->title }}</a>
+                                </h3>
                                 <p class="text-[11px] sm:text-xs text-gray-500 mb-3 flex items-center gap-1 font-medium">
                                     <i class="far fa-calendar-alt text-theme-secondary"></i> {{ $firstAnn->published_at ? $firstAnn->published_at->format('F d, Y') : 'July 16, 2022' }}
                                 </p>
@@ -514,11 +733,11 @@
                                 </p>
                             </div>
                             <div>
-                                <a class="inline-block border border-theme-primary text-theme-primary hover-bg-secondary hover:text-slate-950 px-4 py-1.5 rounded-full text-xs font-bold transition shadow-sm" href="#pengumuman">Selengkapnya</a>
+                                <a class="inline-block border border-theme-primary text-theme-primary hover-bg-secondary hover:text-slate-950 px-4 py-1.5 rounded-full text-xs font-bold transition shadow-sm" href="{{ route('announcement.show', $firstAnn->id) }}">Selengkapnya</a>
                             </div>
                         </div>
 
-                        <!-- Side Announcement Cards (Fixed Height per Card matching Berita Smada Image Frame) -->
+                        <!-- Side Announcement Cards -->
                         <div class="flex flex-col justify-start gap-4">
                             @foreach($announcementsList->slice(1, 2) as $idx => $annItem)
                                 <div class="bg-gray-50 rounded-lg shadow border border-gray-100 flex items-stretch overflow-hidden hover:shadow-md transition min-h-[160px] sm:h-[180px] img-zoom-box spring-hover" data-aos="fade-up" data-aos-duration="800" data-aos-delay="{{ ($idx + 1) * 200 }}">
@@ -527,7 +746,9 @@
                                     </div>
                                     <div class="p-3.5 sm:p-4 flex flex-col justify-between flex-1 min-h-[160px] sm:h-[180px]">
                                         <div>
-                                            <h3 class="font-bold mb-1 text-xs text-slate-900 uppercase leading-snug font-headline">{{ $annItem->title }}</h3>
+                                            <h3 class="font-bold mb-1 text-xs text-slate-900 uppercase leading-snug font-headline">
+                                                <a href="{{ route('announcement.show', $annItem->id) }}" class="hover-text-primary">{{ $annItem->title }}</a>
+                                            </h3>
                                             <p class="text-[10px] sm:text-[11px] text-gray-400 mb-1.5 flex items-center gap-1 font-medium">
                                                 <i class="far fa-calendar-alt text-theme-secondary"></i> {{ $annItem->published_at ? $annItem->published_at->format('F d, Y') : 'May 05, 2022' }}
                                             </p>
@@ -536,7 +757,7 @@
                                             </p>
                                         </div>
                                         <div>
-                                            <a class="inline-block border border-theme-primary text-theme-primary hover-bg-secondary hover:text-slate-950 px-3 py-1 rounded-full text-[11px] font-bold transition shadow-sm" href="#pengumuman">Selengkapnya</a>
+                                            <a class="inline-block border border-theme-primary text-theme-primary hover-bg-secondary hover:text-slate-950 px-3 py-1 rounded-full text-[11px] font-bold transition shadow-sm" href="{{ route('announcement.show', $annItem->id) }}">Selengkapnya</a>
                                         </div>
                                     </div>
                                 </div>
@@ -603,7 +824,7 @@
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 10. MOTTO BANNER SECTION (DYNAMIC THEME ACCENTS) -->
+    <!-- 10. MOTTO BANNER SECTION (DYNAMIC THEME ACCENTS)              -->
     <!-- ------------------------------------------------------------- -->
     <section class="py-8 sm:py-10 bg-white border-y-4 border-theme-secondary">
         <div class="container mx-auto px-4 text-center" data-aos="zoom-in" data-aos-duration="900">
@@ -616,10 +837,7 @@
     </section>
 
     <!-- ------------------------------------------------------------- -->
-    <!-- 11. FOOTER (PREMIUM CLEAN DYNAMIC THEME) -->
-    <!-- ------------------------------------------------------------- -->
-    <!-- ------------------------------------------------------------- -->
-    <!-- 6. SHARED FOOTER COMPONENT -->
+    <!-- 11. SHARED FOOTER COMPONENT (100% UNIFIED WITH OTHER MENUS)  -->
     <!-- ------------------------------------------------------------- -->
     @include('user.partials.footer')
 
@@ -637,13 +855,13 @@
              class="fixed inset-0 flex items-center justify-center p-3 sm:p-4 bg-black/80 overflow-y-auto" 
              x-transition:enter="transition ease-out duration-150" 
              x-transition:enter-start="opacity-0" 
-             x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-100"
-             x-transition:leave-start="opacity-100"
+             x-transition:enter-end="opacity-100" 
+             x-transition:leave="transition ease-in duration-100" 
+             x-transition:leave-start="opacity-100" 
              x-transition:leave-end="opacity-0">
             <div @click.away="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }"
                  class="bg-white rounded-2xl overflow-hidden max-w-md w-full shadow-2xl relative border border-gray-200 my-auto max-h-[92vh] flex flex-col transform-gpu">
-                <!-- Close Button (Always visible on mobile, elevated z-30, large touch target) -->
+                <!-- Close Button -->
                 <button @click="if (popupIndex < {{ count($popupsList) - 1 }}) { popupIndex++ } else { showPopup = false }" 
                         type="button"
                         aria-label="Tutup Popup"
@@ -717,7 +935,7 @@
 </div>
 
 <!-- ------------------------------------------------------------- -->
-<!-- INITIALIZE AOS ANIMATION ENGINE & POPUP COUNTDOWN CONTROLLER -->
+<!-- INITIALIZE AOS ANIMATION ENGINE & POPUP COUNTDOWN CONTROLLER  -->
 <!-- ------------------------------------------------------------- -->
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -774,7 +992,7 @@
 
                 this.days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 this.hours = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
-                this.minutes = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                this.minutes = String(Math.floor((distance % (1000 * 60)) / (1000 * 60))).padStart(2, '0');
                 this.seconds = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
             },
 

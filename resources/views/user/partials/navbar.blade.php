@@ -10,11 +10,9 @@
                 <i class="fas fa-phone-alt text-[10px] text-gray-400 group-hover:text-theme-primary transition-colors"></i>
                 <span>(0338) 671618</span>
             </a>
-            <a class="hover-text-primary transition-colors duration-200" href="{{ route('home') }}#alumni">Alumni</a>
-            <a class="hover-text-primary transition-colors duration-200" href="{{ route('home') }}#siklus">SIKLUS</a>
-            <a class="bg-theme-secondary text-slate-950 px-2.5 sm:px-3.5 py-0.5 sm:py-1 font-bold rounded-lg shadow-2xs hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 spring-hover inline-flex items-center gap-1" href="{{ route('home') }}#mysmada">
-                <i class="fas fa-user-circle text-[11px]"></i>
-                <span>MySmada</span>
+            <a class="bg-theme-secondary text-slate-950 px-3.5 sm:px-4 py-1 sm:py-1 rounded-full font-extrabold shadow-2xs hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 spring-hover inline-flex items-center gap-1.5 uppercase text-[10px] sm:text-[11px]" href="{{ route('home') }}#siklus">
+                <i class="fas fa-graduation-cap text-[11px]"></i>
+                <span>SIKLUS</span>
             </a>
         </div>
     </div>
