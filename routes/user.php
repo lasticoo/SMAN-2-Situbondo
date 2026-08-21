@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\User\AnnouncementController;
+use App\Http\Controllers\User\AppDevelopmentController;
 use App\Http\Controllers\User\ContactController;
 use App\Http\Controllers\User\EmployeeController;
 use App\Http\Controllers\User\LandingPageController;
 use App\Http\Controllers\User\MediaController;
 use App\Http\Controllers\User\NewsController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\SiklusController;
 use App\Http\Controllers\User\SpmbController;
 use App\Http\Controllers\User\StudentController;
 use App\Http\Controllers\User\VideoController;
@@ -83,3 +85,18 @@ Route::get('/penerimaan-siswa-baru', [SpmbController::class, 'index']);
 Route::get('/spmb/download/{id}', [SpmbController::class, 'download'])->name('spmb.download');
 Route::get('/spmb/{id}', [SpmbController::class, 'show'])->name('spmb.show');
 Route::get('/ppdb/{id}', [SpmbController::class, 'show']);
+
+// US-10 Sistem Informasi Kelulusan Siswa (SIKLUS) / Cek Kelulusan & SKL Online
+Route::get('/siklus', [SiklusController::class, 'index'])->name('siklus.index');
+Route::get('/kelulusan', [SiklusController::class, 'index'])->name('siklus.kelulusan');
+Route::get('/skl', [SiklusController::class, 'index']);
+Route::get('/cek-kelulusan', [SiklusController::class, 'index']);
+
+// Aplikasi Kami (Elearning, Video Pembelajaran, Buku Digital, Literasi) - Dalam Masa Pengembangan
+Route::get('/aplikasi/{type?}', [AppDevelopmentController::class, 'index'])->name('apps.development');
+Route::get('/elearning', [AppDevelopmentController::class, 'elearning'])->name('apps.elearning');
+Route::get('/video-pembelajaran', [AppDevelopmentController::class, 'video'])->name('apps.video');
+Route::get('/buku-digital', [AppDevelopmentController::class, 'bukuDigital'])->name('apps.buku');
+Route::get('/literasi', [AppDevelopmentController::class, 'literasi'])->name('apps.literasi');
+
+

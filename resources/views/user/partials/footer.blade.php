@@ -31,11 +31,11 @@
         <div>
             <h4 class="font-bold mb-3 sm:mb-4 text-xs sm:text-sm text-white border-b-2 border-theme-secondary pb-1.5 inline-block font-headline tracking-wider uppercase">Aplikasi Kami</h4>
             <ul class="space-y-2 sm:space-y-2.5 text-xs text-slate-200 font-medium">
-                <li><a class="hover-text-secondary transition hover:underline" href="{{ route('home') }}#elearning">&bull; Elearning</a></li>
-                <li><a class="hover-text-secondary transition hover:underline" href="{{ route('home') }}#video">&bull; Video Pembelajaran</a></li>
-                <li><a class="hover-text-secondary transition hover:underline" href="{{ route('home') }}#buku-digital">&bull; Buku Digital</a></li>
-                <li><a class="hover-text-secondary transition hover:underline" href="{{ route('home') }}#literasi">&bull; Literasi</a></li>
-                <li><a class="hover-text-secondary transition hover:underline" href="{{ route('home') }}#spmb">&bull; SPMB</a></li>
+                <li><a class="hover-text-secondary transition hover:underline" href="{{ route('apps.elearning') }}">&bull; Elearning</a></li>
+                <li><a class="hover-text-secondary transition hover:underline" href="{{ route('apps.video') }}">&bull; Video Pembelajaran</a></li>
+                <li><a class="hover-text-secondary transition hover:underline" href="{{ route('apps.buku') }}">&bull; Buku Digital</a></li>
+                <li><a class="hover-text-secondary transition hover:underline" href="{{ route('apps.literasi') }}">&bull; Literasi</a></li>
+                <li><a class="hover-text-secondary transition hover:underline" href="{{ route('spmb.index') }}">&bull; SPMB</a></li>
             </ul>
         </div>
 

@@ -5,8 +5,8 @@
     $pageDescription = 'Kami selalu terbuka untuk pertanyaan, saran, maupun masukan dari Anda. Silakan isi formulir di bawah ini atau hubungi kami melalui kontak yang tersedia.';
 
     // Data tema dinamis
-    $primaryColor = $colorSetting->primary_color ?? '#05479E';
-    $secondaryColor = $colorSetting->secondary_color ?? '#F19E38';
+    $primaryColor = $colorSetting?->primary_color ?? '#001c4d';
+    $secondaryColor = $colorSetting?->secondary_color ?? '#f59e0b';
 
     // Fallback data profil kontak jika belum terisi di database
     $contactAddress = 'Jl. Argopuro No.17, Mimbaan, Kec. Panji, Kabupaten Situbondo, Jawa Timur 68322';
@@ -100,13 +100,15 @@
 @push('styles')
 <style>
     /* =========================================================================
-       DYNAMIC THEME CSS VARIABLES (CONSISTENT WITH NEWS & ANNOUNCEMENT PATTERNS)
+       DYNAMIC THEME CSS VARIABLES (CONSISTENT WITH ALL PAGES & FOOTER SYSTEM)
        ========================================================================= */
     :root {
-        --primary-main: {{ $primaryColor ?? '#05479E' }};
-        --primary-deep: #032b69;
-        --secondary-main: {{ $secondaryColor ?? '#F19E38' }};
-        --secondary-gold: {{ $secondaryColor ?? '#F19E38' }};
+        --primary-main: {{ $primaryColor }};
+        --secondary-gold: {{ $secondaryColor }};
+        --secondary-main: {{ $secondaryColor }};
+        --primary-deep: color-mix(in srgb, var(--primary-main) 80%, black);
+        --primary-light: color-mix(in srgb, var(--primary-main) 12%, white);
+        --secondary-hover: color-mix(in srgb, var(--secondary-gold) 85%, black);
         --theme-surface: #FAFAFB;
         --theme-card-bg: #FFFFFF;
         --theme-border: #E2E8F0;
@@ -116,12 +118,22 @@
         background-color: var(--primary-main) !important;
     }
 
+    .bg-theme-primary-deep {
+        background-color: var(--primary-deep) !important;
+    }
+
     .bg-theme-secondary {
         background-color: var(--secondary-gold) !important;
     }
 
     .hover-bg-primary:hover {
         background-color: var(--primary-main) !important;
+        color: #ffffff !important;
+    }
+
+    .hover-bg-secondary:hover {
+        background-color: var(--secondary-gold) !important;
+        color: #020617 !important;
     }
 
     .text-theme-primary {
@@ -134,6 +146,10 @@
 
     .hover-text-primary:hover {
         color: var(--primary-main) !important;
+    }
+
+    .hover-text-secondary:hover {
+        color: var(--secondary-gold) !important;
     }
 
     .border-theme-primary {

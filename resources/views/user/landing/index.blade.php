@@ -317,7 +317,7 @@ class="min-h-screen font-sans antialiased text-gray-800 bg-gray-50 overflow-x-hi
                             <i class="fas fa-arrow-right text-xs"></i>
                         </a>
 
-                        <a href="{{ route('home') }}#siklus" 
+                        <a href="{{ route('siklus.index') }}" 
                            class="spring-hover px-6 py-2.5 sm:px-7 sm:py-3 rounded-full bg-theme-primary hover:bg-theme-primary-deep text-white font-black text-xs sm:text-sm uppercase tracking-wider border-2 border-theme-secondary text-center min-h-[42px] flex items-center justify-center gap-2 shadow-md">
                             <span>SIKLUS</span>
                             <i class="fas fa-graduation-cap text-xs text-theme-secondary"></i>
@@ -433,7 +433,7 @@ class="min-h-screen font-sans antialiased text-gray-800 bg-gray-50 overflow-x-hi
                 <i class="fas fa-user-plus text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
                 <span class="font-semibold text-xs sm:text-sm">SPMB</span>
             </a>
-            <a class="bg-theme-primary-deep text-white rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="500" href="{{ route('home') }}#siklus">
+            <a class="bg-theme-primary-deep text-white rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center shadow-md group spring-hover" data-aos="zoom-in" data-aos-delay="500" href="{{ route('siklus.index') }}">
                 <i class="fas fa-user-graduate text-2xl sm:text-3xl mb-2.5 sm:mb-3 text-theme-secondary group-hover:scale-110 transition duration-300"></i>
                 <span class="font-semibold text-xs sm:text-sm">SIKLUS</span>
             </a>

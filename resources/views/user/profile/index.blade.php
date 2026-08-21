@@ -333,7 +333,7 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
                                         <div class="min-w-0">
                                             <span class="block text-[11px] font-extrabold text-slate-900 uppercase tracking-wider mb-0.5">Alamat</span>
                                             <p class="text-slate-600 leading-relaxed font-normal text-xs sm:text-sm">
-                                                Jl. Argopuro No.17, Mimbaan, Kec. Panji, Kabupaten Situbondo, Jawa Timur 68322
+                                               Jalan Anggrek No. 1, Kelurahan Patokan, Kecamatan Situbondo, Kabupaten Situbondo, Provinsi Jawa Timur
                                             </p>
                                         </div>
                                     </div>
@@ -346,7 +346,8 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
                                         <div class="min-w-0">
                                             <span class="block text-[11px] font-extrabold text-slate-900 uppercase tracking-wider mb-0.5">Telepon</span>
                                             <a href="tel:0338671234" class="text-slate-700 font-semibold hover-text-primary transition-colors text-xs sm:text-sm">
-                                                (0338) 671234
+                                                
+                                        (0338) 671618
                                             </a>
                                         </div>
                                     </div>
@@ -358,8 +359,8 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
                                         </div>
                                         <div class="min-w-0">
                                             <span class="block text-[11px] font-extrabold text-slate-900 uppercase tracking-wider mb-0.5">Email</span>
-                                            <a href="mailto:info@sman2situbondo.sch.id" class="text-slate-700 font-semibold hover-text-primary transition-colors text-xs sm:text-sm">
-                                                info@sman2situbondo.sch.id
+                                            <a href="mailto:smadasit@yahoo.com" class="text-slate-700 font-semibold hover-text-primary transition-colors text-xs sm:text-sm">
+                                                smadasit@yahoo.com
                                             </a>
                                         </div>
                                     </div>
@@ -380,22 +381,56 @@ class="min-h-screen font-sans antialiased text-slate-800 bg-gray-50 flex flex-co
 
                             <!-- Right: Responsive Interactive Google Maps Embed (7 cols) -->
                             <div class="lg:col-span-7">
-                                <div class="rounded-2xl overflow-hidden border border-slate-200/90 shadow-sm h-72 sm:h-80 md:h-96 w-full relative">
+                                <div class="rounded-2xl overflow-hidden border border-slate-200/90 shadow-sm h-72 sm:h-80 md:h-96 w-full relative group/map">
+                                    
+                                    <!-- Google Maps Embed: SMAN 2 Situbondo (coordinates: -7.7021752, 113.9955106) -->
                                     <iframe 
-                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3953.766324391696!2d114.01258907499708!3d-7.708204676352932!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd72750e3860bb7%3A0x6b1076b1f28b7468!2sSMAN%202%20Situbondo!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid" 
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d993.4484097082867!2d113.9952755!3d-7.7021752!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7220d98f7c34d%3A0xd69b79e0aa3dfa00!2sSMAN%202%20Situbondo!5e0!3m2!1sid!2sid!4v1724262000000!5m2!1sid!2sid" 
                                         class="w-full h-full border-0" 
                                         allowfullscreen="" 
                                         loading="lazy" 
                                         referrerpolicy="no-referrer-when-downgrade"
                                         title="Lokasi SMAN 2 Situbondo di Google Maps">
                                     </iframe>
-                                    <a href="https://maps.app.goo.gl/ftYMjJRxN9KV7v6D6" 
+
+                                    <!-- Custom Location Marker Overlay: Menunjukkan titik SMAN 2 Situbondo -->
+                                    <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                                        <div class="relative flex flex-col items-center" style="margin-top: -24px;">
+                                            <!-- Pin Label Bubble -->
+                                            <div class="bg-white border-2 border-theme-secondary rounded-xl px-2.5 py-1.5 shadow-lg flex items-center gap-1.5 mb-1 whitespace-nowrap">
+                                                <div class="w-4 h-4 rounded-full bg-theme-primary flex items-center justify-center shrink-0">
+                                                    <i class="fas fa-graduation-cap text-white" style="font-size:7px;"></i>
+                                                </div>
+                                                <span class="text-[10px] font-extrabold text-slate-900 tracking-wide">SMAN 2 Situbondo</span>
+                                            </div>
+                                            <!-- Pin Point Icon -->
+                                            <svg width="28" height="36" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.35));">
+                                                <path d="M14 0C6.268 0 0 6.268 0 14C0 24.5 14 36 14 36C14 36 28 24.5 28 14C28 6.268 21.732 0 14 0Z" fill="var(--primary-main, #001c4d)"/>
+                                                <circle cx="14" cy="14" r="6" fill="var(--secondary-gold, #f59e0b)"/>
+                                                <circle cx="14" cy="14" r="3" fill="white"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <!-- Transparent Full-Map Clickable Overlay: Opens Google Maps to SMAN 2 Situbondo -->
+                                    <a href="https://www.google.com/maps/place/SMAN+2+Situbondo/@-7.7021752,113.9955106,17z" 
+                                       target="_blank" 
+                                       rel="noopener noreferrer"
+                                       class="absolute inset-0 pointer-events-auto"
+                                       aria-label="Buka SMAN 2 Situbondo di Google Maps"
+                                       title="Klik untuk membuka lokasi SMAN 2 Situbondo di Google Maps">
+                                    </a>
+
+                                    <!-- Bottom Button: Open Full Google Maps -->
+                                    <a href="https://www.google.com/maps/place/SMAN+2+Situbondo/@-7.7021752,113.9955106,17z" 
                                        target="_blank" 
                                        rel="noopener noreferrer" 
-                                       class="absolute bottom-3 right-3 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[11px] font-extrabold text-slate-900 border border-gray-200 shadow-md hover:bg-theme-secondary hover:text-slate-950 transition-all flex items-center gap-1.5 spring-hover">
-                                        <i class="fas fa-external-link-alt text-[10px]"></i>
-                                        <span>Buka Peta Penuh</span>
+                                       class="absolute bottom-3 right-3 z-10 pointer-events-auto bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[11px] font-extrabold text-slate-900 border border-gray-200 shadow-md hover:bg-theme-secondary hover:text-slate-950 transition-all flex items-center gap-1.5 spring-hover">
+                                        <i class="fas fa-map-marker-alt text-theme-primary text-[10px]"></i>
+                                        <span>Buka di Google Maps</span>
+                                        <i class="fas fa-external-link-alt text-[9px]"></i>
                                     </a>
+
                                 </div>
                             </div>
 
