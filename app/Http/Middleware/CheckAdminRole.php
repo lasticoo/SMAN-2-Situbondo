@@ -24,7 +24,7 @@ class CheckAdminRole
 
         $user = Auth::guard('admin')->user();
 
-        if (! $user->is_active) {
+        if ($user->is_active !== null && ! (bool) $user->is_active) {
             Auth::guard('admin')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();

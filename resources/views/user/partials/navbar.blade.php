@@ -204,7 +204,7 @@
             </a>
 
             <!-- SPMB Action Button (Dynamic Secondary Accent) -->
-            <a class="bg-theme-secondary text-slate-950 px-5 py-2 rounded-full font-extrabold shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 spring-hover flex items-center gap-1.5 uppercase text-xs" href="{{ route('home') }}#spmb">
+            <a class="bg-theme-secondary text-slate-950 px-5 py-2 rounded-full font-extrabold shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all duration-200 spring-hover flex items-center gap-1.5 uppercase text-xs {{ request()->routeIs('spmb.*') || request()->routeIs('ppdb.*') ? 'ring-2 ring-theme-secondary ring-offset-2' : '' }}" href="{{ route('spmb.index') }}">
                 <span>SPMB</span>
                 <i class="fas fa-arrow-right text-[10px]"></i>
             </a>
@@ -230,43 +230,29 @@
          x-transition:leave="transition ease-in duration-200 transform-gpu"
          x-transition:leave-start="opacity-100 translate-y-0"
          x-transition:leave-end="opacity-0 -translate-y-4"
-         class="md:hidden bg-white border-b border-gray-200 px-4 pt-2 pb-6 space-y-2 shadow-2xl relative z-50 text-sm font-semibold">
+         class="md:hidden bg-white/95 backdrop-blur-xl border-b border-gray-200/80 px-5 pt-3 pb-6 space-y-2 text-sm font-semibold shadow-2xl text-slate-900"
+         style="background-color: rgba(255, 255, 255, 0.98) !important;">
         
-        <!-- BERANDA -->
         <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('home') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50 rounded-r-lg' : '' }}" href="{{ route('home') }}">BERANDA</a>
         
-        <!-- PROFIL Mobile Accordion -->
-        <div class="border-b border-gray-100 pb-2">
-            <button @click="mobileProfilOpen = !mobileProfilOpen" class="flex items-center justify-between w-full py-2 text-theme-primary font-bold uppercase text-xs">
-                <span>PROFIL</span>
+        <!-- PROFIL SEKOLAH (Mobile Accordion) -->
+        <div class="border-b border-gray-100 py-1">
+            <button @click="mobileProfilOpen = !mobileProfilOpen" class="w-full flex items-center justify-between py-2 text-left hover-text-primary transition-colors">
+                <span>PROFIL SEKOLAH</span>
                 <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="mobileProfilOpen ? 'rotate-180 text-theme-secondary' : ''"></i>
             </button>
             <div x-show="mobileProfilOpen" x-collapse class="space-y-1 pl-3 border-l-2 border-theme-secondary my-1">
-                <a href="{{ route('profile.index') }}" class="block py-1.5 text-theme-primary font-bold text-xs hover-text-primary">Halaman Profil Utama</a>
-                <a href="{{ route('profile.index', ['open' => 'vision']) }}" class="block w-full text-left py-1.5 text-gray-600 hover-text-primary text-xs transition-colors">Visi, Misi &amp; Tujuan</a>
-                <a href="{{ route('profile.index', ['open' => 'history']) }}" class="block w-full text-left py-1.5 text-gray-600 hover-text-primary text-xs transition-colors">Sejarah Singkat</a>
-                <a href="{{ route('profile.index', ['open' => 'structure']) }}" class="block w-full text-left py-1.5 text-gray-600 hover-text-primary text-xs transition-colors">Struktur Organisasi</a>
+                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('profile.*') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50' : 'text-gray-600' }}" href="{{ route('profile.index') }}">Profil</a>
+                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('civitas.*') || request()->routeIs('employee.*') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50' : 'text-gray-600' }}" href="{{ route('civitas.index') }}">Civitas Akademik</a>
+                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('student.*') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50' : 'text-gray-600' }}" href="{{ route('student.index') }}">Data Siswa</a>
             </div>
         </div>
 
-        <!-- CIVITAS AKADEMIK Mobile Accordion -->
-        <div class="border-b border-gray-100 pb-2">
-            <button @click="mobileCivitasOpen = !mobileCivitasOpen" class="flex items-center justify-between w-full py-2 text-gray-700 font-bold uppercase text-xs hover-text-primary">
-                <span>CIVITAS AKADEMIK</span>
-                <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="mobileCivitasOpen ? 'rotate-180 text-theme-secondary' : ''"></i>
-            </button>
-            <div x-show="mobileCivitasOpen" x-collapse class="space-y-1 pl-3 border-l-2 border-theme-secondary my-1">
-                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('civitas.*') || request()->routeIs('employee.*') ? 'text-theme-primary font-bold' : 'text-gray-600' }}" href="{{ route('civitas.index') }}">Data Pegawai</a>
-                <a class="block py-1.5 text-xs font-semibold hover-text-primary transition-colors {{ request()->routeIs('student.*') ? 'text-theme-primary font-bold' : 'text-gray-600' }}" href="{{ route('student.index') }}">Data Siswa</a>
-            </div>
-        </div>
-
-        <!-- PENGUMUMAN -->
         <a class="block py-2 hover-text-primary transition-colors border-b border-gray-100 {{ request()->routeIs('announcement.*') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50 rounded-r-lg' : '' }}" href="{{ route('announcement.index') }}">PENGUMUMAN</a>
 
-        <!-- MEDIA Mobile Accordion -->
-        <div class="border-b border-gray-100 pb-2">
-            <button @click="mobileMediaOpen = !mobileMediaOpen" class="flex items-center justify-between w-full py-2 text-gray-700 font-bold uppercase text-xs hover-text-primary">
+        <!-- MEDIA (Mobile Accordion) -->
+        <div class="border-b border-gray-100 py-1">
+            <button @click="mobileMediaOpen = !mobileMediaOpen" class="w-full flex items-center justify-between py-2 text-left hover-text-primary transition-colors">
                 <span>MEDIA</span>
                 <i class="fas fa-chevron-down text-[10px] transition-transform duration-200" :class="mobileMediaOpen ? 'rotate-180 text-theme-secondary' : ''"></i>
             </button>
@@ -280,7 +266,7 @@
         <a class="block py-2 hover-text-primary transition-colors {{ request()->routeIs('contact.*') ? 'text-theme-primary font-black border-l-4 border-theme-secondary pl-2 bg-slate-50 rounded-r-lg' : '' }}" href="{{ route('contact.index') }}">CONTACT</a>
         
         <div class="pt-3">
-            <a class="inline-flex items-center justify-center w-full bg-theme-secondary text-slate-950 px-4 py-2.5 rounded-full font-extrabold shadow-sm active:scale-95 transition-all text-xs uppercase" href="{{ route('home') }}#spmb">
+            <a class="inline-flex items-center justify-center w-full bg-theme-secondary text-slate-950 px-4 py-2.5 rounded-full font-extrabold shadow-sm active:scale-95 transition-all text-xs uppercase" href="{{ route('spmb.index') }}">
                 <span>Daftar SPMB</span>
                 <i class="fas fa-arrow-right ml-1.5 text-xs"></i>
             </a>

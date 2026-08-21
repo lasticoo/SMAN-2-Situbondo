@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             GalleryTestDataSeederUser::class,
             VideoTestDataSeederUser::class,
             NewsTestDataSeederUser::class,
+            SpmbTestDataSeederUser::class,
         ]);
     }
 }

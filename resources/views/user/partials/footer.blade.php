@@ -1,5 +1,5 @@
 <!-- SHARED FOOTER COMPONENT (Matching Landing Page) -->
-<footer class="bg-theme-primary-deep text-white pt-10 sm:pt-12 pb-6 border-t border-white/10 relative overflow-hidden" id="contact">
+<footer class="bg-theme-primary-deep text-white pt-10 sm:pt-12 pb-6 border-t border-white/10 relative overflow-hidden" id="contact" style="background-color: var(--primary-deep, #0e2347);">
     <!-- Ambient Subtle Lighting -->
     <div class="absolute top-0 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\User\LandingPageController;
 use App\Http\Controllers\User\MediaController;
 use App\Http\Controllers\User\NewsController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\SpmbController;
 use App\Http\Controllers\User\StudentController;
 use App\Http\Controllers\User\VideoController;
 use Illuminate\Support\Facades\Route;
@@ -74,3 +75,11 @@ Route::get('/hubungi-kami', [ContactController::class, 'index']);
 Route::post('/kontak', [ContactController::class, 'store'])->name('contact.store');
 Route::post('/contact', [ContactController::class, 'store']);
 Route::post('/hubungi-kami', [ContactController::class, 'store']);
+
+// US-09 Sistem Penerimaan Murid Baru (SPMB) / PPDB Publik
+Route::get('/spmb', [SpmbController::class, 'index'])->name('spmb.index');
+Route::get('/ppdb', [SpmbController::class, 'index'])->name('ppdb.index');
+Route::get('/penerimaan-siswa-baru', [SpmbController::class, 'index']);
+Route::get('/spmb/download/{id}', [SpmbController::class, 'download'])->name('spmb.download');
+Route::get('/spmb/{id}', [SpmbController::class, 'show'])->name('spmb.show');
+Route::get('/ppdb/{id}', [SpmbController::class, 'show']);
