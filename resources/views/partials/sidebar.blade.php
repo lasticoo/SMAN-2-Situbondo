@@ -70,14 +70,6 @@
             <span>Galeri Foto</span>
         </a>
 
-        <!-- Video Youtube -->
-        <a href="{{ Route::has('admin.videos.index') ? route('admin.videos.index') : url('/admin/videos') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-all {{ request()->routeIs('admin.videos.*') || request()->is('admin/videos*') ? 'font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-xs' : 'font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ request()->routeIs('admin.videos.*') || request()->is('admin/videos*') ? 'text-indigo-600' : 'text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-            </svg>
-            <span>Video Youtube</span>
-        </a>
-
         <div class="pt-4 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3">Master Data & Dokumen</div>
 
         <!-- Data Siswa -->
@@ -97,8 +89,8 @@
         </a>
 
         <!-- Kelola SPMB -->
-        <a href="{{ url('/admin/spmb') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-all {{ request()->is('admin/spmb*') ? 'font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-xs' : 'font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ request()->is('admin/spmb*') ? 'text-indigo-600' : 'text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <a href="{{ Route::has('admin.spmb_info.index') ? route('admin.spmb_info.index') : url('/admin/spmb-info') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-all {{ request()->routeIs('admin.spmb_info.*') || request()->is('admin/spmb*') ? 'font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-xs' : 'font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ request()->routeIs('admin.spmb_info.*') || request()->is('admin/spmb*') ? 'text-indigo-600' : 'text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
             <span>Kelola SPMB</span>
@@ -123,14 +115,6 @@
 
         <div class="pt-4 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3">Pengaturan System</div>
 
-        <!-- Manajemen Akun Admin -->
-        <a href="{{ Route::has('admin.admin_accounts.index') ? route('admin.admin_accounts.index') : url('/admin/admin-accounts') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-all {{ request()->routeIs('admin.admin_accounts.*') || request()->is('admin/admin-accounts*') ? 'font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-xs' : 'font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ request()->routeIs('admin.admin_accounts.*') || request()->is('admin/admin-accounts*') ? 'text-indigo-600' : 'text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-            </svg>
-            <span>Manajemen Akun Admin</span>
-        </a>
-
         <!-- Pengaturan Warna -->
         <a href="{{ route('admin.color_settings.edit') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-all {{ request()->routeIs('admin.color_settings.*') || request()->is('admin/color-settings*') ? 'font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-xs' : 'font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ request()->routeIs('admin.color_settings.*') || request()->is('admin/color-settings*') ? 'text-indigo-600' : 'text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -139,15 +123,29 @@
             <span>Pengaturan Warna</span>
         </a>
 
+                <!-- Manajemen Akun Admin -->
+        <a href="{{ Route::has('admin.admin_accounts.index') ? route('admin.admin_accounts.index') : url('/admin/admin-accounts') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm transition-all {{ request()->routeIs('admin.admin_accounts.*') || request()->is('admin/admin-accounts*') ? 'font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-xs' : 'font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 {{ request()->routeIs('admin.admin_accounts.*') || request()->is('admin/admin-accounts*') ? 'text-indigo-600' : 'text-slate-400' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+            <span>Manajemen Akun Admin</span>
+        </a>
+
         <!-- Admin Profile Footnote -->
         <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between px-2">
             <div class="flex items-center gap-3 overflow-hidden">
-                <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-white text-xs shrink-0 shadow-sm">
-                    {{ strtoupper(substr($currentAdmin->name ?? 'A', 0, 1)) }}
-                </div>
+                @if(!empty($currentAdmin?->avatar_url))
+                    <img src="{{ Storage::url($currentAdmin->avatar_url) }}" alt="{{ $currentAdmin->name ?? 'Admin' }}" class="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm border border-slate-200">
+                @else
+                    <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-white text-xs shrink-0 shadow-sm">
+                        {{ strtoupper(substr($currentAdmin->name ?? 'A', 0, 1)) }}
+                    </div>
+                @endif
                 <div class="overflow-hidden">
-                    <p class="text-xs font-bold text-slate-800 truncate">{{ $currentAdmin->name ?? 'Administrator SMAN 2 Situbondo' }}</p>
-                    <p class="text-[10px] text-slate-500 truncate">{{ $currentAdmin->email ?? 'admin@smada.sch.id' }}</p>
+                    <p class="text-xs font-bold text-slate-800 truncate">{{ $currentAdmin->name ?? 'Administrator' }}</p>
+                    <p class="text-[10px] text-slate-500 truncate">
+                        Role: {{ $currentAdmin?->role === 'super_admin' ? 'Super Admin' : ucwords(str_replace('_', ' ', $currentAdmin?->role ?? 'Admin')) }}
+                    </p>
                 </div>
             </div>
             <form action="{{ route('admin.logout') }}" method="POST">

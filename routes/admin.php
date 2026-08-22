@@ -210,3 +210,31 @@ Route::resource('admin-accounts', AdminAccountController::class)
         'update' => 'admin.admin_accounts.update',
         'destroy' => 'admin.admin_accounts.destroy',
     ]);
+
+// =============================================================================
+// AD-13 — Info & Dokumen SPMB (SPMB Info Packages & Documents)
+// =============================================================================
+use App\Http\Controllers\Admin\SpmbDocumentController;
+use App\Http\Controllers\Admin\SpmbInfoController;
+
+Route::get('spmb', function () {
+    return redirect()->route('admin.spmb_info.index');
+})->name('admin.spmb.index');
+
+Route::resource('spmb-info', SpmbInfoController::class)
+    ->except(['show', 'create', 'edit'])
+    ->names([
+        'index' => 'admin.spmb_info.index',
+        'store' => 'admin.spmb_info.store',
+        'update' => 'admin.spmb_info.update',
+        'destroy' => 'admin.spmb_info.destroy',
+    ]);
+
+Route::resource('spmb-info.documents', SpmbDocumentController::class)
+    ->except(['show', 'create', 'edit'])
+    ->names([
+        'index' => 'admin.spmb_info.documents.index',
+        'store' => 'admin.spmb_info.documents.store',
+        'update' => 'admin.spmb_info.documents.update',
+        'destroy' => 'admin.spmb_info.documents.destroy',
+    ]);
