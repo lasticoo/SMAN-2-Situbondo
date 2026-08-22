@@ -31,8 +31,8 @@
 
                 <div class="flex items-center gap-3">
                     <div class="text-right">
-                        <p class="text-xs font-bold text-slate-800">{{ $currentAdmin->name ?? 'Administrator SMAN 2 Situbondo' }}</p>
-                        <p class="text-[11px] text-slate-500">Role: Admin</p>
+                        <p class="text-xs font-bold text-slate-800">{{ $currentAdmin->name ?? 'Administrator' }}</p>
+                        <p class="text-[11px] text-slate-500">Role: {{ $currentAdmin?->role === 'super_admin' ? 'Super Admin' : ucwords(str_replace('_', ' ', $currentAdmin?->role ?? 'Admin')) }}</p>
                     </div>
                     <form action="{{ route('admin.logout') }}" method="POST">
                         @csrf
@@ -54,7 +54,7 @@
                         Selamat Datang Kembali 👋
                     </span>
                     <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
-                        Halo, {{ $currentAdmin->name ?? 'Administrator SMAN 2 Situbondo' }}!
+                        Halo, {{ $currentAdmin->name ?? 'Administrator' }}!
                     </h1>
                     <p class="text-slate-700 text-sm mt-2 leading-relaxed">
                         Berikut adalah ringkasan performa dan data operasional terkini dari sistem informasi SMAN 2 Situbondo.

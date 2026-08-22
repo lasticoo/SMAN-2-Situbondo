@@ -35,8 +35,8 @@
 
                 <div class="flex items-center gap-3">
                     <div class="text-right">
-                        <p class="text-xs font-bold text-slate-800">{{ $currentAdmin->name ?? 'Administrator SMAN 2 Situbondo' }}</p>
-                        <p class="text-[11px] text-slate-500">Role: Admin</p>
+                        <p class="text-xs font-bold text-slate-800">{{ $currentAdmin->name ?? 'Administrator' }}</p>
+                        <p class="text-[11px] text-slate-500">Role: {{ $currentAdmin?->role === 'super_admin' ? 'Super Admin' : ucwords(str_replace('_', ' ', $currentAdmin?->role ?? 'Admin')) }}</p>
                     </div>
 
                     <a href="{{ route('admin.galleries.index') }}" class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-xs">
