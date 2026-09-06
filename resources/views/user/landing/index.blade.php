@@ -810,13 +810,13 @@ class="min-h-screen font-sans antialiased text-gray-800 bg-gray-50 overflow-x-hi
                     @endforeach
                 @else
                     <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-56 sm:w-64 h-72 sm:h-80 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-lg border-2 border-white/20 hover:border-theme-secondary block spring-hover">
-                        <img alt="Atmosfer 1" class="w-full h-full object-cover" src="/build/assets/banner smada.png">
+                        <img alt="Atmosfer 1" class="w-full h-full object-cover" src="{{ asset('images/spmb/banner_spmb_smada_hd.jpg') }}">
                     </a>
                     <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-56 sm:w-64 h-72 sm:h-80 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-lg border-2 border-white/20 hover:border-theme-secondary block spring-hover">
-                        <img alt="Atmosfer 2 Poster" class="w-full h-full object-cover" src="/build/assets/banner smada.png">
+                        <img alt="Atmosfer 2" class="w-full h-full object-cover" src="{{ asset('images/static/gambar_profile_statis.jpg') }}">
                     </a>
                     <a href="https://www.instagram.com/sman2situbondoofficial/" target="_blank" rel="noopener noreferrer" class="w-56 sm:w-64 h-72 sm:h-80 flex-shrink-0 bg-black/40 rounded-xl overflow-hidden shadow-lg border-2 border-white/20 hover:border-theme-secondary block spring-hover">
-                        <img alt="Atmosfer 3" class="w-full h-full object-cover" src="/build/assets/kepala sekolah smada.png">
+                        <img alt="Atmosfer 3" class="w-full h-full object-cover" src="{{ asset('images/static/kepseksmada.png') }}">
                     </a>
                 @endif
             </div>

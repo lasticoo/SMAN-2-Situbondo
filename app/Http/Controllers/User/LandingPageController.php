@@ -136,10 +136,29 @@ class LandingPageController extends Controller
      */
     private function fetchInstagramFeedPosts(): array
     {
-        $storageDir = public_path('storage/instagram_cache');
-        if (!file_exists($storageDir)) {
-            @mkdir($storageDir, 0755, true);
+        $storageDir = storage_path('app/public/instagram_cache');
+        $publicDir = public_path('storage/instagram_cache');
+
+        foreach ([$storageDir, $publicDir] as $dir) {
+            if (!file_exists($dir)) {
+                @mkdir($dir, 0775, true);
+            }
         }
+
+        // Helper to retrieve cached posts directly from disk
+        $getExistingDiskPosts = function () use ($storageDir, $publicDir): array {
+            $diskPosts = [];
+            for ($i = 1; $i <= 10; $i++) {
+                $filename = 'post_' . $i . '.jpg';
+                $storageFile = $storageDir . '/' . $filename;
+                $publicFile = $publicDir . '/' . $filename;
+                if ((file_exists($storageFile) && filesize($storageFile) > 1000) ||
+                    (file_exists($publicFile) && filesize($publicFile) > 1000)) {
+                    $diskPosts[] = '/storage/instagram_cache/' . $filename;
+                }
+            }
+            return $diskPosts;
+        };
 
         // Check if we are in a brief Tier 4 cooldown period (e.g. 60 seconds after a failed network attempt)
         // Once this 60-second cooldown expires, the next refresh automatically retries Tier 1 -> Tier 2 -> Tier 3!
@@ -147,15 +166,9 @@ class LandingPageController extends Controller
 
         // If in short cooldown and we have disk files, serve them immediately to avoid network blocking
         if ($isInRetryCooldown) {
-            $existingDiskPosts = [];
-            for ($i = 1; $i <= 10; $i++) {
-                $filename = 'post_' . $i . '.jpg';
-                if (file_exists($storageDir . '/' . $filename) && filesize($storageDir . '/' . $filename) > 1000) {
-                    $existingDiskPosts[] = '/storage/instagram_cache/' . $filename;
-                }
-            }
-            if (count($existingDiskPosts) >= 10) {
-                return $existingDiskPosts;
+            $cachedDisk = $getExistingDiskPosts();
+            if (count($cachedDisk) >= 5) {
+                return $cachedDisk;
             }
         }
 
@@ -163,28 +176,44 @@ class LandingPageController extends Controller
         $newFetchedPhotos = [];
 
         // =========================================================================
-        // --- TIER 1: Live Instagram Profile Info API (Primary & Alternate App IDs) ---
+        // --- TIER 1: Live Instagram Profile Info API (with Optional Session Cookie) ---
         // =========================================================================
+        $sessionId = env('INSTAGRAM_SESSION_ID');
+        $dsUserId = env('INSTAGRAM_DS_USER_ID');
         $appIds = ['936619743392459', '1217981644879628'];
+
         foreach ($appIds as $appId) {
             try {
                 $url = "https://www.instagram.com/api/v1/users/web_profile_info/?username={$username}";
                 $ch = curl_init($url);
+
+                $headers = [
+                    "X-IG-App-ID: {$appId}",
+                    'Accept: */*',
+                    'Accept-Language: id-ID,id;q=0.9,en-US;q=0.8',
+                    'Sec-Fetch-Mode: cors',
+                    'Sec-Fetch-Site: same-origin',
+                    'X-Requested-With: XMLHttpRequest',
+                    "Referer: https://www.instagram.com/{$username}/",
+                ];
+
+                if (!empty($sessionId)) {
+                    $cookieStr = "sessionid={$sessionId};";
+                    if (!empty($dsUserId)) {
+                        $cookieStr .= " ds_user_id={$dsUserId};";
+                    }
+                    $headers[] = "Cookie: {$cookieStr}";
+                }
+
                 curl_setopt_array($ch, [
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_CONNECTTIMEOUT => 2,
-                    CURLOPT_TIMEOUT => 4,
+                    CURLOPT_CONNECTTIMEOUT => 4,
+                    CURLOPT_TIMEOUT => 8,
                     CURLOPT_SSL_VERIFYPEER => false,
                     CURLOPT_SSL_VERIFYHOST => false,
                     CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-                    CURLOPT_HTTPHEADER => [
-                        "X-IG-App-ID: {$appId}",
-                        'Accept: */*',
-                        'Accept-Language: id-ID,id;q=0.9,en-US;q=0.8',
-                        'Sec-Fetch-Mode: cors',
-                        'Sec-Fetch-Site: same-origin',
-                    ],
+                    CURLOPT_HTTPHEADER => $headers,
                 ]);
 
                 $response = curl_exec($ch);
@@ -220,8 +249,8 @@ class LandingPageController extends Controller
                 curl_setopt_array($ch, [
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_CONNECTTIMEOUT => 2,
-                    CURLOPT_TIMEOUT => 4,
+                    CURLOPT_CONNECTTIMEOUT => 4,
+                    CURLOPT_TIMEOUT => 8,
                     CURLOPT_SSL_VERIFYPEER => false,
                     CURLOPT_SSL_VERIFYHOST => false,
                     CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
@@ -247,20 +276,21 @@ class LandingPageController extends Controller
         }
 
         // =========================================================================
-        // --- TIER 3: Download & Persist Live Photos Locally ---
+        // --- TIER 3: Download & Persist Live Photos Locally to Server Disk ---
         // =========================================================================
         if (!empty($newFetchedPhotos)) {
             $savedLocalPosts = [];
             foreach ($newFetchedPhotos as $i => $remoteUrl) {
                 $filename = 'post_' . ($i + 1) . '.jpg';
-                $localPath = $storageDir . '/' . $filename;
+                $destStorage = $storageDir . '/' . $filename;
+                $destPublic = $publicDir . '/' . $filename;
 
                 try {
                     $imgCh = curl_init($remoteUrl);
                     curl_setopt_array($imgCh, [
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_TIMEOUT => 6,
+                        CURLOPT_TIMEOUT => 8,
                         CURLOPT_SSL_VERIFYPEER => false,
                         CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
                     ]);
@@ -269,7 +299,15 @@ class LandingPageController extends Controller
                     curl_close($imgCh);
 
                     if ($imgStatus === 200 && !empty($imgData)) {
-                        @file_put_contents($localPath, $imgData);
+                        @file_put_contents($destStorage, $imgData);
+                        @chmod($destStorage, 0664);
+
+                        // If public directory is not a symlink, duplicate to ensure public web visibility
+                        if (!file_exists($destPublic) || realpath($destPublic) !== realpath($destStorage)) {
+                            @file_put_contents($destPublic, $imgData);
+                            @chmod($destPublic, 0664);
+                        }
+
                         $savedLocalPosts[] = '/storage/instagram_cache/' . $filename;
                     }
                 } catch (\Throwable $e) {
@@ -289,17 +327,10 @@ class LandingPageController extends Controller
         // --- TIER 4: Persistent Disk Fallback & Scheduled Retry Trigger ---
         // =========================================================================
         // If live scraping failed, set a short 60s cooldown so on the next refresh after 60s,
-        // the system automatically tries Tier 1 -> Tier 2 -> Tier 3 again!
+        // the system automatically retries Tier 1 -> Tier 2 -> Tier 3 again!
         Cache::put('instagram_tier4_retry_cooldown', true, 60);
 
-        $existingDiskPosts = [];
-        for ($i = 1; $i <= 10; $i++) {
-            $filename = 'post_' . $i . '.jpg';
-            if (file_exists($storageDir . '/' . $filename) && filesize($storageDir . '/' . $filename) > 1000) {
-                $existingDiskPosts[] = '/storage/instagram_cache/' . $filename;
-            }
-        }
-
+        $existingDiskPosts = $getExistingDiskPosts();
         if (!empty($existingDiskPosts)) {
             return $existingDiskPosts;
         }
